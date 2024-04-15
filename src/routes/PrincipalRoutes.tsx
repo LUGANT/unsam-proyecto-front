@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { LoginPage } from "@/pages/login"
-import { Home } from "@/pages"
+import { Home } from "@/pages/home"
 
 export function PrincipalRoutes() {
   return (
