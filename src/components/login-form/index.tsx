@@ -32,7 +32,7 @@ export function LoginForm(){
 
   const sendData = async () => {
     if(!validarCampo(usuario) && !validarCampo(contrasenia) && await userService.loggin({usuario,contrasenia})){
-      navigate('/')
+      navigate('/home')
     }else{
       setTouchedUsuario(true)
       setTouchedContrasenia(true)
