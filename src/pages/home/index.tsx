@@ -11,9 +11,11 @@ export const HomePage = () => {
           justify={"center"}
           align={"center"}
           textAlign={"center"}
-          wrap={"wrap"}
+          wrap={{ base: "nowrap", md: "wrap" }}
           spacing={{ base: 8, md: 14 }}
           py={{ base: 20, md: 36 }}
+          overflow={"scroll"}
+          height={"86vh"}
         >
           <EventCard></EventCard>
           <EventCard></EventCard>

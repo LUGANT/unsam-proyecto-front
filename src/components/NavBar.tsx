@@ -49,7 +49,11 @@ export const NavBar = () => {
 
   return (
     <>
-      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+      <Box
+        bg={useColorModeValue("gray.100", "gray.900")}
+        px={4}
+        position={"sticky"}
+      >
         <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
           <IconButton
             size={"md"}
@@ -90,7 +94,7 @@ export const NavBar = () => {
                 cursor={"pointer"}
                 minW={0}
               >
-                <Avatar size={"sm"} bg={"purple.300"} />
+                <Avatar size={"sm"} bg={"brand.300"} />
               </MenuButton>
               <MenuList>
                 <MenuItem>Ver perfil</MenuItem>
