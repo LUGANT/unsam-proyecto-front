@@ -8,7 +8,7 @@ export const HomePage = () => {
         <Stack
           as={Box}
           direction={{ base: "column", md: "row" }}
-          justify={"center"}
+          justify={{ base: "none", md: "center" }}
           align={"center"}
           textAlign={"center"}
           wrap={{ base: "nowrap", md: "wrap" }}
