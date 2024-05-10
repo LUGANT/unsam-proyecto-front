@@ -27,6 +27,7 @@ export function RequestItem() {
             bg={"#47d247"}
             aria-label="Search database"
             icon={<CheckIcon />}
+            size={"sm"}
             _hover={{ backgroundColor: "#84e184" }}
           />
           <IconButton
@@ -34,6 +35,7 @@ export function RequestItem() {
             bg={"#ff4d4d"}
             aria-label="Search database"
             icon={<CloseIcon />}
+            size={"sm"}
             _hover={{ backgroundColor: "#ff6767" }}
           />
         </Flex>

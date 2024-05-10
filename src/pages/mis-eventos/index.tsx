@@ -24,9 +24,16 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { SimpleEventCard } from "../../components/event-card/simple";
+import { RequestItem } from "../../components/request-item";
+import { useState } from "react";
 
 export const MisEventos = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [openRequest, setOpenRequest] = useState(false);
+
+  const toggleOpenRequest = () => {
+    setOpenRequest(!openRequest);
+  };
 
   return (
     <>
@@ -53,12 +60,13 @@ export const MisEventos = () => {
           py={{ base: 18, md: 18 }}
           overflow={"auto"}
         >
-          <SimpleEventCard></SimpleEventCard>
-          <SimpleEventCard></SimpleEventCard>
-          <SimpleEventCard></SimpleEventCard>
+          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
+          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
+          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
         </Stack>
       </Container>
       <CreateEventPopup isOpen={isOpen} onClose={onClose} />
+      <RequestsForAnEvent isOpen={openRequest} onClose={toggleOpenRequest} />
     </>
   );
 };
@@ -144,3 +152,36 @@ function HookUsage() {
     </HStack>
   );
 }
+
+const RequestsForAnEvent = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent
+        minHeight={"80%"}
+        maxHeight={"90%"}
+        overflowY={"scroll"}
+        gap="10px"
+      >
+        <ModalHeader>Solicitudes</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Flex height="100%" direction={"column"} gap={10}>
+            <RequestItem />
+            <RequestItem />
+            <RequestItem />
+            <RequestItem />
+            <RequestItem />
+            <RequestItem />
+          </Flex>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};

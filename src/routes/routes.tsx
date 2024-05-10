@@ -4,7 +4,6 @@ import { LoginPage } from "../pages/login";
 import { AuthLayout } from "../pages/layouts/auth-layout";
 import { MainLayout } from "../pages/layouts/main-layout";
 import { SignUpPage } from "../pages/signup";
-import { MyEventsPage } from "../pages/my-events";
 import { NotFound } from "../pages/errors/not-found";
 import { MisEventos } from "../pages/mis-eventos";
 import { PageNotFound } from "../pages/errors/page-not-found";
