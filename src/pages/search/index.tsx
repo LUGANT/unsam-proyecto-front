@@ -1,7 +1,7 @@
 import { Box, Container, Stack } from "@chakra-ui/react";
 import { EventCard } from "../../components/event-card/full";
 
-export const HomePage = () => {
+export const Search = () => {
   return (
     <>
       <Container maxW={"full"}>
