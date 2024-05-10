@@ -4,6 +4,7 @@ import { LoginPage } from "../pages/login";
 import { AuthLayout } from "../pages/layouts/auth-layout";
 import { MainLayout } from "../pages/layouts/main-layout";
 import NewEventModal from './../components/NewEventModal';
+import UserReview from "../components/UserReview";
 
 export function PrincipalRoutes() {
   return (
@@ -12,7 +13,7 @@ export function PrincipalRoutes() {
         <Route path = "/auth" element = { <AuthLayout /> }>
             <Route path = "/auth/login" element = { <LoginPage /> }/>
         </Route>
-        <Route path = "/" element = { <NewEventModal /> }>
+        <Route path = "/" element = { <UserReview /> }>
           <Route path = "/home" element = { < HomePage/> }/>
         </Route>
       </Routes>
