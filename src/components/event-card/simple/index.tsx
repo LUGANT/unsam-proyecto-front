@@ -16,7 +16,8 @@ import {
 import { FaHandSparkles } from "react-icons/fa";
 import { GiSoccerBall } from "react-icons/gi";
 
-export const SimpleEventCard = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const SimpleEventCard = ({ handlerRequest }: any) => {
   return (
     <Center py={6}>
       <Box
@@ -63,7 +64,7 @@ export const SimpleEventCard = () => {
         <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
           <Stack direction={"row"} spacing={0} align={"center"} gap={3}>
             <Text fontWeight={600}>Solicitudes</Text>
-            <Box position={"relative"}>
+            <Box position={"relative"} onClick={handlerRequest}>
               <IconButton
                 icon={<FaHandSparkles />}
                 fontSize={"xl"}

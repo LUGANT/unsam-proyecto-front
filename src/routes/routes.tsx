@@ -3,6 +3,7 @@ import { HomePage } from "../pages/home";
 import { LoginPage } from "../pages/login";
 import { AuthLayout } from "../pages/layouts/auth-layout";
 import { MainLayout } from "../pages/layouts/main-layout";
+import { SignUpPage } from "../pages/signup";
 import { NotFound } from "../pages/errors/not-found";
 import { MisEventos } from "../pages/mis-eventos";
 import { PageNotFound } from "../pages/errors/page-not-found";
@@ -14,6 +15,7 @@ export function PrincipalRoutes() {
       <Routes>
         <Route path="/auth" element={<AuthLayout />}>
           <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/signup" element={<SignUpPage />} />
         </Route>
         <Route path="/" element={<MainLayout />}>
           <Route path="/home" element={<HomePage />} />
