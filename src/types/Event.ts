@@ -1,5 +1,6 @@
+import { Actividad } from "./Actividad";
+
 type Usuario = any;
-type Actividad = any;
 
 type Evento = {
   id: number;
