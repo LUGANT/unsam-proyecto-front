@@ -4,7 +4,7 @@ const arrayDeOpciones = ["futbol","basquet"] as const; //Array de actividades
 /*[number] extrae los tipos de los elementos del array.*/
 type nombreDeporte = (typeof arrayDeOpciones)[number]; 
 
-export type Actividad = {
+export type Activity = {
   id: number
   nombre: nombreDeporte
   esGrupal: boolean
