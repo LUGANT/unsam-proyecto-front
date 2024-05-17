@@ -8,8 +8,14 @@ import { NotFound } from "../pages/errors/not-found";
 import { MisEventos } from "../pages/mis-eventos";
 import { PageNotFound } from "../pages/errors/page-not-found";
 import { Search } from "../pages/search";
+import { useAuth } from "../providers/auth/AuthContext";
+import { useEffect } from "react";
 
 export function PrincipalRoutes() {
+  const { login } = useAuth();
+  useEffect(() => {
+    login(1);
+  }, []);
   return (
     <BrowserRouter>
       <Routes>
