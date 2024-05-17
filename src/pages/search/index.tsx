@@ -1,16 +1,7 @@
 import { Box, Container, Stack } from "@chakra-ui/react";
 import { EventCard } from "../../components/event-card/full";
-// import { useEffect } from "react";
-// import eventService from "../../services/event-service/event-service";
 
-export const HomePage = () => {
-  // useEffect(() => {
-  //   const res = async () => {
-  //     const res = await eventService.todas();
-  //     console.log(res);
-  //   };
-  //   res();
-  // }, []);
+export const Search = () => {
   return (
     <>
       <Container maxW={"full"}>

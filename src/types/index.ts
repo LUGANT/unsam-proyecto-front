@@ -10,6 +10,15 @@ export type logginType = {
   contrasenia: string
 }
 
+export type signupType = {
+  nombre: string
+  apellido: string
+  email: string
+  usuario: string
+  contrasenia: string
+}
+
+//
 export type textFieldType = {
   isRequired?: boolean
   size : string
