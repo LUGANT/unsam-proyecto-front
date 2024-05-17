@@ -1,17 +1,16 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
+  Badge,
   Box,
   Center,
   Heading,
-  Text,
-  Stack,
-  Image,
-  useColorModeValue,
-  Spacer,
-  IconButton,
   HStack,
   Icon,
-  Badge,
+  IconButton,
+  Spacer,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { FaHandSparkles } from "react-icons/fa";
 import { GiSoccerBall } from "react-icons/gi";

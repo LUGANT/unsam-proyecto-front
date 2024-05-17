@@ -3,7 +3,7 @@ import { TextField } from "../../ui/text-field";
 import { ButtonUi } from "../../ui/button";
 import { Box } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { userService } from "../../services/user-service/user-service";
+import { userService } from "../../services/user-service";
 
 export function LoginForm() {
   const navigate = useNavigate();

@@ -3,9 +3,9 @@ import { TextField } from "../../ui/text-field";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ButtonUi } from "../../ui/button";
-import { userService } from "../../services/user-service/user-service";
+import { userService } from "../../services/user-service";
 
-export function SignUpForm(){
+export function SignUpForm() {
   const navigate = useNavigate();
   const [nombre, setNombre] = useState("");
   const [apellido, setApellido] = useState("");
@@ -19,52 +19,78 @@ export function SignUpForm(){
   const [touchedUsuario, setTouchedUsuario] = useState(false);
   const [touchedEmail, setTouchedEmail] = useState(false);
   const [touchedContrasenia, setTouchedContrasenia] = useState(false);
-  const [touchedConfirmarContrasenia, setTouchedConfirmarContrasenia] = useState(false);
+  const [touchedConfirmarContrasenia, setTouchedConfirmarContrasenia] =
+    useState(false);
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<string>>, touchedSetter: React.Dispatch<React.SetStateAction<boolean>> ) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    setter: React.Dispatch<React.SetStateAction<string>>,
+    touchedSetter: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
     setter(event.target.value);
     touchedSetter(true);
   };
   //
-  const handlerNombre = (event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setNombre, setTouchedNombre)
-  const handlerApellido = (event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setApellido, setTouchedApellido)
-  const handlerUsuario = (event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setUsuario, setTouchedUsuario)
-  const handlerEmail = (event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setEmail, setTouchedEmail)
-  const handlerContrasenia = (event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setContrasenia, setTouchedContrasenia)
-  const handlerConfirmarContrasenia = (event: React.ChangeEvent<HTMLInputElement>) => handleInputChange(event, setConfirmarContrasenia, setTouchedConfirmarContrasenia)
+  const handlerNombre = (event: React.ChangeEvent<HTMLInputElement>) =>
+    handleInputChange(event, setNombre, setTouchedNombre);
+  const handlerApellido = (event: React.ChangeEvent<HTMLInputElement>) =>
+    handleInputChange(event, setApellido, setTouchedApellido);
+  const handlerUsuario = (event: React.ChangeEvent<HTMLInputElement>) =>
+    handleInputChange(event, setUsuario, setTouchedUsuario);
+  const handlerEmail = (event: React.ChangeEvent<HTMLInputElement>) =>
+    handleInputChange(event, setEmail, setTouchedEmail);
+  const handlerContrasenia = (event: React.ChangeEvent<HTMLInputElement>) =>
+    handleInputChange(event, setContrasenia, setTouchedContrasenia);
+  const handlerConfirmarContrasenia = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) =>
+    handleInputChange(
+      event,
+      setConfirmarContrasenia,
+      setTouchedConfirmarContrasenia
+    );
 
   //
-  const validarCampo = (value: string): boolean => value === ""
-  const validarContrasenia = (passUno:string, passDos:string): boolean => passUno != passDos
+  const validarCampo = (value: string): boolean => value === "";
+  const validarContrasenia = (passUno: string, passDos: string): boolean =>
+    passUno != passDos;
   const validarFormatoEmail = (email: string): boolean => {
     const emailRegex: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return !emailRegex.test(email);
-  }
+  };
 
   //
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") { sendData(); }
+    if (event.key === "Enter") {
+      sendData();
+    }
   };
-  
+
   //
   const sendData = async () => {
     if (
-      !validarCampo(nombre) && 
-      !validarCampo(apellido) && 
-      !validarCampo(usuario) && 
-      !validarFormatoEmail(email) && 
-      !validarCampo(contrasenia) && 
+      !validarCampo(nombre) &&
+      !validarCampo(apellido) &&
+      !validarCampo(usuario) &&
+      !validarFormatoEmail(email) &&
+      !validarCampo(contrasenia) &&
       !validarCampo(confirmarContrasenia) &&
-      (await userService.singUp({ nombre, apellido, email, usuario, contrasenia }))
+      (await userService.singUp({
+        nombre,
+        apellido,
+        email,
+        usuario,
+        contrasenia,
+      }))
     ) {
       navigate("/home");
     } else {
-      setTouchedNombre(true)
-      setTouchedApellido(true)
-      setTouchedUsuario(true)
-      setTouchedEmail(true)
-      setTouchedContrasenia(true)
-      setTouchedConfirmarContrasenia(true)
+      setTouchedNombre(true);
+      setTouchedApellido(true);
+      setTouchedUsuario(true);
+      setTouchedEmail(true);
+      setTouchedContrasenia(true);
+      setTouchedConfirmarContrasenia(true);
     }
   };
 
@@ -128,7 +154,7 @@ export function SignUpForm(){
         size="md"
         inputType="password"
         label="Confirmar contraseña"
-        isError={validarContrasenia(contrasenia,confirmarContrasenia)}
+        isError={validarContrasenia(contrasenia, confirmarContrasenia)}
         touched={touchedConfirmarContrasenia}
         errorMessage="Las contraseñas deben ser iguales"
         onChange={handlerConfirmarContrasenia}
