@@ -1,11 +1,11 @@
-import { Activity } from "./Activity";
+import { Actividad } from "./Activity";
 
 type Usuario = any;
 
-type Evento = {
+export type Evento = {
   id: number;
   anfitrion: Usuario;
-  actividad: Activity;
+  actividad: Actividad;
   fecha: Date;
   direccion: string;
   capacidadMaxima: number;
