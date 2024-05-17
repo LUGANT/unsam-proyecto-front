@@ -10,6 +10,11 @@ export type Evento = {
   direccion: string;
   capacidadMaxima: number;
 };
+type Solicitud = {
+  id: number;
+  solicitante: Usuario;
+  evento: Evento;
+};
 /* 
 ---------Ejemplo de respuesta evento
 {

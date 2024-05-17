@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Container,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
@@ -20,12 +21,10 @@ import {
   useDisclosure,
   useNumberInput,
   VStack,
-  Image,
-  Flex,
 } from "@chakra-ui/react";
-import { SimpleEventCard } from "../../components/event-card/simple";
-import { RequestItem } from "../../components/request-item";
 import { useState } from "react";
+import { SimpleEventCard } from "../../components/event-card/simple";
+import { RequestsForAnEvent } from "../../features/event-requests";
 
 export const MisEventos = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -103,7 +102,7 @@ const CreateEventPopup = ({
 
               <FormControl>
                 <FormLabel>Cantidad de participantes </FormLabel>
-                <HookUsage />
+                <Incrementer />
               </FormControl>
               <FormControl>
                 <FormLabel>Fecha y hora</FormLabel>
@@ -132,7 +131,7 @@ const CreateEventPopup = ({
     </Modal>
   );
 };
-function HookUsage() {
+function Incrementer() {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
       step: 1,
@@ -152,36 +151,3 @@ function HookUsage() {
     </HStack>
   );
 }
-
-const RequestsForAnEvent = ({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent
-        minHeight={"80%"}
-        maxHeight={"90%"}
-        overflowY={"scroll"}
-        gap="10px"
-      >
-        <ModalHeader>Solicitudes</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Flex height="100%" direction={"column"} gap={10}>
-            <RequestItem />
-            <RequestItem />
-            <RequestItem />
-            <RequestItem />
-            <RequestItem />
-            <RequestItem />
-          </Flex>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  );
-};
