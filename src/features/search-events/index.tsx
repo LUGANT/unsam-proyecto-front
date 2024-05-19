@@ -2,6 +2,7 @@ import { Stack, Box } from "@chakra-ui/react";
 import { EventCard } from "../../components/event-card/full";
 import { useEffect, useState } from "react";
 import eventService from "../../services/event-service";
+import { Evento } from "../../types/Event";
 
 export const SearchEvents = () => {
   const [events, setEvents] = useState<Evento[]>();

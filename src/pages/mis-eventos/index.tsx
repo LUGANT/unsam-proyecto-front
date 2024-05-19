@@ -1,12 +1,10 @@
 import {
   AspectRatio,
-  Box,
   Button,
   Container,
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   HStack,
   Input,
   Modal,
@@ -17,14 +15,13 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Stack,
   useDisclosure,
   useNumberInput,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { SimpleEventCard } from "../../components/event-card/simple";
 import { RequestsForAnEvent } from "../../features/event-requests";
+import { EventByUserId } from "../../features/event-requests/eventByUserId";
 
 export const MisEventos = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,38 +32,11 @@ export const MisEventos = () => {
   };
 
   return (
-    <>
-      <Container maxW={"full"}>
-        <VStack>
-          <Heading pt={2}>Mis eventos</Heading>
-          <Button
-            onClick={onOpen}
-            variant={"outline"}
-            color="brand.300"
-            _hover={{ bgColor: "brand.300", color: "white" }}
-          >
-            + Crear Evento
-          </Button>
-        </VStack>
-        <Stack
-          as={Box}
-          direction={"column"}
-          justify={{ base: "none", md: "center" }}
-          align={"center"}
-          gap={2}
-          textAlign={"center"}
-          spacing={{ base: 8, md: 14 }}
-          py={{ base: 18, md: 18 }}
-          overflow={"auto"}
-        >
-          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
-          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
-          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
-        </Stack>
-      </Container>
+    <Container minHeight={"86vh"} maxW={"full"}>
+      <EventByUserId onOpen={onOpen} toggleOpenRequest={toggleOpenRequest} />
       <CreateEventPopup isOpen={isOpen} onClose={onClose} />
       <RequestsForAnEvent isOpen={openRequest} onClose={toggleOpenRequest} />
-    </>
+    </Container>
   );
 };
 

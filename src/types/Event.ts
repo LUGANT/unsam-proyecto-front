@@ -9,6 +9,7 @@ export type Evento = {
   fecha: Date;
   direccion: string;
   capacidadMaxima: number;
+  solicitudes?: number;
 };
 type Solicitud = {
   id: number;

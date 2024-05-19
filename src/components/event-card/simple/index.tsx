@@ -14,9 +14,17 @@ import {
 } from "@chakra-ui/react";
 import { FaHandSparkles } from "react-icons/fa";
 import { GiSoccerBall } from "react-icons/gi";
+import { Evento } from "../../../types/Event";
+type SimpleEventCardType = {
+  evento: Evento;
+  handlerRequest: any;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const SimpleEventCard = ({ handlerRequest }: any) => {
+export const SimpleEventCard = ({
+  evento,
+  handlerRequest,
+}: SimpleEventCardType) => {
   return (
     <Center py={6}>
       <Box
@@ -50,7 +58,7 @@ export const SimpleEventCard = ({ handlerRequest }: any) => {
               textAlign={"left"}
               fontFamily={"body"}
             >
-              Partido de Basquet en Plaza Mitre
+              Partido de {evento.actividad.nombre} en Plaza Mitre
             </Heading>
             <Text color={"gray.500"} textAlign={"left"}>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -81,7 +89,7 @@ export const SimpleEventCard = ({ handlerRequest }: any) => {
                 right={-2}
                 zIndex={9}
               >
-                1
+                {evento.solicitudes || 0}
               </Badge>
             </Box>
           </Stack>
