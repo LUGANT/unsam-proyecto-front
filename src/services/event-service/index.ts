@@ -8,6 +8,24 @@ class EventService extends ApiService {
       return response.data;
     });
   }
+  async getRequests(eventId: string): Promise<Solicitud[]> {
+    console.log(eventId);
+
+    return this.handleRequest<Solicitud[]>(async () => {
+      const response: AxiosResponse<Solicitud[]> = await this.api.get(
+        `/${eventId}/solicitudes`
+      );
+      return response.data;
+    });
+  }
+  async getFromUser(userId: string): Promise<Evento[]> {
+    return this.handleRequest<Evento[]>(async () => {
+      const response: AxiosResponse<Evento[]> = await this.api.get(
+        `/usuario/${userId}`
+      );
+      return response.data;
+    });
+  }
 }
 
 export default new EventService("/evento");

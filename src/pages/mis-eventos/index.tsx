@@ -22,18 +22,31 @@ import {
   useNumberInput,
   VStack,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SimpleEventCard } from "../../components/event-card/simple";
 import { RequestsForAnEvent } from "../../features/event-requests";
+import eventService from "../../services/event-service";
+import { useAuth } from "../../providers/auth/AuthContext";
 
 export const MisEventos = () => {
+  const { userId } = useAuth();
+  const [eventRequestSelected, setEventRequestSelected] = useState<string>("");
+  const [userEvents, setUserEvents] = useState<Evento[]>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openRequest, setOpenRequest] = useState(false);
 
   const toggleOpenRequest = () => {
     setOpenRequest(!openRequest);
   };
-
+  const apiCall = async () => {
+    const res = await eventService.getFromUser(userId!!);
+    setUserEvents(res);
+  };
+  useEffect(() => {
+    if (userId) {
+      apiCall();
+    }
+  }, []);
   return (
     <>
       <Container maxW={"full"}>
@@ -59,13 +72,22 @@ export const MisEventos = () => {
           py={{ base: 18, md: 18 }}
           overflow={"auto"}
         >
-          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
-          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
-          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
+          {userEvents?.map((e) => (
+            <SimpleEventCard
+              key={e.id}
+              evento={e}
+              handlerRequest={toggleOpenRequest}
+              openRequests={setEventRequestSelected}
+            ></SimpleEventCard>
+          ))}
         </Stack>
       </Container>
       <CreateEventPopup isOpen={isOpen} onClose={onClose} />
-      <RequestsForAnEvent isOpen={openRequest} onClose={toggleOpenRequest} />
+      <RequestsForAnEvent
+        id={eventRequestSelected}
+        isOpen={openRequest}
+        onClose={toggleOpenRequest}
+      />
     </>
   );
 };

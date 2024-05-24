@@ -1,31 +1,37 @@
 import {
+  Flex,
   Modal,
-  ModalOverlay,
+  ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  Flex,
+  ModalOverlay,
 } from "@chakra-ui/react";
-import { RequestItem } from "../../components/request-item";
 import { useEffect, useState } from "react";
-import requestService from "../../services/request-service";
+import { RequestItem } from "../../components/request-item";
+import eventService from "../../services/event-service";
 
 export const RequestsForAnEvent = ({
+  id,
   isOpen,
   onClose,
 }: {
+  id: string;
   isOpen: boolean;
   onClose: () => void;
 }) => {
   const [requests, setRequests] = useState<Solicitud[]>();
+  const fetchRequests = async () => {
+    const res = await eventService.getRequests(id);
+    console.log(res);
+
+    setRequests(res);
+  };
   useEffect(() => {
-    const res = async () => {
-      const res = await requestService.getByEvent();
-      setRequests(res);
-    };
-    res();
-  }, []);
+    if (id) {
+      fetchRequests();
+    }
+  }, [id]);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />

@@ -2,7 +2,7 @@ type Usuario = any;
 type Actividad = any;
 
 type Evento = {
-  id: number;
+  id: string;
   anfitrion: Usuario;
   actividad: Actividad;
   fecha: Date;
@@ -10,8 +10,9 @@ type Evento = {
   capacidadMaxima: number;
 };
 type Solicitud = {
-  id: number;
-  solicitante: Usuario;
+  id: string;
+  usuario: Usuario;
+  puntajeUsuario: number;
   evento: Evento;
 };
 /* 
