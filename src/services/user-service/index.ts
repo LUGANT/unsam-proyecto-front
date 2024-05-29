@@ -1,6 +1,7 @@
 import { AxiosResponse } from "axios";
 import ApiService from "..";
 import { logginType, signupType } from "../../types";
+import { Solicitud } from "../../types/Event";
 
 class UserService extends ApiService {
   async loggin(data: logginType): Promise<boolean> {

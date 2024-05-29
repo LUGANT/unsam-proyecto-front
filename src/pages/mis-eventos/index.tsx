@@ -1,12 +1,10 @@
 import {
   AspectRatio,
-  Box,
   Button,
   Container,
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   HStack,
   Input,
   Modal,
@@ -17,80 +15,40 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Stack,
   useDisclosure,
   useNumberInput,
   VStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { SimpleEventCard } from "../../components/event-card/simple";
+import { useState } from "react";
 import { RequestsForAnEvent } from "../../features/event-requests";
-import eventService from "../../services/event-service";
-import { useAuth } from "../../providers/auth/AuthContext";
+import { EventByUserId } from "../../features/event-requests/eventByUserId";
 
 export const MisEventos = () => {
-  const { userId } = useAuth();
   const [eventRequestSelected, setEventRequestSelected] = useState<string>("");
-  const [userEvents, setUserEvents] = useState<Evento[]>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openRequest, setOpenRequest] = useState(false);
 
   const toggleOpenRequest = () => {
     setOpenRequest(!openRequest);
   };
-  const apiCall = async () => {
-    const res = await eventService.getFromUser(userId!!);
-    setUserEvents(res);
-  };
-  useEffect(() => {
-    if (userId) {
-      apiCall();
-    }
-  }, []);
   return (
-    <>
-      <Container maxW={"full"}>
-        <VStack>
-          <Heading pt={2}>Mis eventos</Heading>
-          <Button
-            onClick={onOpen}
-            variant={"outline"}
-            color="brand.300"
-            _hover={{ bgColor: "brand.300", color: "white" }}
-          >
-            + Crear Evento
-          </Button>
-        </VStack>
-        <Stack
-          as={Box}
-          direction={"column"}
-          justify={{ base: "none", md: "center" }}
-          align={"center"}
-          gap={2}
-          textAlign={"center"}
-          spacing={{ base: 8, md: 14 }}
-          py={{ base: 18, md: 18 }}
-          overflow={"auto"}
-        >
-          {userEvents?.map((e) => (
-            <SimpleEventCard
-              key={e.id}
-              evento={e}
-              handlerRequest={toggleOpenRequest}
-              openRequests={setEventRequestSelected}
-            ></SimpleEventCard>
-          ))}
-        </Stack>
-      </Container>
+    <Container minHeight={"86vh"} maxW={"full"}>
+      <EventByUserId
+        onRequestsOpen={setEventRequestSelected}
+        onOpen={onOpen}
+        toggleOpenRequest={toggleOpenRequest}
+      />
       <CreateEventPopup isOpen={isOpen} onClose={onClose} />
       <RequestsForAnEvent
         id={eventRequestSelected}
         isOpen={openRequest}
         onClose={toggleOpenRequest}
       />
-    </>
+    </Container>
   );
 };
+{
+}
 
 const CreateEventPopup = ({
   isOpen,

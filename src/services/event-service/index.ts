@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 import ApiService from "..";
+import { Evento, Solicitud } from "../../types/Event";
 
 class EventService extends ApiService {
   async all(): Promise<Evento[]> {

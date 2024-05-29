@@ -1,5 +1,6 @@
+import { Actividad } from "./Activity";
+
 type Usuario = any;
-type Actividad = any;
 
 type Evento = {
   id: string;
@@ -8,8 +9,9 @@ type Evento = {
   fecha: Date;
   direccion: string;
   capacidadMaxima: number;
+  solicitudes?: number;
 };
-type Solicitud = {
+export type Solicitud = {
   id: string;
   usuario: Usuario;
   puntajeUsuario: number;

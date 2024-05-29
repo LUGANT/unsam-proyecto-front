@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { FaHandSparkles } from "react-icons/fa";
 import { GiSoccerBall } from "react-icons/gi";
+import { Evento } from "../../../types/Event";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SimpleEventCard = ({
@@ -95,7 +96,7 @@ export const SimpleEventCard = ({
                 right={-2}
                 zIndex={9}
               >
-                1
+                {evento.solicitudes || 0}
               </Badge>
             </Box>
           </Stack>

@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { RequestItem } from "../../components/request-item";
 import eventService from "../../services/event-service";
+import { Solicitud } from "../../types/Event";
 
 export const RequestsForAnEvent = ({
   id,
