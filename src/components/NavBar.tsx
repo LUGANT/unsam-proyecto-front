@@ -21,7 +21,9 @@ import {
 import { useState } from "react";
 import { BrandIcon } from "../ui/icons/BrandIcon";
 import { FaSearch } from "react-icons/fa";
-import { Router, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../providers/auth/AuthContext";
+import { capitalLetter } from "../util/capitalLetter";
 
 interface Props {
   children: React.ReactNode;
@@ -55,6 +57,13 @@ const NavLink = (props: Props) => {
 
 export const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+  const authData = useAuth();
+
+  const handlerLogOut = () => {
+    authData.logout();
+    navigate("/auth/login");
+  };
 
   return (
     <>
@@ -92,7 +101,9 @@ export const NavBar = () => {
             <SearchInput />
           </HStack>
           <Flex alignItems={"center"} gap={4}>
-            <Text display={{ base: "none", md: "inline" }}>Jose1371</Text>
+            <Text display={{ base: "none", md: "inline" }}>
+              {capitalLetter(authData.username)}
+            </Text>
             <Menu>
               <MenuButton
                 as={Button}
@@ -107,7 +118,7 @@ export const NavBar = () => {
                 <MenuItem>Ver perfil</MenuItem>
                 <MenuItem>Cambiar contraseña</MenuItem>
                 <MenuDivider />
-                <MenuItem>Cerrar sesión</MenuItem>
+                <MenuItem onClick={handlerLogOut}>Cerrar sesión</MenuItem>
               </MenuList>
             </Menu>
           </Flex>

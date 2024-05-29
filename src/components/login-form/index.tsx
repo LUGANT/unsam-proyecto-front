@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { TextField } from "../../ui/text-field";
 import { ButtonUi } from "../../ui/button";
-import { Box } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../../services/user-service";
+import { useAuth } from "../../providers/auth/AuthContext";
 
 export function LoginForm() {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ export function LoginForm() {
   const [contrasenia, setContrasenia] = useState("");
   const [touchedUsuario, setTouchedUsuario] = useState(false);
   const [touchedContrasenia, setTouchedContrasenia] = useState(false);
+  const toast = useToast();
+  const auth = useAuth();
 
   const handlerUsuario = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsuario(event.target.value);
@@ -33,12 +36,23 @@ export function LoginForm() {
   };
 
   const sendData = async () => {
-    if (
-      !validarCampo(usuario) &&
-      !validarCampo(contrasenia) &&
-      (await userService.loggin({ usuario, contrasenia }))
-    ) {
-      navigate("/home");
+    if (!validarCampo(usuario) && !validarCampo(contrasenia)) {
+      try {
+        const rta = await userService.loggin({
+          usuario: usuario.toLowerCase(),
+          contrasenia,
+        });
+        auth.login(rta.id);
+        auth.changeUsername(rta.username);
+        navigate("/home");
+      } catch (e) {
+        toast({
+          description: "El usuario o la contraseña son incorrectas",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     } else {
       setTouchedUsuario(true);
       setTouchedContrasenia(true);
