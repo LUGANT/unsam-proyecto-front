@@ -14,7 +14,7 @@ import { useEffect } from "react";
 export function PrincipalRoutes() {
   const { login } = useAuth();
   useEffect(() => {
-    login(1);
+    login("1");
   }, []);
   return (
     <BrowserRouter>

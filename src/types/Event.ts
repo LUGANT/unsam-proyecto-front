@@ -2,8 +2,8 @@ import { Actividad } from "./Activity";
 
 type Usuario = any;
 
-export type Evento = {
-  id: number;
+type Evento = {
+  id: string;
   anfitrion: Usuario;
   actividad: Actividad;
   fecha: Date;
@@ -11,9 +11,10 @@ export type Evento = {
   capacidadMaxima: number;
   solicitudes?: number;
 };
-type Solicitud = {
-  id: number;
-  solicitante: Usuario;
+export type Solicitud = {
+  id: string;
+  usuario: Usuario;
+  puntajeUsuario: number;
   evento: Evento;
 };
 /* 

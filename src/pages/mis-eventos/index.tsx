@@ -24,21 +24,31 @@ import { RequestsForAnEvent } from "../../features/event-requests";
 import { EventByUserId } from "../../features/event-requests/eventByUserId";
 
 export const MisEventos = () => {
+  const [eventRequestSelected, setEventRequestSelected] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openRequest, setOpenRequest] = useState(false);
 
   const toggleOpenRequest = () => {
     setOpenRequest(!openRequest);
   };
-
   return (
     <Container minHeight={"86vh"} maxW={"full"}>
-      <EventByUserId onOpen={onOpen} toggleOpenRequest={toggleOpenRequest} />
+      <EventByUserId
+        onRequestsOpen={setEventRequestSelected}
+        onOpen={onOpen}
+        toggleOpenRequest={toggleOpenRequest}
+      />
       <CreateEventPopup isOpen={isOpen} onClose={onClose} />
-      <RequestsForAnEvent isOpen={openRequest} onClose={toggleOpenRequest} />
+      <RequestsForAnEvent
+        id={eventRequestSelected}
+        isOpen={openRequest}
+        onClose={toggleOpenRequest}
+      />
     </Container>
   );
 };
+{
+}
 
 const CreateEventPopup = ({
   isOpen,

@@ -1,15 +1,25 @@
 import { Box, Button, Heading, Stack, VStack } from "@chakra-ui/react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SimpleEventCard } from "../../components/event-card/simple";
 import { Evento } from "../../types/Event";
-import { useEffect, useState } from "react";
-import requestService from "../../services/request-service";
+import eventService from "../../services/event-service";
+import { useAuth } from "../../providers/auth/AuthContext";
 
-export function EventByUserId({ onOpen, toggleOpenRequest }: any) {
+export function EventByUserId({
+  onRequestsOpen,
+  onOpen,
+  toggleOpenRequest,
+}: {
+  onRequestsOpen: Dispatch<SetStateAction<string>>;
+  onOpen: () => void;
+  toggleOpenRequest: () => void;
+}) {
+  const { userId } = useAuth();
   const [events, setEvents] = useState<Evento[]>([]);
 
   useEffect(() => {
     const getEvents = async () => {
-      const res = await requestService.getEventByUserId(1);
+      const res = await eventService.getFromUser(userId!!);
       setEvents(res);
     };
     getEvents();
@@ -45,6 +55,7 @@ export function EventByUserId({ onOpen, toggleOpenRequest }: any) {
               key={e.id}
               evento={e}
               handlerRequest={toggleOpenRequest}
+              openRequests={onRequestsOpen}
             ></SimpleEventCard>
           );
         })}

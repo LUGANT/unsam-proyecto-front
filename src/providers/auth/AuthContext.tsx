@@ -3,8 +3,8 @@ import React, { createContext, useState, useContext, ReactNode } from "react";
 // Define la forma de los datos en el contexto
 interface AuthContextType {
   isLoggedIn: boolean;
-  userId: number | null;
-  login: (userId: number) => void;
+  userId: string | null;
+  login: (userId: string) => void;
   logout: () => void;
 }
 
@@ -27,9 +27,11 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [userId, setUserId] = useState<string | null>("1");
   //reemplazar luego con backend
-  const login = (userId: number) => {
+  const login = (userId: string) => {
+    console.log("se logea");
+
     setIsLoggedIn(true);
     setUserId(userId);
   };
