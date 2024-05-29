@@ -1,18 +1,18 @@
 import {
+  Avatar,
   Box,
+  Button,
   Center,
   Heading,
-  Text,
-  Stack,
-  Avatar,
   Image,
-  useColorModeValue,
-  Button,
   Spacer,
+  Stack,
+  Text,
+  useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import requestService from "../../../services/request-service";
 import { useAuth } from "../../../providers/auth/AuthContext";
+import { userService } from "../../../services/user-service";
 
 export const EventCard = ({ evento }: { evento: Evento }) => {
   const toast = useToast();
@@ -20,14 +20,24 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
   const { id, anfitrion, actividad, fecha, direccion, capacidadMaxima } =
     evento;
   const handleRequest = () => {
-    requestService.send(id, userId!);
-    toast({
-      title: "Solicitud enviada.",
-      description: "Debes esperar a que el anfitrión te acepte.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
+    try {
+      userService.sendRequest(id, userId!);
+      toast({
+        title: "Solicitud enviada.",
+        description: "Debes esperar a que el anfitrión te acepte.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (e) {
+      toast({
+        title: "Algo inesperado ocurrió",
+        description: "No pudimos enviar tu solicitud debido a un fallo",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
   return (
     <Center py={6}>

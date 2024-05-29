@@ -7,24 +7,24 @@ import {
   IconButton,
   Text,
 } from "@chakra-ui/react";
-import requestService from "../../services/request-service";
+import { userService } from "../../services/user-service";
 
 export function RequestItem({
   id,
   request,
   onAction,
 }: {
-  id: number;
+  id: string;
   request: Solicitud;
   onAction: () => void;
 }) {
-  const { solicitante } = request;
+  const { usuario } = request;
   const handleAccept = async () => {
-    await requestService.answer(id, true);
+    await userService.answerRequest(id, true);
     onAction();
   };
   const handleReject = async () => {
-    await requestService.answer(id, false);
+    await userService.answerRequest(id, false);
     onAction();
   };
   return (
@@ -34,12 +34,12 @@ export function RequestItem({
           <Avatar size={"md"} bg={"brand.300"} />
           <Flex direction={"column"}>
             <Heading as="h5" textAlign={"left"} size="md">
-              {solicitante.nombre +
+              {usuario.nombre +
                 " " +
-                solicitante.apellido +
-                `(${solicitante.username})`}
+                usuario.apellido +
+                `(${usuario.username})`}
             </Heading>
-            <Text color="gray.500">5 estrellas</Text>
+            <Text color="gray.500">{request.puntajeUsuario} estrellas</Text>
           </Flex>
         </Flex>
         <Flex gap={5}>

@@ -15,6 +15,10 @@ export const Footer = () => {
       bg={useColorModeValue("gray.50", "gray.900")}
       color={useColorModeValue("gray.700", "gray.200")}
       zIndex={9}
+      position={"absolute"}
+      bottom={0}
+      right={0}
+      left={0}
     >
       <Container
         as={Stack}
