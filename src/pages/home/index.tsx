@@ -1,37 +1,11 @@
-import { Box, Container, Stack } from "@chakra-ui/react";
-import { EventCard } from "../../components/event-card/full";
-import Toast from "../../components/Toast";
-// import { useEffect } from "react";
-// import eventService from "../../services/event-service/event-service";
+import { Container } from "@chakra-ui/react";
+import { SearchEvents } from "../../features/search-events";
 
 export const HomePage = () => {
-  // useEffect(() => {
-  //   const res = async () => {
-  //     const res = await eventService.todas();
-  //     console.log(res);
-  //   };
-  //   res();
-  // }, []);
   return (
     <>
       <Container maxW={"full"}>
-        <Stack
-          as={Box}
-          direction={{ base: "column", md: "row" }}
-          justify={{ base: "none", md: "center" }}
-          align={"center"}
-          textAlign={"center"}
-          wrap={{ base: "nowrap", md: "wrap" }}
-          spacing={{ base: 8, md: 14 }}
-          py={{ base: 20, md: 36 }}
-          overflow={"scroll"}
-          height={"86vh"}
-        >
-          <EventCard></EventCard>
-          <EventCard></EventCard>
-          <EventCard></EventCard>
-          <Toast title={"hola"} message={"holaaaaaa"} status={"success"}/>
-        </Stack>
+        <SearchEvents />
       </Container>
     </>
   );

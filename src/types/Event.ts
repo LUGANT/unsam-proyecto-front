@@ -1,12 +1,19 @@
 type Actividad = any;
 
 type Evento = {
-  id: number;
+  id: string;
   anfitrion: Usuario;
   actividad: Actividad;
   fecha: Date;
   direccion: string;
   capacidadMaxima: number;
+  solicitudes?: number;
+};
+export type Solicitud = {
+  id: string;
+  usuario: Usuario;
+  puntajeUsuario: number;
+  evento: Evento;
 };
 /* 
 ---------Ejemplo de respuesta evento

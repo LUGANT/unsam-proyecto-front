@@ -1,23 +1,37 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
+  Badge,
   Box,
   Center,
   Heading,
-  Text,
-  Stack,
-  Image,
-  useColorModeValue,
-  Spacer,
-  IconButton,
   HStack,
   Icon,
-  Badge,
+  IconButton,
+  Spacer,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { FaHandSparkles } from "react-icons/fa";
 import { GiSoccerBall } from "react-icons/gi";
+import { Evento } from "../../../types/Event";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const SimpleEventCard = ({ handlerRequest }: any) => {
+export const SimpleEventCard = ({
+  evento,
+  handlerRequest,
+  openRequests,
+}: {
+  evento: Evento;
+  handlerRequest: () => void;
+  openRequests: (id: string) => void;
+}) => {
+  const { id, anfitrion, actividad, fecha, direccion, capacidadMaxima } =
+    evento;
+  const handleOpenRequests = () => {
+    handlerRequest();
+    openRequests(id);
+  };
   return (
     <Center py={6}>
       <Box
@@ -51,7 +65,7 @@ export const SimpleEventCard = ({ handlerRequest }: any) => {
               textAlign={"left"}
               fontFamily={"body"}
             >
-              Partido de Basquet en Plaza Mitre
+              Partido de {actividad.nombre} en {direccion}
             </Heading>
             <Text color={"gray.500"} textAlign={"left"}>
               Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -64,7 +78,7 @@ export const SimpleEventCard = ({ handlerRequest }: any) => {
         <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
           <Stack direction={"row"} spacing={0} align={"center"} gap={3}>
             <Text fontWeight={600}>Solicitudes</Text>
-            <Box position={"relative"} onClick={handlerRequest}>
+            <Box position={"relative"} onClick={handleOpenRequests}>
               <IconButton
                 icon={<FaHandSparkles />}
                 fontSize={"xl"}
@@ -82,7 +96,7 @@ export const SimpleEventCard = ({ handlerRequest }: any) => {
                 right={-2}
                 zIndex={9}
               >
-                1
+                {evento.solicitudes || 0}
               </Badge>
             </Box>
           </Stack>

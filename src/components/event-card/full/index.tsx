@@ -1,17 +1,44 @@
 import {
+  Avatar,
   Box,
+  Button,
   Center,
   Heading,
-  Text,
-  Stack,
-  Avatar,
   Image,
-  useColorModeValue,
-  Button,
   Spacer,
+  Stack,
+  Text,
+  useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
+import { useAuth } from "../../../providers/auth/AuthContext";
+import { userService } from "../../../services/user-service";
 
-export const EventCard = () => {
+export const EventCard = ({ evento }: { evento: Evento }) => {
+  const toast = useToast();
+  const { userId } = useAuth();
+  const { id, anfitrion, actividad, fecha, direccion, capacidadMaxima } =
+    evento;
+  const handleRequest = () => {
+    try {
+      userService.sendRequest(id, userId!);
+      toast({
+        title: "Solicitud enviada.",
+        description: "Debes esperar a que el anfitrión te acepte.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (e) {
+      toast({
+        title: "Algo inesperado ocurrió",
+        description: "No pudimos enviar tu solicitud debido a un fallo",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
   return (
     <Center py={6}>
       <Box
@@ -51,7 +78,7 @@ export const EventCard = () => {
             fontSize={"2xl"}
             fontFamily={"body"}
           >
-            Partido de Basquet en Plaza Mitre
+            Partido de {actividad.nombre} en {direccion}
           </Heading>
           <Text color={"gray.500"}>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
@@ -65,11 +92,11 @@ export const EventCard = () => {
             src={"https://avatars0.githubusercontent.com/u/1164541?v=4"}
           />
           <Stack direction={"column"} spacing={0} fontSize={"sm"}>
-            <Text fontWeight={600}>Akim</Text>
-            <Text color={"gray.500"}>08 Mayo, 2024 · 18:00hs</Text>
+            <Text fontWeight={600}>{anfitrion.nombre}</Text>
+            <Text color={"gray.500"}>{fecha.toString()} · 18:00hs</Text>
           </Stack>
           <Spacer />
-          <Button>Unirse</Button>
+          <Button onClick={handleRequest}>Unirse</Button>
         </Stack>
       </Box>
     </Center>

@@ -1,11 +1,10 @@
 import {
   AspectRatio,
-  Box,
   Button,
   Container,
+  Flex,
   FormControl,
   FormLabel,
-  Heading,
   HStack,
   Input,
   Modal,
@@ -16,60 +15,40 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Stack,
   useDisclosure,
   useNumberInput,
   VStack,
-  Image,
-  Flex,
 } from "@chakra-ui/react";
-import { SimpleEventCard } from "../../components/event-card/simple";
-import { RequestItem } from "../../components/request-item";
 import { useState } from "react";
+import { RequestsForAnEvent } from "../../features/event-requests";
+import { EventByUserId } from "../../features/event-requests/eventByUserId";
 
 export const MisEventos = () => {
+  const [eventRequestSelected, setEventRequestSelected] = useState<string>("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [openRequest, setOpenRequest] = useState(false);
 
   const toggleOpenRequest = () => {
     setOpenRequest(!openRequest);
   };
-
   return (
-    <>
-      <Container maxW={"full"}>
-        <VStack>
-          <Heading pt={2}>Mis eventos</Heading>
-          <Button
-            onClick={onOpen}
-            variant={"outline"}
-            color="brand.300"
-            _hover={{ bgColor: "brand.300", color: "white" }}
-          >
-            + Crear Evento
-          </Button>
-        </VStack>
-        <Stack
-          as={Box}
-          direction={"column"}
-          justify={{ base: "none", md: "center" }}
-          align={"center"}
-          gap={2}
-          textAlign={"center"}
-          spacing={{ base: 8, md: 14 }}
-          py={{ base: 18, md: 18 }}
-          overflow={"auto"}
-        >
-          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
-          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
-          <SimpleEventCard handlerRequest={toggleOpenRequest}></SimpleEventCard>
-        </Stack>
-      </Container>
+    <Container minHeight={"86vh"} maxW={"full"}>
+      <EventByUserId
+        onRequestsOpen={setEventRequestSelected}
+        onOpen={onOpen}
+        toggleOpenRequest={toggleOpenRequest}
+      />
       <CreateEventPopup isOpen={isOpen} onClose={onClose} />
-      <RequestsForAnEvent isOpen={openRequest} onClose={toggleOpenRequest} />
-    </>
+      <RequestsForAnEvent
+        id={eventRequestSelected}
+        isOpen={openRequest}
+        onClose={toggleOpenRequest}
+      />
+    </Container>
   );
 };
+{
+}
 
 const CreateEventPopup = ({
   isOpen,
@@ -103,7 +82,7 @@ const CreateEventPopup = ({
 
               <FormControl>
                 <FormLabel>Cantidad de participantes </FormLabel>
-                <HookUsage />
+                <Incrementer />
               </FormControl>
               <FormControl>
                 <FormLabel>Fecha y hora</FormLabel>
@@ -132,7 +111,7 @@ const CreateEventPopup = ({
     </Modal>
   );
 };
-function HookUsage() {
+function Incrementer() {
   const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
     useNumberInput({
       step: 1,
@@ -152,36 +131,3 @@ function HookUsage() {
     </HStack>
   );
 }
-
-const RequestsForAnEvent = ({
-  isOpen,
-  onClose,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-}) => {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent
-        minHeight={"80%"}
-        maxHeight={"90%"}
-        overflowY={"scroll"}
-        gap="10px"
-      >
-        <ModalHeader>Solicitudes</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Flex height="100%" direction={"column"} gap={10}>
-            <RequestItem />
-            <RequestItem />
-            <RequestItem />
-            <RequestItem />
-            <RequestItem />
-            <RequestItem />
-          </Flex>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
-  );
-};
