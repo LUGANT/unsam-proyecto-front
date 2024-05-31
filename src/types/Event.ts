@@ -2,7 +2,7 @@ import { Actividad } from "./Activity";
 
 type Usuario = any;
 
-type Evento = {
+export type Evento = {
   id: string;
   anfitrion: Usuario;
   actividad: Actividad;
