@@ -104,7 +104,7 @@ export const NavBar = () => {
                 <Avatar size={"sm"} bg={"brand.300"} />
               </MenuButton>
               <MenuList>
-                <MenuItem>Ver perfil</MenuItem>
+                <MenuItem as={'a'} href={`/profile/Jose1371`} >Ver perfil</MenuItem>
                 <MenuItem>Cambiar contraseña</MenuItem>
                 <MenuDivider />
                 <MenuItem>Cerrar sesión</MenuItem>
