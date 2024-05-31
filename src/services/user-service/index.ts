@@ -15,9 +15,14 @@ class UserService extends ApiService {
   }
 
   async singUp(data: signupType): Promise<boolean> {
-    console.log("data que recibe el service login", data);
-    // await axios.post(URL_BACK + 'usuario/signup', data)
-    return true;
+    const rta = await axios.post(URL_BACK + 'usuario/signup', {
+      'nombre': data.nombre,
+      'apellido': data.apellido,
+      'email': data.email,
+      'username': data.usuario,
+      'password': data.contrasenia
+    })
+    return rta.data;
   }
   async sendRequest(idEvento: string, solicitanteId: string) {
     return this.handleRequest<Solicitud[]>(async () => {
