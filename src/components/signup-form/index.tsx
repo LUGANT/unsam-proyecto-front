@@ -3,6 +3,7 @@ import { TextField } from "../../ui/text-field";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { userService } from "../../services/user-service";
+import { useAuth } from "../../providers/auth/AuthContext";
 
 export function SignUpForm() {
   const navigate = useNavigate();
@@ -23,7 +24,9 @@ export function SignUpForm() {
   //
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const toast = useToast();
-  // const []
+  //
+  const auth = useAuth();
+  //
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     setter: React.Dispatch<React.SetStateAction<string>>,
@@ -79,13 +82,15 @@ export function SignUpForm() {
       !validarCampo(confirmarContrasenia)
     ) {
       try {
-        await userService.singUp({
+        const rta = await userService.singUp({
           nombre,
           apellido,
           email,
           usuario,
           contrasenia,
         });
+        auth.login(rta.id);
+        auth.changeUsername(rta.username);
         navigate("/home");
       } catch (e) {
         setTimeout(() => {
