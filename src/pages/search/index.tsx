@@ -1,7 +1,29 @@
-import { Box, Container, Stack } from "@chakra-ui/react";
+import { Box, Container, Heading, Spinner, Stack } from "@chakra-ui/react";
 import { EventCard } from "../../components/event-card/full";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import eventService from "../../services/event-service";
+import { Evento } from "../../types/Event";
 
 export const Search = () => {
+
+  const { search } = useParams()
+  const [events, setEvents] = useState<Evento[]>([])
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const searchedEvents = async () => {
+      try {
+        const response = await eventService.getSearchedEvents(search!!);
+        setEvents(response);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    searchedEvents();
+  }, []);
+
   return (
     <>
       <Container maxW={"full"}>
@@ -17,10 +39,17 @@ export const Search = () => {
           overflow={"scroll"}
           height={"86vh"}
         >
-          <EventCard></EventCard>
-          <EventCard></EventCard>
-          <EventCard></EventCard>
+          {loading ? (
+            <Spinner size="xl" />
+          ) : events.length > 0 ? (
+            events.map((evento: Evento) => (
+              <EventCard key={evento.id} evento={evento} />
+            ))
+          ) : (
+            <Heading size={'lg'}>No se encontraron actividades del tipo "{search}"</Heading>
+          )}
         </Stack>
+
       </Container>
     </>
   );

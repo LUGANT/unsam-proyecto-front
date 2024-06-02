@@ -145,7 +145,7 @@ const SearchInput = () => {
           }}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <IconButton aria-label={"search-icon"} icon={<FaSearch />}></IconButton>
+        <IconButton type="submit" aria-label={"search-icon"} icon={<FaSearch />}></IconButton>
       </HStack>
     </form>
   );
