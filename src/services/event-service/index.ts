@@ -38,8 +38,9 @@ class EventService extends ApiService {
       return response.data
     }
       
-    )
-  async getById(eventId: string): Promise<Evento> {
+    )}
+    
+  async getById(eventId: string): Promise<Evento>{
     return this.handleRequest<Evento>(async () => {
       const response: AxiosResponse<Evento> = await this.api.get(`/${eventId}`);
       return response.data;
