@@ -16,8 +16,10 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  Link as ChakraLink,
   useDisclosure,
 } from "@chakra-ui/react";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BrandIcon } from "../ui/icons/BrandIcon";
 import { FaSearch } from "react-icons/fa";
@@ -50,7 +52,9 @@ const NavLink = (props: Props) => {
       }}
       href={route}
     >
-      {children}
+      <ChakraLink as={ReactRouterLink} to={route}>
+        {children}
+      </ChakraLink>
     </Box>
   );
 };
@@ -89,9 +93,9 @@ export const NavBar = () => {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={{ base: 1, md: 8 }} alignItems={"center"}>
-            <Link href="/home">
+            <ChakraLink as={ReactRouterLink} to={"/home"}>
               <BrandIcon boxSize={10} color="#341c54" />
-            </Link>
+            </ChakraLink>
             <HStack
               as={"nav"}
               spacing={4}
