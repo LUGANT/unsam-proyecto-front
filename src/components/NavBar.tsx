@@ -18,7 +18,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrandIcon } from "../ui/icons/BrandIcon";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -57,11 +57,16 @@ const NavLink = (props: Props) => {
 
 export const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [islogged, setIsLogged] = useState<boolean | null>(null);
   const navigate = useNavigate();
-  const authData = useAuth();
+  const { isLoggedIn, logout, username } = useAuth();
+
+  useEffect(() => {
+    setIsLogged(isLoggedIn);
+  }, []);
 
   const handlerLogOut = () => {
-    authData.logout();
+    logout();
     navigate("/auth/login");
   };
 
@@ -102,7 +107,7 @@ export const NavBar = () => {
           </HStack>
           <Flex alignItems={"center"} gap={4}>
             <Text display={{ base: "none", md: "inline" }}>
-              {capitalLetter(authData.username)}
+              {capitalLetter(username)}
             </Text>
             <Menu>
               <MenuButton
@@ -112,7 +117,7 @@ export const NavBar = () => {
                 cursor={"pointer"}
                 minW={0}
               >
-                <Avatar size={"sm"} bg={"brand.300"} />
+                {islogged ? <Avatar size={"sm"} bg={"brand.300"} /> : <></>}
               </MenuButton>
               <MenuList>
                 <MenuItem>Ver perfil</MenuItem>
