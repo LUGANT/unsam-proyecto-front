@@ -1,9 +1,9 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
 import { TextField } from "../../ui/text-field";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ButtonUi } from "../../ui/button";
 import { userService } from "../../services/user-service";
+import { useAuth } from "../../providers/auth/AuthContext";
 
 export function SignUpForm() {
   const navigate = useNavigate();
@@ -21,7 +21,12 @@ export function SignUpForm() {
   const [touchedContrasenia, setTouchedContrasenia] = useState(false);
   const [touchedConfirmarContrasenia, setTouchedConfirmarContrasenia] =
     useState(false);
-
+  //
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const toast = useToast();
+  //
+  const auth = useAuth();
+  //
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     setter: React.Dispatch<React.SetStateAction<string>>,
@@ -74,16 +79,30 @@ export function SignUpForm() {
       !validarCampo(usuario) &&
       !validarFormatoEmail(email) &&
       !validarCampo(contrasenia) &&
-      !validarCampo(confirmarContrasenia) &&
-      (await userService.singUp({
-        nombre,
-        apellido,
-        email,
-        usuario,
-        contrasenia,
-      }))
+      !validarCampo(confirmarContrasenia)
     ) {
-      navigate("/home");
+      try {
+        const rta = await userService.singUp({
+          nombre,
+          apellido,
+          email,
+          usuario,
+          contrasenia,
+        });
+        auth.login(rta.id);
+        auth.changeUsername(rta.username);
+        navigate("/home");
+      } catch (e) {
+        setTimeout(() => {
+          setIsLoading(false);
+          toast({
+            description: "Hubo con error al registrarse. Inténtelo más tarde.",
+            status: "error",
+            duration: 5000,
+            isClosable: true,
+          });
+        }, 2000);
+      }
     } else {
       setTouchedNombre(true);
       setTouchedApellido(true);
@@ -160,9 +179,9 @@ export function SignUpForm() {
         onChange={handlerConfirmarContrasenia}
         handleKeyDown={handleKeyPress}
       />
-      <ButtonUi onClick={sendData} type="submit">
+      <Button isLoading={isLoading} onClick={sendData} type="submit">
         Registrarse
-      </ButtonUi>
+      </Button>
     </Box>
   );
 }

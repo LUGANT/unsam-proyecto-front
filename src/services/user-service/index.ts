@@ -6,7 +6,8 @@ import { logginType, signupType } from "../../types";
 import { Solicitud } from "../../types/Event";
 
 class UserService extends ApiService {
-  async loggin(data: logginType): Promise<boolean> {
+  
+  async loggin(data: logginType): Promise<any> {
     const rta = await axios.post(URL_BACK + 'usuario/login', {
       'username': data.usuario,
       'password': data.contrasenia
@@ -14,11 +15,17 @@ class UserService extends ApiService {
     return rta.data;
   }
 
-  async singUp(data: signupType): Promise<boolean> {
-    console.log("data que recibe el service login", data);
-    // await axios.post(URL_BACK + 'usuario/signup', data)
-    return true;
+  async singUp(data: signupType): Promise<any> {
+    const rta = await axios.post(URL_BACK + 'usuario/signup', {
+      'nombre': data.nombre,
+      'apellido': data.apellido,
+      'email': data.email,
+      'username': data.usuario,
+      'password': data.contrasenia
+    })
+    return rta.data;
   }
+  
   async sendRequest(idEvento: string, solicitanteId: string) {
     return this.handleRequest<Solicitud[]>(async () => {
       const response: AxiosResponse<Solicitud[]> = await this.api.post(
@@ -27,6 +34,7 @@ class UserService extends ApiService {
       return response.data;
     });
   }
+  
   async answerRequest(idSolicitud: string, aceptada: boolean) {
     return this.handleRequest<Solicitud[]>(async () => {
       const response: AxiosResponse<Solicitud[]> = await this.api.patch(
