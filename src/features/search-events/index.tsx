@@ -23,7 +23,7 @@ export const SearchEvents = () => {
       wrap={{ base: "nowrap", md: "wrap" }}
       spacing={{ base: 8, md: 14 }}
       py={{ base: 20, md: 36 }}
-      overflow={"scroll"}
+      overflow={"auto"}
       height={"86vh"}
     >
       {events?.map((e: Evento) => (
