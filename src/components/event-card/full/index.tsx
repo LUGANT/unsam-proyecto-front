@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Center,
+  Link as ChakraLink,
   Heading,
   Image,
   Spacer,
@@ -11,8 +12,10 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { useAuth } from "../../../providers/auth/AuthContext";
 import { userService } from "../../../services/user-service";
+import { Evento } from "../../../types/Event";
 
 export const EventCard = ({ evento }: { evento: Evento }) => {
   const toast = useToast();
@@ -78,7 +81,9 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
             fontSize={"2xl"}
             fontFamily={"body"}
           >
-            Partido de {actividad.nombre} en {direccion}
+            <ChakraLink as={ReactRouterLink} to={`/evento/${id}`}>
+              Partido de {actividad.nombre} en {direccion}
+            </ChakraLink>
           </Heading>
           <Text color={"gray.500"}>
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam

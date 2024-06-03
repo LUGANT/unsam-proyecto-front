@@ -9,14 +9,17 @@ import {
   useToast,
   VStack,
   Spinner,
+  Icon,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import eventService from "../../services/event-service";
 import { RoundedActivityIcon } from "../../ui/icons/ActivityIcon";
+import { FaCrown } from "react-icons/fa";
+import { Evento, Participante } from "../../types/Event";
 
 export const FullEventDetail = () => {
-  const [evento, setEvento] = useState<any>(null);
+  const [evento, setEvento] = useState<Evento>();
   const [isLoading, setIsLoading] = useState(true);
   const { idEvento } = useParams();
   const toast = useToast();
@@ -32,7 +35,7 @@ export const FullEventDetail = () => {
   };
 
   function avaiableSlot() {
-    return !(evento?.participantes.length === evento?.maximoParticipantes);
+    return !(evento?.participantes?.length === evento?.capacidadMaxima);
   }
 
   useEffect(() => {
@@ -132,11 +135,15 @@ export const FullEventDetail = () => {
               <Text
                 fontWeight={"bold"}
                 color={avaiableSlot() ? "green.400" : "red.300"}
-              >{`${evento.participantes.length}/${evento.maximoParticipantes}`}</Text>
+              >{`${evento.participantes?.length}/${evento.capacidadMaxima}`}</Text>
             </HStack>
             <HStack>
-              {evento.participantes.map((p: any) => (
-                <ParticipantItem key={p.id} user={p} />
+              {evento.participantes?.map((p: Participante) => (
+                <ParticipantItem
+                  key={p.id}
+                  user={p}
+                  isOwner={p.id == evento.anfitrion.id}
+                />
               ))}
             </HStack>
           </VStack>
@@ -144,7 +151,7 @@ export const FullEventDetail = () => {
 
         <VStack alignItems={"flex-start"}>
           <Heading size={"md"}>Ubicación</Heading>
-          <Text>{"por ahi 333"}</Text>
+          <Text>{evento.direccion}</Text>
           <AspectRatio w="xs" h={"xs"} ratio={4 / 3}>
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.952912260219!2d3.375295414770757!3d6.5276316452784755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2ae68280c1%3A0xdc9e87a367c3d9cb!2sLagos!5e0!3m2!1sen!2sng!4v1567723392506!5m2!1sen!2sng" />
           </AspectRatio>
@@ -156,15 +163,29 @@ export const FullEventDetail = () => {
 
 const ParticipantItem = ({
   user,
+  isOwner,
 }: {
-  user: { id: string; username: string; imgUrl?: string };
+  user: Participante;
+  isOwner: boolean;
 }) => {
   return (
     <VStack w={"70px"}>
       <Avatar
+        position={"relative"}
         size={"xs"}
         src={user.imgUrl || "https://bit.ly/broken-link"}
-      ></Avatar>
+      >
+        {isOwner && (
+          <Icon
+            as={FaCrown}
+            pos={"absolute"}
+            top={-2}
+            right={-1.5}
+            boxSize={4}
+            color={"gold"}
+          ></Icon>
+        )}
+      </Avatar>
       <Text maxW={"full"} textOverflow={"clip"} isTruncated fontSize={"xs"}>
         {user.username}
       </Text>

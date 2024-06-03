@@ -9,7 +9,14 @@ export type Evento = {
   fecha: Date;
   direccion: string;
   capacidadMaxima: number;
+  descripcion?: string;
+  participantes?: Participante[];
   solicitudes?: number;
+};
+export type Participante = {
+  id: string;
+  username: string;
+  imgUrl?: string;
 };
 export type Solicitud = {
   id: string;
