@@ -10,7 +10,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ChakraProvider cssVarsRoot={undefined} theme={theme}>
       <AuthProvider>
-        <Container minHeight={"100vh"} maxW={"none"} m={0} p={0}>
+        <Container minHeight={"100vh"} maxW={"none"} m={0} p={0} display={'flex'} flexDirection={'column'}>
           <App />
         </Container>
       </AuthProvider>

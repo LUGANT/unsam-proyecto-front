@@ -10,6 +10,7 @@ import { PageNotFound } from "../pages/errors/page-not-found";
 import { Search } from "../pages/search";
 import { useAuth } from "../providers/auth/AuthContext";
 import { useEffect } from "react";
+import Profile from "../pages/profile/Profile";
 import { EventoDetail } from "../pages/evento-detail";
 
 export function PrincipalRoutes() {
@@ -28,6 +29,7 @@ export function PrincipalRoutes() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/mis-eventos" element={<MisEventos />} />
           <Route path="/buscar-eventos/:search" element={<Search />}></Route>
+          <Route path="/profile/:username" element={<Profile />}></Route>
           <Route path="/evento/:idEvento" element={<EventoDetail />}></Route>
         </Route>
         <Route path="/404" element={<NotFound />}></Route>
