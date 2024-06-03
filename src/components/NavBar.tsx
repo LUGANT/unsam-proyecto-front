@@ -16,12 +16,16 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  Link as ChakraLink,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { Link as ReactRouterLink } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { BrandIcon } from "../ui/icons/BrandIcon";
 import { FaSearch } from "react-icons/fa";
-import { Router, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../providers/auth/AuthContext";
+import { capitalLetter } from "../util/capitalLetter";
 
 interface Props {
   children: React.ReactNode;
@@ -48,13 +52,27 @@ const NavLink = (props: Props) => {
       }}
       href={route}
     >
-      {children}
+      <ChakraLink as={ReactRouterLink} to={route}>
+        {children}
+      </ChakraLink>
     </Box>
   );
 };
 
 export const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [islogged, setIsLogged] = useState<boolean | null>(null);
+  const navigate = useNavigate();
+  const { isLoggedIn, logout, username } = useAuth();
+
+  useEffect(() => {
+    setIsLogged(isLoggedIn);
+  }, []);
+
+  const handlerLogOut = () => {
+    logout();
+    navigate("/auth/login");
+  };
 
   return (
     <>
@@ -75,9 +93,9 @@ export const NavBar = () => {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={{ base: 1, md: 8 }} alignItems={"center"}>
-            <Link href="/home">
+            <ChakraLink as={ReactRouterLink} to={"/home"}>
               <BrandIcon boxSize={10} color="#341c54" />
-            </Link>
+            </ChakraLink>
             <HStack
               as={"nav"}
               spacing={4}
@@ -92,7 +110,9 @@ export const NavBar = () => {
             <SearchInput />
           </HStack>
           <Flex alignItems={"center"} gap={4}>
-            <Text display={{ base: "none", md: "inline" }}>Jose1371</Text>
+            <Text display={{ base: "none", md: "inline" }}>
+              {capitalLetter(username)}
+            </Text>
             <Menu>
               <MenuButton
                 as={Button}
@@ -101,13 +121,13 @@ export const NavBar = () => {
                 cursor={"pointer"}
                 minW={0}
               >
-                <Avatar size={"sm"} bg={"brand.300"} />
+                {islogged ? <Avatar size={"sm"} bg={"brand.300"} /> : <></>}
               </MenuButton>
               <MenuList>
                 <MenuItem as={'a'} href={`/profile/Jose1371`} >Ver perfil</MenuItem>
                 <MenuItem>Cambiar contraseña</MenuItem>
                 <MenuDivider />
-                <MenuItem>Cerrar sesión</MenuItem>
+                <MenuItem onClick={handlerLogOut}>Cerrar sesión</MenuItem>
               </MenuList>
             </Menu>
           </Flex>

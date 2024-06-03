@@ -21,7 +21,7 @@ export const LoginPage = () => {
         <Text fontSize="lg">Conectá, coordiná y divertite acompañado!</Text>
       </VStack>
       <LoginForm />
-      <Link isExternal color={"blue"}>
+      <Link href="/auth/signup" color={"blue"}>
         ¿No tenés cuenta? Registrate ahora!
       </Link>
     </Box>

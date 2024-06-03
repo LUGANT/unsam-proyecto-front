@@ -15,6 +15,7 @@ import {
 import { FaHandSparkles } from "react-icons/fa";
 import { GiSoccerBall } from "react-icons/gi";
 import { Evento } from "../../../types/Event";
+import { RoundedActivityIcon } from "../../../ui/icons/ActivityIcon";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SimpleEventCard = ({
@@ -45,9 +46,7 @@ export const SimpleEventCard = ({
         overflow={"hidden"}
       >
         <HStack alignItems={"flex-start"} gap={6}>
-          <Center rounded={"full"} bg="brand.300" p={1}>
-            <Icon color={"white"} as={GiSoccerBall} fontSize={"2xl"} />
-          </Center>
+          <RoundedActivityIcon act={"futbol"} />
           <Stack alignItems={"flex-start"}>
             <Text
               color={"green.500"}

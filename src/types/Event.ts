@@ -1,13 +1,20 @@
 type Actividad = any;
 
-type Evento = {
+export type Evento = {
   id: string;
   anfitrion: Usuario;
   actividad: Actividad;
   fecha: Date;
   direccion: string;
   capacidadMaxima: number;
+  descripcion?: string;
+  participantes?: Participante[];
   solicitudes?: number;
+};
+export type Participante = {
+  id: string;
+  username: string;
+  imgUrl?: string;
 };
 export type Solicitud = {
   id: string;
