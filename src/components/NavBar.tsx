@@ -122,7 +122,9 @@ export const NavBar = () => {
                 {islogged ? <Avatar size={"sm"} bg={"brand.300"} /> : <></>}
               </MenuButton>
               <MenuList>
-                <MenuItem>Ver perfil</MenuItem>
+                <MenuItem as={ReactRouterLink} to={`/profile/` + username}>
+                  Ver perfil
+                </MenuItem>
                 <MenuItem>Cambiar contraseña</MenuItem>
                 <MenuDivider />
                 <MenuItem onClick={handlerLogOut}>Cerrar sesión</MenuItem>
@@ -163,7 +165,11 @@ const SearchInput = () => {
           }}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <IconButton aria-label={"search-icon"} icon={<FaSearch />}></IconButton>
+        <IconButton
+          type="submit"
+          aria-label={"search-icon"}
+          icon={<FaSearch />}
+        ></IconButton>
       </HStack>
     </form>
   );

@@ -1,6 +1,4 @@
-import { Actividad } from "./Activity";
-
-type Usuario = any;
+type Actividad = any;
 
 export type Evento = {
   id: string;
