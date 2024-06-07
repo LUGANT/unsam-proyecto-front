@@ -61,7 +61,10 @@ const MapComponent = ({
           lat,
           lon,
         };
+        console.log(obj);
+
         onValuechange(obj);
+        console.log("on value change");
       } else {
         toast({
           title: "Sin resultados",

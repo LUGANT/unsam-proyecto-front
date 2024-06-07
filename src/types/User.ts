@@ -1,6 +1,6 @@
 type Usuario = {
-    id: number
-    nombre: string,
-    apellido: string,
-    username: string
-}
+  id: string;
+  nombre: string;
+  apellido: string;
+  username: string;
+};

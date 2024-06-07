@@ -27,43 +27,40 @@ class EventService extends ApiService {
       return response.data;
     });
   }
-  async getSearchedEvents(searchParam: string): Promise<Evento[]>{
-    console.log(searchParam)
+  async getSearchedEvents(searchParam: string): Promise<Evento[]> {
     return this.handleRequest<Evento[]>(async () => {
       const response: AxiosResponse<Evento[]> = await this.api.get(
         `?actividad=${searchParam}`
-      )
-      console.log(response)
-      console.log(response.data)
-      return response.data
-    }
-      
-    )}
-    
-  async getById(eventId: string): Promise<Evento>{
+      );
+      return response.data;
+    });
+  }
+
+  async getById(eventId: string): Promise<Evento> {
     return this.handleRequest<Evento>(async () => {
       const response: AxiosResponse<Evento> = await this.api.get(`/${eventId}`);
       return response.data;
     });
   }
-  async create(userId: string, data: EventoCreate): Promise<any> {
-    // return new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve("");
-    //   }, 1000); // Simula un retraso de 1 segundo
-    // });
+  async create(data: EventoCreate): Promise<any> {
     return this.handleRequest<any>(async () => {
-      const response: AxiosResponse<any> = await this.api.post(`/crear`, {
-        anfitrionId: data.anfitrionId,
-        actividadId: data.actividadId,
-        fecha: data.fecha,
-        hora: data.hora,
-        direccion: data.ubicacion.nombreCompletoLugar,
-        capacidadMaxima: data.capacidadMaxima,
-      });
+      const response: AxiosResponse<any> = await this.api.post(`/crear`, data);
+      return response.data;
+    });
+  }
+  async delete(eventId: string): Promise<any> {
+    return this.handleRequest<any>(async () => {
+      const response: AxiosResponse<any> = await this.api.delete(
+        `/${eventId}/borrar`
+      );
       return response.data;
     });
   }
 }
+// return new Promise((resolve) => {
+//   setTimeout(() => {
+//     resolve("");
+//   }, 1000); // Simula un retraso de 1 segundo
+// });
 
 export default new EventService("/evento");

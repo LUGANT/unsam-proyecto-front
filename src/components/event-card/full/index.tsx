@@ -20,7 +20,7 @@ import { Evento } from "../../../types/Event";
 export const EventCard = ({ evento }: { evento: Evento }) => {
   const toast = useToast();
   const { userId } = useAuth();
-  const { id, anfitrion, actividad, fecha, direccion, capacidadMaxima } =
+  const { id, anfitrion, actividad, fecha, ubicacion, capacidadMaxima } =
     evento;
   const handleRequest = () => {
     try {
@@ -82,15 +82,10 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
             fontFamily={"body"}
           >
             <ChakraLink as={ReactRouterLink} to={`/evento/${id}`}>
-              Partido de {actividad.nombre} en {direccion}
+              Partido de {actividad.nombre} en {ubicacion.barrio}
             </ChakraLink>
           </Heading>
-          <Text color={"gray.500"}>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-            nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-            erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-            et ea rebum.
-          </Text>
+          <Text color={"gray.500"}>{evento.descripcion}</Text>
         </Stack>
         <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
           <Avatar

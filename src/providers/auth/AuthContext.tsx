@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, ReactNode } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
 
 // Define la forma de los datos en el contexto
 interface AuthContextType {
@@ -31,21 +37,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
-  //reemplazar luego con backend
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem("userId");
+    const storedUsername = localStorage.getItem("username");
+    const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+
+    if (storedUserId && storedUsername) {
+      setUserId(storedUserId);
+      setUsername(storedUsername);
+      setIsLoggedIn(storedIsLoggedIn);
+    }
+    setLoading(false);
+  }, []);
+
   const login = (userId: string) => {
     setIsLoggedIn(true);
     setUserId(userId);
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("userId", userId);
   };
-  //reemplazar luego con backend
+
   const logout = () => {
     setIsLoggedIn(false);
     setUserId(null);
     setUsername("");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("username");
   };
 
   const changeUsername = (newUsername: string) => {
     setUsername(newUsername);
+    localStorage.setItem("username", newUsername);
   };
+
+  if (loading) {
+    return null; // O un componente de carga
+  }
 
   return (
     <AuthContext.Provider

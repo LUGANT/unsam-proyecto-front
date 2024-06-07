@@ -5,7 +5,7 @@ export type Evento = {
   anfitrion: Usuario;
   actividad: Actividad;
   fecha: Date;
-  direccion: string;
+  ubicacion: Ubicacion;
   capacidadMaxima: number;
   descripcion?: string;
   participantes?: Participante[];

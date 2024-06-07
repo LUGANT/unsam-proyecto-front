@@ -60,13 +60,14 @@ export const CreateEventPopup = ({
       };
       console.log(eventoData);
 
-      await eventService.create(userId!!, eventoData);
+      await eventService.create(eventoData);
       toast({
         title: "Evento creado correctamente",
         status: "success",
         duration: 5000,
         isClosable: true,
       });
+      onClose();
     } catch (error) {
       toast({
         title: "Algo inesperado ocurrió",

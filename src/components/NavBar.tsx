@@ -18,7 +18,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/auth/AuthContext";
@@ -151,8 +151,14 @@ export const NavBar = () => {
 const SearchInput = () => {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+
+  const handlerSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    navigate("/buscar-eventos/" + search);
+  };
+
   return (
-    <form onSubmit={() => navigate("/buscar-eventos/" + search)}>
+    <form onSubmit={(e) => handlerSubmit(e)}>
       <HStack>
         <Input
           placeholder="Busca una actividad"
