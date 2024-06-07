@@ -45,6 +45,16 @@ class UserService extends ApiService {
       return response.data;
     });
   }
+
+  async getUserData(userId:string | null){
+    const rta = await axios.get(URL_BACK + `usuario/${userId}/perfil`)
+    return rta.data;
+  }
+
+  async updateUsername(userId:string | null,newUsername:string){
+    const rta = await axios.patch(URL_BACK + `usuario/${userId}/updateUsername?nuevoUsername=${newUsername}`)
+    return rta;
+  }
 }
 
 export const userService = new UserService("/usuario");

@@ -28,13 +28,10 @@ class EventService extends ApiService {
     });
   }
   async getSearchedEvents(searchParam: string): Promise<Evento[]>{
-    console.log(searchParam)
     return this.handleRequest<Evento[]>(async () => {
       const response: AxiosResponse<Evento[]> = await this.api.get(
         `?actividad=${searchParam}`
       )
-      console.log(response)
-      console.log(response.data)
       return response.data
     }
       
