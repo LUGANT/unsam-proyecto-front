@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import ApiService from "..";
-import { Evento, Solicitud } from "../../types/Event";
+import { Evento, EventoCreate, Solicitud } from "../../types/Event";
 
 class EventService extends ApiService {
   async all(): Promise<Evento[]> {
@@ -27,22 +27,40 @@ class EventService extends ApiService {
       return response.data;
     });
   }
-  async getSearchedEvents(searchParam: string): Promise<Evento[]>{
+  async getSearchedEvents(searchParam: string): Promise<Evento[]> {
     return this.handleRequest<Evento[]>(async () => {
       const response: AxiosResponse<Evento[]> = await this.api.get(
         `?actividad=${searchParam}`
-      )
-      return response.data
-    }
-      
-    )}
-    
-  async getById(eventId: string): Promise<Evento>{
+      );
+      return response.data;
+    });
+  }
+
+  async getById(eventId: string): Promise<Evento> {
     return this.handleRequest<Evento>(async () => {
       const response: AxiosResponse<Evento> = await this.api.get(`/${eventId}`);
       return response.data;
     });
   }
+  async create(data: EventoCreate): Promise<any> {
+    return this.handleRequest<any>(async () => {
+      const response: AxiosResponse<any> = await this.api.post(`/crear`, data);
+      return response.data;
+    });
+  }
+  async delete(eventId: string): Promise<any> {
+    return this.handleRequest<any>(async () => {
+      const response: AxiosResponse<any> = await this.api.delete(
+        `/${eventId}/borrar`
+      );
+      return response.data;
+    });
+  }
 }
+// return new Promise((resolve) => {
+//   setTimeout(() => {
+//     resolve("");
+//   }, 1000); // Simula un retraso de 1 segundo
+// });
 
 export default new EventService("/evento");

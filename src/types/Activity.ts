@@ -4,7 +4,7 @@ const arrayDeOpciones = ["futbol", "basquet"] as const; //Array de actividades
 type nombreDeporte = (typeof arrayDeOpciones)[number];
 
 export type Actividad = {
-  id: number;
+  id: string;
   nombre: nombreDeporte;
   esGrupal: boolean;
 };

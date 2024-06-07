@@ -5,11 +5,26 @@ export type Evento = {
   anfitrion: Usuario;
   actividad: Actividad;
   fecha: Date;
-  direccion: string;
+  ubicacion: Ubicacion;
   capacidadMaxima: number;
   descripcion?: string;
   participantes?: Participante[];
   solicitudes?: number;
+};
+export type EventoCreate = {
+  anfitrionId: string;
+  actividadId: string;
+  descripcion: string;
+  fecha: string;
+  hora: String;
+  ubicacion: Ubicacion;
+  capacidadMaxima: number;
+};
+export type Ubicacion = {
+  nombreCompletoLugar: string;
+  barrio: string;
+  lat: number;
+  lon: number;
 };
 export type Participante = {
   id: string;

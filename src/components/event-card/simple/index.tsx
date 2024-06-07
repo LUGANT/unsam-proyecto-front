@@ -1,19 +1,29 @@
 import { DeleteIcon } from "@chakra-ui/icons";
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Badge,
   Box,
+  Button,
   Center,
   Heading,
   HStack,
-  Icon,
   IconButton,
   Spacer,
   Stack,
   Text,
   useColorModeValue,
+  useDisclosure,
+  useToast,
+  UseToastOptions,
 } from "@chakra-ui/react";
+import { useRef, useState } from "react";
 import { FaHandSparkles } from "react-icons/fa";
-import { GiSoccerBall } from "react-icons/gi";
+import eventService from "../../../services/event-service";
 import { Evento } from "../../../types/Event";
 import { RoundedActivityIcon } from "../../../ui/icons/ActivityIcon";
 
@@ -27,7 +37,7 @@ export const SimpleEventCard = ({
   handlerRequest: () => void;
   openRequests: (id: string) => void;
 }) => {
-  const { id, anfitrion, actividad, fecha, direccion, capacidadMaxima } =
+  const { id, anfitrion, actividad, fecha, ubicacion, capacidadMaxima } =
     evento;
   const handleOpenRequests = () => {
     handlerRequest();
@@ -64,13 +74,10 @@ export const SimpleEventCard = ({
               textAlign={"left"}
               fontFamily={"body"}
             >
-              Partido de {actividad.nombre} en {direccion}
+              Partido de {actividad.nombre} en {ubicacion.barrio}
             </Heading>
             <Text color={"gray.500"} textAlign={"left"}>
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-              nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-              erat, sed diam voluptua. At vero eos et accusam et justo duo
-              dolores et ea rebum.
+              {evento.descripcion}
             </Text>
           </Stack>
         </HStack>
@@ -100,14 +107,90 @@ export const SimpleEventCard = ({
             </Box>
           </Stack>
           <Spacer />
-          <IconButton
-            icon={<DeleteIcon />}
-            fontSize={"xl"}
-            aria-label={"delete-event"}
-            _hover={{ bgColor: "red", color: "white" }}
-          ></IconButton>
+          <DeleteEventButton eventId={id} />
         </Stack>
       </Box>
     </Center>
+  );
+};
+
+interface DeleteEventButtonProps {
+  eventId: string;
+}
+
+const DeleteEventButton: React.FC<DeleteEventButtonProps> = ({ eventId }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<HTMLButtonElement | null>(null);
+  const toast = useToast();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const handleDelete = async () => {
+    setLoading(true);
+    try {
+      await eventService.delete(eventId);
+      toast({
+        title: "Evento eliminado",
+        description: "El evento ha sido eliminado correctamente.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      } as UseToastOptions);
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Ocurrió un error al intentar eliminar el evento.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      } as UseToastOptions);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <IconButton
+        icon={<DeleteIcon />}
+        fontSize={"xl"}
+        aria-label={"delete-event"}
+        _hover={{ bgColor: "red", color: "white" }}
+        onClick={onOpen}
+      ></IconButton>
+
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Eliminar Evento
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              ¿Estás seguro de que quieres eliminar este evento? Esta acción no
+              se puede deshacer.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose} disabled={loading}>
+                Cancelar
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={handleDelete}
+                ml={3}
+                isLoading={loading}
+              >
+                Eliminar
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   );
 };
