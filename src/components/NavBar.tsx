@@ -3,11 +3,11 @@ import {
   Avatar,
   Box,
   Button,
+  Link as ChakraLink,
   Flex,
   HStack,
   IconButton,
   Input,
-  Link,
   Menu,
   MenuButton,
   MenuDivider,
@@ -16,15 +16,13 @@ import {
   Stack,
   Text,
   useColorModeValue,
-  Link as ChakraLink,
   useDisclosure,
 } from "@chakra-ui/react";
-import { Link as ReactRouterLink } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { BrandIcon } from "../ui/icons/BrandIcon";
 import { FaSearch } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/auth/AuthContext";
+import { BrandIcon } from "../ui/icons/BrandIcon";
 import { capitalLetter } from "../util/capitalLetter";
 
 interface Props {

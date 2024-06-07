@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import ApiService from "..";
-import { Evento, Solicitud } from "../../types/Event";
+import { Evento, EventoCreate, Solicitud } from "../../types/Event";
 
 class EventService extends ApiService {
   async all(): Promise<Evento[]> {
@@ -30,6 +30,24 @@ class EventService extends ApiService {
   async getById(eventId: string): Promise<Evento> {
     return this.handleRequest<Evento>(async () => {
       const response: AxiosResponse<Evento> = await this.api.get(`/${eventId}`);
+      return response.data;
+    });
+  }
+  async create(userId: string, data: EventoCreate): Promise<any> {
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve("");
+    //   }, 1000); // Simula un retraso de 1 segundo
+    // });
+    return this.handleRequest<any>(async () => {
+      const response: AxiosResponse<any> = await this.api.post(`/crear`, {
+        anfitrionId: data.anfitrionId,
+        actividadId: data.actividadId,
+        fecha: data.fecha,
+        hora: data.hora,
+        direccion: data.ubicacion.nombreCompletoLugar,
+        capacidadMaxima: data.capacidadMaxima,
+      });
       return response.data;
     });
   }
