@@ -91,7 +91,7 @@ export const NavBar = () => {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={{ base: 1, md: 8 }} alignItems={"center"}>
-            <ChakraLink as={ReactRouterLink} to={"/home"}>
+            <ChakraLink as={ReactRouterLink} to={"/"}>
               <BrandIcon boxSize={10} color="#341c54" />
             </ChakraLink>
             <HStack

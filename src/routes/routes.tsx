@@ -26,7 +26,7 @@ export function PrincipalRoutes() {
           <Route path="/auth/signup" element={<SignUpPage />} />
         </Route>
         <Route path="/" element={<MainLayout />}>
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/mis-eventos" element={<MisEventos />} />
           <Route path="/buscar-eventos/:search" element={<Search />}></Route>
           <Route path="/profile/:username" element={<Profile />}></Route>

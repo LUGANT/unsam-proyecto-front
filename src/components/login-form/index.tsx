@@ -45,7 +45,7 @@ export function LoginForm() {
         });
         auth.login(rta.id);
         auth.changeUsername(rta.username);
-        navigate("/home");
+        navigate("/");
       } catch (e) {
         setTimeout(() => {
           setIsLoading(false);

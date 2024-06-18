@@ -91,7 +91,7 @@ export function SignUpForm() {
         });
         auth.login(rta.id);
         auth.changeUsername(rta.username);
-        navigate("/home");
+        navigate("/");
       } catch (e) {
         setTimeout(() => {
           setIsLoading(false);
