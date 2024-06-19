@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     const storedUsername = localStorage.getItem("username");
-    const storedIsLoggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const storedIsLoggedIn = localStorage.getItem("token") != null;
 
     if (storedUserId && storedUsername) {
       setUserId(storedUserId);
@@ -55,7 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = (userId: string) => {
     setIsLoggedIn(true);
     setUserId(userId);
-    localStorage.setItem("isLoggedIn", "true");
+    // localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userId", userId);
   };
 
@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoggedIn(false);
     setUserId(null);
     setUsername("");
-    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("token");
     localStorage.removeItem("userId");
     localStorage.removeItem("username");
   };

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { HomePage } from "../pages/home";
 import { LoginPage } from "../pages/login";
 import { AuthLayout } from "../pages/layouts/auth-layout";
@@ -9,19 +9,19 @@ import { MisEventos } from "../pages/mis-eventos";
 import { PageNotFound } from "../pages/errors/page-not-found";
 import { Search } from "../pages/search";
 import { useAuth } from "../providers/auth/AuthContext";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import Profile from "../pages/profile/Profile";
 import { EventoDetail } from "../pages/evento-detail";
 
 export function PrincipalRoutes() {
-  const { login } = useAuth();
-  useEffect(() => {
-    login("1");
-  }, []);
+  const { isLoggedIn } = useAuth();
+  // useEffect(() => {
+  //   login("1");
+  // }, []);
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth" element={<AuthLayout />}>
+        <Route path="/auth" element={ isLoggedIn ? <Navigate to='/home'/> : <AuthLayout />}>
           <Route path="/auth/login" element={<LoginPage />} />
           <Route path="/auth/signup" element={<SignUpPage />} />
         </Route>
