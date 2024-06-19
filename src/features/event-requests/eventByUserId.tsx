@@ -4,6 +4,7 @@ import { SimpleEventCard } from "../../components/event-card/simple";
 import { Evento } from "../../types/Event";
 import eventService from "../../services/event-service";
 import { useAuth } from "../../providers/auth/AuthContext";
+import { useEventContext } from "../../providers/events/EventContext";
 
 export function EventByUserId({
   onRequestsOpen,
@@ -16,6 +17,7 @@ export function EventByUserId({
 }) {
   const { userId } = useAuth();
   const [events, setEvents] = useState<Evento[]>([]);
+  const { somethingChange } = useEventContext();
 
   useEffect(() => {
     const getEvents = async () => {
@@ -23,7 +25,7 @@ export function EventByUserId({
       setEvents(res);
     };
     getEvents();
-  }, []);
+  }, [somethingChange]);
 
   return (
     <>
