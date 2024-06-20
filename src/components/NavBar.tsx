@@ -125,7 +125,9 @@ export const NavBar = () => {
                 <MenuItem as={ReactRouterLink} to={`/profile/` + username}>
                   Ver perfil
                 </MenuItem>
-                <MenuItem>Cambiar contraseña</MenuItem>
+                <MenuItem as={ReactRouterLink} to={"/profile/change-password"}>
+                  Cambiar contraseña
+                </MenuItem>
                 <MenuDivider />
                 <MenuItem onClick={handlerLogOut}>Cerrar sesión</MenuItem>
               </MenuList>
