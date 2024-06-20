@@ -13,7 +13,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { BrandIcon } from "../../ui/icons/BrandIcon";
-import { FieldValues, useForm, Validate } from "react-hook-form";
+import { useForm, Validate } from "react-hook-form";
 import { userService } from "../../services/user-service";
 import { useAuth } from "../../providers/auth/AuthContext";
 import { useState } from "react";
@@ -47,6 +47,7 @@ function ChangePassWordForm() {
     handleSubmit,
     watch,
     register,
+    reset,
     formState: { errors },
   } = useForm();
   const { userId } = useAuth();
@@ -69,6 +70,7 @@ function ChangePassWordForm() {
           duration: 5000,
           isClosable: true,
         });
+        reset();
       }, 2000);
     } catch (e) {
       setTimeout(() => {
