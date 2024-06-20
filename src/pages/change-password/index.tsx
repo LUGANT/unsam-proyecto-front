@@ -6,15 +6,18 @@ import {
   FormLabel,
   Heading,
   Input,
+  InputGroup,
+  InputRightElement,
   Text,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import { BrandIcon } from "../../ui/icons/BrandIcon";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm, Validate } from "react-hook-form";
 import { userService } from "../../services/user-service";
 import { useAuth } from "../../providers/auth/AuthContext";
 import { useState } from "react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 export function ChangePasswordPage() {
   return (
@@ -84,51 +87,30 @@ function ChangePassWordForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* Contraseña actual */}
-      <FormControl isInvalid={errors.currentPassword} mb={4}>
-        <FormLabel htmlFor="currentPassword">Contraseña Actual</FormLabel>
-        <Input
-          id="currentPassword"
-          type="password"
-          {...register("currentPassword", {
-            required: "Este campo es obligatorio",
-          })}
-        />
-        <FormErrorMessage>
-          {errors.currentPassword && errors.currentPassword.message}
-        </FormErrorMessage>
-      </FormControl>
-      {/* Nueva contraseña */}
-      <FormControl isInvalid={errors.newPassword} mb={4}>
-        <FormLabel htmlFor="newPassword">Nueva Contraseña</FormLabel>
-        <Input
-          id="newPassword"
-          type="password"
-          {...register("newPassword", {
-            required: "Este campo es obligatorio",
-          })}
-        />
-        <FormErrorMessage>
-          {errors.newPassword && errors.newPassword.message}
-        </FormErrorMessage>
-      </FormControl>
-      {/* Confirmar nueva contraseña */}
-      <FormControl isInvalid={errors.confirmPassword} mb={4}>
-        <FormLabel htmlFor="confirmPassword">
-          Confirmar Nueva Contraseña
-        </FormLabel>
-        <Input
-          id="confirmPassword"
-          type="password"
-          {...register("confirmPassword", {
-            required: "Este campo es obligatorio",
-            validate: (value) =>
-              value === watch("newPassword") || "Las contraseñas no coinciden",
-          })}
-        />
-        <FormErrorMessage>
-          {errors.confirmPassword && errors.confirmPassword.message}
-        </FormErrorMessage>
-      </FormControl>
+      <InputSecret
+        id="currentPassword"
+        label="Contraseña Actual"
+        error={errors.currentPassword}
+        errorMessage={errors.currentPassword?.message}
+        register={register}
+      />
+      <InputSecret
+        id="newPassword"
+        label="Nueva Contraseña"
+        error={errors.newPassword}
+        errorMessage={errors.newPassword?.message}
+        register={register}
+      />
+      <InputSecret
+        id="confirmPassword"
+        label="Confirmar Nueva Contraseña"
+        error={errors.confirmPassword}
+        errorMessage={errors.confirmPassword?.message}
+        register={register}
+        validate={(value) =>
+          value === watch("newPassword") || "Las contraseñas no coinciden"
+        }
+      />
       {/* Boton para confirmar */}
       <Box display={"flex"} justifyContent={"center"}>
         <Button isLoading={isSubmitting} type="submit">
@@ -136,5 +118,49 @@ function ChangePassWordForm() {
         </Button>
       </Box>
     </form>
+  );
+}
+
+type InputSecretType = {
+  register: any;
+  error: any;
+  errorMessage: any;
+  id: string;
+  label: string;
+  validate?: Validate<any, any> | Record<string, Validate<any, any>>;
+};
+
+function InputSecret({
+  id,
+  label,
+  register,
+  error,
+  errorMessage,
+  validate,
+}: InputSecretType) {
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const handlerShowPassword = () => setShowPassword(!showPassword);
+
+  return (
+    <FormControl isInvalid={error} mb={4}>
+      <FormLabel htmlFor={id}>{label}</FormLabel>
+      <InputGroup size="md">
+        <Input
+          id={id}
+          type={showPassword ? "text" : "password"}
+          {...register(id, {
+            required: "Este campo es obligatorio",
+            validate: validate,
+          })}
+        />
+        <InputRightElement width="4.5rem">
+          <Button h="1.75rem" size="sm" onClick={handlerShowPassword}>
+            {showPassword ? <ViewOffIcon /> : <ViewIcon />}
+          </Button>
+        </InputRightElement>
+      </InputGroup>
+
+      <FormErrorMessage>{error && errorMessage}</FormErrorMessage>
+    </FormControl>
   );
 }

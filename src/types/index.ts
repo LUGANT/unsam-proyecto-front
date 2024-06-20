@@ -30,6 +30,8 @@ export type textFieldType = {
   errorMessage: string
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   handleKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void
+  showPassword ?: boolean
+  handlerShowPassword ?: ()=>void
 }
 
 export type ButtonType = {
