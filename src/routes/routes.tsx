@@ -12,6 +12,8 @@ import { useAuth } from "../providers/auth/AuthContext";
 import { useEffect } from "react";
 import Profile from "../pages/profile/Profile";
 import { EventoDetail } from "../pages/evento-detail";
+import { AboutPage } from "../pages/about";
+import { ChangePasswordPage } from "../pages/change-password";
 
 export function PrincipalRoutes() {
   const { login } = useAuth();
@@ -26,11 +28,16 @@ export function PrincipalRoutes() {
           <Route path="/auth/signup" element={<SignUpPage />} />
         </Route>
         <Route path="/" element={<MainLayout />}>
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/mis-eventos" element={<MisEventos />} />
-          <Route path="/buscar-eventos/:search" element={<Search />}></Route>
-          <Route path="/profile/:username" element={<Profile />}></Route>
-          <Route path="/evento/:idEvento" element={<EventoDetail />}></Route>
+          <Route path="/buscar-eventos/:search" element={<Search />} />
+          <Route path="/profile/:username" element={<Profile />} />
+          <Route
+            path="/profile/change-password"
+            element={<ChangePasswordPage />}
+          />
+          <Route path="/evento/:idEvento" element={<EventoDetail />} />
         </Route>
         <Route path="/404" element={<NotFound />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>

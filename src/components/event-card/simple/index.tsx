@@ -26,6 +26,7 @@ import { FaHandSparkles } from "react-icons/fa";
 import eventService from "../../../services/event-service";
 import { Evento } from "../../../types/Event";
 import { RoundedActivityIcon } from "../../../ui/icons/ActivityIcon";
+import { useEventContext } from "../../../providers/events/EventContext";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SimpleEventCard = ({
@@ -123,6 +124,7 @@ const DeleteEventButton: React.FC<DeleteEventButtonProps> = ({ eventId }) => {
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const toast = useToast();
   const [loading, setLoading] = useState<boolean>(false);
+  const { toggleSomethingChange } = useEventContext();
 
   const handleDelete = async () => {
     setLoading(true);
@@ -136,6 +138,7 @@ const DeleteEventButton: React.FC<DeleteEventButtonProps> = ({ eventId }) => {
         isClosable: true,
       } as UseToastOptions);
       onClose();
+      toggleSomethingChange();
     } catch (error) {
       toast({
         title: "Error",

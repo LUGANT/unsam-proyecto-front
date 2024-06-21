@@ -91,7 +91,7 @@ export const NavBar = () => {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={{ base: 1, md: 8 }} alignItems={"center"}>
-            <ChakraLink as={ReactRouterLink} to={"/home"}>
+            <ChakraLink as={ReactRouterLink} to={"/"}>
               <BrandIcon boxSize={10} color="#341c54" />
             </ChakraLink>
             <HStack
@@ -125,7 +125,9 @@ export const NavBar = () => {
                 <MenuItem as={ReactRouterLink} to={`/profile/` + username}>
                   Ver perfil
                 </MenuItem>
-                <MenuItem>Cambiar contraseña</MenuItem>
+                <MenuItem as={ReactRouterLink} to={"/profile/change-password"}>
+                  Cambiar contraseña
+                </MenuItem>
                 <MenuDivider />
                 <MenuItem onClick={handlerLogOut}>Cerrar sesión</MenuItem>
               </MenuList>

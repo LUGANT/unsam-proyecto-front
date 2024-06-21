@@ -26,6 +26,7 @@ import { Actividad } from "../../types/Activity";
 import activityService from "../../services/activity-service";
 import { EventoCreate } from "../../types/Event";
 import { formatDate, formatTime } from "../../util/date";
+import { useEventContext } from "../../providers/events/EventContext";
 const initEventoCreate = {
   actividadId: "",
   anfitrionId: "", // Asigna un valor predeterminado si es undefined
@@ -46,6 +47,7 @@ export const CreateEventPopup = ({
   const [formData, setFormData] = useState<EventoCreate>(initEventoCreate);
   const [activities, setActivities] = useState<Actividad[]>();
   const toast = useToast();
+  const { toggleSomethingChange } = useEventContext();
 
   const handleCreate = async () => {
     try {
@@ -68,6 +70,7 @@ export const CreateEventPopup = ({
         isClosable: true,
       });
       onClose();
+      toggleSomethingChange();
     } catch (error) {
       toast({
         title: "Algo inesperado ocurrió",
