@@ -27,18 +27,18 @@ class EventService extends ApiService {
       return response.data;
     });
   }
-  async getSearchedEvents(searchParam: string): Promise<Evento[]> {
+  async getSearchedEvents(userId:string,searchParam: string): Promise<Evento[]> {
     return this.handleRequest<Evento[]>(async () => {
       const response: AxiosResponse<Evento[]> = await this.api.get(
-        `?actividad=${searchParam}`
+        `${userId}?actividad=${searchParam}`
       );
       return response.data;
     });
   }
 
-  async getById(eventId: string): Promise<Evento> {
+  async getById(userId:string,eventId: string): Promise<Evento> {
     return this.handleRequest<Evento>(async () => {
-      const response: AxiosResponse<Evento> = await this.api.get(`/${eventId}`);
+      const response: AxiosResponse<Evento> = await this.api.get(`/${eventId}/${userId}`);
       return response.data;
     });
   }
