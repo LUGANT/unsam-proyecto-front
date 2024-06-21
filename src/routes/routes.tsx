@@ -7,7 +7,7 @@ import { SignUpPage } from "../pages/signup";
 import { NotFound } from "../pages/errors/not-found";
 import { MisEventos } from "../pages/mis-eventos";
 import { PageNotFound } from "../pages/errors/page-not-found";
-import { Search } from "../pages/search";
+import { SearchPage } from "../pages/search";
 import { useAuth } from "../providers/auth/AuthContext";
 import { useEffect } from "react";
 import Profile from "../pages/profile/Profile";
@@ -31,7 +31,7 @@ export function PrincipalRoutes() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/mis-eventos" element={<MisEventos />} />
-          <Route path="/buscar-eventos/:search" element={<Search />} />
+          <Route path="/buscar-eventos/:search" element={<SearchPage />} />
           <Route path="/profile/:username" element={<Profile />} />
           <Route
             path="/profile/change-password"
