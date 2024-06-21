@@ -1,12 +1,19 @@
-import { Box, Button, Input, useToast, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { useEffect, useRef, useState } from "react";
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
-
-import { AspectRatio, FormControl, FormLabel, HStack } from "@chakra-ui/react";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import "leaflet/dist/leaflet.css";
+import { useState } from "react";
+import { MapRender } from "../../components/map-render";
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
@@ -31,8 +38,6 @@ const MapComponent = ({
     lat: number;
     lon: number;
   } | null>(null);
-  const mapRef = useRef<L.Map | null>(null);
-
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -79,12 +84,6 @@ const MapComponent = ({
     }
   };
 
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setView(position, 13, { animate: true });
-    }
-  }, [position]);
-
   return (
     <VStack maxW={"sm"} gap={8}>
       +
@@ -104,22 +103,7 @@ const MapComponent = ({
           </Button>
         </HStack>
       </Box>
-      <AspectRatio w="xs" h={"xs"} ratio={4 / 3}>
-        <Box width="100%" height="400px">
-          <MapContainer
-            center={position}
-            zoom={13}
-            style={{ height: "100%", width: "100%" }}
-            ref={mapRef}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            <Marker position={position}></Marker>
-          </MapContainer>
-        </Box>
-      </AspectRatio>
+      <MapRender position={position} />
     </VStack>
   );
 };

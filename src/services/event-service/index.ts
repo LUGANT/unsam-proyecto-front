@@ -56,6 +56,15 @@ class EventService extends ApiService {
       return response.data;
     });
   }
+
+  async getEventsAssisted(userId: string): Promise<Evento[]> {
+    return this.handleRequest<Evento[]>(async () => {
+      const response: AxiosResponse<Evento[]> = await this.api.get(
+        `/${userId}/eventosAsistidos`
+      );
+      return response.data;
+    });
+  }
 }
 // return new Promise((resolve) => {
 //   setTimeout(() => {
