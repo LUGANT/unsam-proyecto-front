@@ -50,7 +50,13 @@ const NavLink = (props: Props) => {
       }}
       href={route}
     >
-      <ChakraLink as={ReactRouterLink} to={route}>
+      <ChakraLink
+        as={ReactRouterLink}
+        to={route}
+        _hover={{
+          textDecoration: "none",
+        }}
+      >
         {children}
       </ChakraLink>
     </Box>
