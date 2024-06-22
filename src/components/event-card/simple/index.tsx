@@ -15,17 +15,20 @@ import {
   IconButton,
   Spacer,
   Stack,
+  Link as ChakraLink,
   Text,
   useColorModeValue,
   useDisclosure,
   useToast,
   UseToastOptions,
 } from "@chakra-ui/react";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { useRef, useState } from "react";
 import { FaHandSparkles } from "react-icons/fa";
 import eventService from "../../../services/event-service";
 import { Evento } from "../../../types/Event";
 import { RoundedActivityIcon } from "../../../ui/icons/ActivityIcon";
+import { useEventContext } from "../../../providers/events/EventContext";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SimpleEventCard = ({
@@ -37,8 +40,7 @@ export const SimpleEventCard = ({
   handlerRequest: () => void;
   openRequests: (id: string) => void;
 }) => {
-  const { id, anfitrion, actividad, fecha, ubicacion, capacidadMaxima } =
-    evento;
+  const { id, actividad, ubicacion } = evento;
   const handleOpenRequests = () => {
     handlerRequest();
     openRequests(id);
@@ -74,7 +76,14 @@ export const SimpleEventCard = ({
               textAlign={"left"}
               fontFamily={"body"}
             >
-              Partido de {actividad.nombre} en {ubicacion.barrio}
+              <ChakraLink
+                as={ReactRouterLink}
+                to={`/evento/${id}`}
+                noOfLines={2}
+                maxW={"300px"}
+              >
+                Partido de {actividad.nombre} en {ubicacion.barrio}
+              </ChakraLink>
             </Heading>
             <Text color={"gray.500"} textAlign={"left"}>
               {evento.descripcion}
@@ -123,6 +132,7 @@ const DeleteEventButton: React.FC<DeleteEventButtonProps> = ({ eventId }) => {
   const cancelRef = useRef<HTMLButtonElement | null>(null);
   const toast = useToast();
   const [loading, setLoading] = useState<boolean>(false);
+  const { toggleSomethingChange } = useEventContext();
 
   const handleDelete = async () => {
     setLoading(true);
@@ -136,6 +146,7 @@ const DeleteEventButton: React.FC<DeleteEventButtonProps> = ({ eventId }) => {
         isClosable: true,
       } as UseToastOptions);
       onClose();
+      toggleSomethingChange();
     } catch (error) {
       toast({
         title: "Error",

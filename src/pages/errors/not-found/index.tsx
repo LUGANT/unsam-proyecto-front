@@ -15,7 +15,7 @@ export const NotFound = () => {
         <Heading color={"black"}>404 Error not found</Heading>
         <Text>Lamentamos los inconvenientes</Text>
         <Button mt={10} bg={"brand.300"} color={"white"}>
-          <Link href="/home">Volver al inicio</Link>
+          <Link href="/">Volver al inicio</Link>
         </Button>
       </VStack>
     </Flex>

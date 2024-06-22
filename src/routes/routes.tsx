@@ -1,23 +1,19 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AboutPage } from "../pages/about";
+import { ChangePasswordPage } from "../pages/change-password";
+import { NotFound } from "../pages/errors/not-found";
+import { PageNotFound } from "../pages/errors/page-not-found";
+import { EventoDetail } from "../pages/evento-detail";
 import { HomePage } from "../pages/home";
-import { LoginPage } from "../pages/login";
 import { AuthLayout } from "../pages/layouts/auth-layout";
 import { MainLayout } from "../pages/layouts/main-layout";
-import { SignUpPage } from "../pages/signup";
-import { NotFound } from "../pages/errors/not-found";
+import { LoginPage } from "../pages/login";
 import { MisEventos } from "../pages/mis-eventos";
-import { PageNotFound } from "../pages/errors/page-not-found";
-import { Search } from "../pages/search";
-import { useAuth } from "../providers/auth/AuthContext";
-import { useEffect } from "react";
 import Profile from "../pages/profile/Profile";
-import { EventoDetail } from "../pages/evento-detail";
+import { SearchPage } from "../pages/search";
+import { SignUpPage } from "../pages/signup";
 
 export function PrincipalRoutes() {
-  const { login } = useAuth();
-  useEffect(() => {
-    login("1");
-  }, []);
   return (
     <BrowserRouter>
       <Routes>
@@ -26,11 +22,16 @@ export function PrincipalRoutes() {
           <Route path="/auth/signup" element={<SignUpPage />} />
         </Route>
         <Route path="/" element={<MainLayout />}>
-          <Route path="/home" element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/mis-eventos" element={<MisEventos />} />
-          <Route path="/buscar-eventos/:search" element={<Search />}></Route>
-          <Route path="/profile/:username" element={<Profile />}></Route>
-          <Route path="/evento/:idEvento" element={<EventoDetail />}></Route>
+          <Route path="/buscar-eventos/:search" element={<SearchPage />} />
+          <Route path="/profile/:username" element={<Profile />} />
+          <Route
+            path="/profile/change-password"
+            element={<ChangePasswordPage />}
+          />
+          <Route path="/evento/:idEvento" element={<EventoDetail />} />
         </Route>
         <Route path="/404" element={<NotFound />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>

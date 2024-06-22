@@ -23,7 +23,7 @@ export const MisEventos = () => {
   };
   return (
     <Container minHeight={"86vh"} maxW={"full"}>
-      <Tabs variant="soft-rounded" colorScheme="brand" isFitted>
+      <Tabs variant={"soft-rounded"} colorScheme="brand" isFitted>
         <TabList>
           <Tab>Mis eventos</Tab>
           <Tab>Mis Participaciones</Tab>

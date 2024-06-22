@@ -55,6 +55,14 @@ class UserService extends ApiService {
     const rta = await axios.patch(URL_BACK + `usuario/${userId}/updateUsername?nuevoUsername=${newUsername}`)
     return rta;
   }
+  async updatePassword(usuarioId:string,currentPassword:string,newPassword:string){
+    const rta = await axios.patch(URL_BACK + `usuario/cambiarPassword`,{
+      usuarioId,
+      contrasenaActual: currentPassword,
+      nuevaContrasena: newPassword
+    })
+    return rta;
+  }
 }
 
 export const userService = new UserService("/usuario");

@@ -1,5 +1,5 @@
 import { Box, Button, useToast } from "@chakra-ui/react";
-import { TextField } from "../../ui/text-field";
+import { TextField, TextFieldSecret } from "../../ui/text-field";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { userService } from "../../services/user-service";
@@ -91,7 +91,7 @@ export function SignUpForm() {
         });
         auth.login(rta.id);
         auth.changeUsername(rta.username);
-        navigate("/home");
+        navigate("/");
       } catch (e) {
         setTimeout(() => {
           setIsLoading(false);
@@ -157,7 +157,7 @@ export function SignUpForm() {
         onChange={handlerEmail}
         handleKeyDown={handleKeyPress}
       />
-      <TextField
+      <TextFieldSecret
         isRequired={true}
         size="md"
         inputType="password"
@@ -168,7 +168,7 @@ export function SignUpForm() {
         onChange={handlerContrasenia}
         handleKeyDown={handleKeyPress}
       />
-      <TextField
+      <TextFieldSecret
         isRequired={true}
         size="md"
         inputType="password"

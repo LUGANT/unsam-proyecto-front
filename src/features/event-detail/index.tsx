@@ -18,12 +18,14 @@ import { RoundedActivityIcon } from "../../ui/icons/ActivityIcon";
 import { FaCrown } from "react-icons/fa";
 import { Evento, Participante } from "../../types/Event";
 import { MapRender } from "../../components/map-render";
+import { useAuth } from "../../providers/auth/AuthContext";
 
 export const FullEventDetail = () => {
   const [evento, setEvento] = useState<Evento>();
   const [isLoading, setIsLoading] = useState(true);
   const { idEvento } = useParams();
   const toast = useToast();
+  const { userId } = useAuth();
 
   const handleJoin = () => {
     toast({
@@ -42,7 +44,7 @@ export const FullEventDetail = () => {
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const res = await eventService.getById(idEvento!!);
+        const res = await eventService.getById(userId!!, idEvento!!);
         console.log(res);
         setEvento(res);
         console.log(evento);
