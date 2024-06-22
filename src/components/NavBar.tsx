@@ -172,7 +172,11 @@ const SearchInput = () => {
 
   const handlerSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    navigate("/buscar-eventos/" + search);
+    if (search != "") {
+      navigate("/buscar-eventos/" + search);
+    } else {
+      navigate("/");
+    }
   };
 
   return (
