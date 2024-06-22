@@ -93,7 +93,9 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
           />
           <Stack direction={"column"} spacing={0} fontSize={"sm"}>
             <Text fontWeight={600}>{anfitrion.nombre}</Text>
-            <Text color={"gray.500"}>{fecha.toString()} · 18:00hs</Text>
+            <Text color={"gray.500"}>
+              {formatDate(fecha.toString())} · 18:00hs
+            </Text>
           </Stack>
           <Spacer />
           <Button onClick={handleRequest}>Unirse</Button>
@@ -102,3 +104,17 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
     </Center>
   );
 };
+
+function formatDate(dateString: string): string {
+  // Validar el formato de la cadena de entrada
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(dateString)) {
+    throw new Error("Formato de fecha inválido. Debe ser yyyy-MM-dd.");
+  }
+
+  // Dividir la cadena en partes
+  const [year, month, day] = dateString.split("-");
+
+  // Retornar la cadena formateada
+  return `${day}-${month}-${year}`;
+}
