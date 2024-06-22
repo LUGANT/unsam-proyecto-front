@@ -3,13 +3,20 @@ import { EventCard } from "../../components/event-card/full";
 import { useEffect, useState } from "react";
 import eventService from "../../services/event-service";
 import { Evento } from "../../types/Event";
+import { useAuth } from "../../providers/auth/AuthContext";
 
 export const SearchEvents = () => {
   const [events, setEvents] = useState<Evento[]>();
+  const { userId } = useAuth();
   useEffect(() => {
     const res = async () => {
-      const res = await eventService.all();
-      setEvents(res);
+      if (userId) {
+        const res = await eventService.getEventForAnUserLogged(userId);
+        setEvents(res);
+      } else {
+        const res = await eventService.all();
+        setEvents(res);
+      }
     };
     res();
   }, []);
