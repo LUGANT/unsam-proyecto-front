@@ -7,11 +7,11 @@ import { useAuth } from "../../providers/auth/AuthContext";
 
 export const SearchEvents = () => {
   const [events, setEvents] = useState<Evento[]>();
-  const { userId } = useAuth();
+  const { isLoggedIn, userId } = useAuth();
   useEffect(() => {
     const res = async () => {
-      if (userId) {
-        const res = await eventService.getEventForAnUserLogged(userId);
+      if (isLoggedIn) {
+        const res = await eventService.getEventForAnUserLogged(userId!!);
         setEvents(res);
       } else {
         const res = await eventService.all();
