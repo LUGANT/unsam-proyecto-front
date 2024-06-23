@@ -20,8 +20,7 @@ import { Evento } from "../../../types/Event";
 export const EventCard = ({ evento }: { evento: Evento }) => {
   const toast = useToast();
   const { userId } = useAuth();
-  const { id, anfitrion, actividad, fecha, ubicacion, capacidadMaxima } =
-    evento;
+  const { id, anfitrion, actividad, fecha, ubicacion } = evento;
   const handleRequest = () => {
     try {
       userService.sendRequest(id, userId!);
@@ -47,6 +46,7 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
       <Box
         maxW={"445px"}
         w={"full"}
+        h={"md"}
         // eslint-disable-next-line react-hooks/rules-of-hooks
         bg={useColorModeValue("white", "gray.900")}
         boxShadow={"2xl"}
@@ -81,7 +81,12 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
             fontSize={"2xl"}
             fontFamily={"body"}
           >
-            <ChakraLink as={ReactRouterLink} to={`/evento/${id}`}>
+            <ChakraLink
+              as={ReactRouterLink}
+              to={`/evento/${id}`}
+              noOfLines={2}
+              maxW={"300px"}
+            >
               Partido de {actividad.nombre} en {ubicacion.barrio}
             </ChakraLink>
           </Heading>

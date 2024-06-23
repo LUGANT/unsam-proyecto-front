@@ -24,22 +24,20 @@ export const RequestsForAnEvent = ({
   const [requests, setRequests] = useState<Solicitud[]>();
   const fetchRequests = async () => {
     const res = await eventService.getRequests(id);
-    console.log(res);
-
     setRequests(res);
   };
   useEffect(() => {
     if (id) {
       fetchRequests();
     }
-  }, [id]);
+  }, [id, onClose]);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
         minHeight={"80%"}
         maxHeight={"90%"}
-        overflowY={"scroll"}
+        overflowY={"auto"}
         gap="10px"
       >
         <ModalHeader>Solicitudes</ModalHeader>

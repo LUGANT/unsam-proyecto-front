@@ -2,6 +2,7 @@ import {
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Input,
@@ -15,27 +16,19 @@ import {
   Select,
   Textarea,
   useNumberInput,
-  useToast,
   VStack,
 } from "@chakra-ui/react";
-import MapComponent from "../../features/location-search";
 import { useEffect, useState } from "react";
-import eventService from "../../services/event-service";
+import { FormProvider, useForm } from "react-hook-form";
+import MapComponent from "../../features/location-search";
 import { useAuth } from "../../providers/auth/AuthContext";
-import { Actividad } from "../../types/Activity";
+import { useEventContext } from "../../providers/events/EventContext";
 import activityService from "../../services/activity-service";
+import eventService from "../../services/event-service";
+import { Actividad } from "../../types/Activity";
 import { EventoCreate } from "../../types/Event";
 import { formatDate, formatTime } from "../../util/date";
-import { useEventContext } from "../../providers/events/EventContext";
-const initEventoCreate = {
-  actividadId: "",
-  anfitrionId: "", // Asigna un valor predeterminado si es undefined
-  descripcion: "",
-  fecha: "", // Puedes usar un valor predeterminado apropiado
-  hora: "",
-  ubicacion: { nombreCompletoLugar: "", barrio: "", lat: 0, lon: 0 }, // Proporciona un valor predeterminado adecuado para Ubicacion
-  capacidadMaxima: 0, // O cualquier valor predeterminado adecuado
-};
+
 export const CreateEventPopup = ({
   isOpen,
   onClose,
@@ -44,43 +37,26 @@ export const CreateEventPopup = ({
   onClose: () => void;
 }) => {
   const { userId } = useAuth();
-  const [formData, setFormData] = useState<EventoCreate>(initEventoCreate);
-  const [activities, setActivities] = useState<Actividad[]>();
-  const toast = useToast();
   const { toggleSomethingChange } = useEventContext();
-
-  const handleCreate = async () => {
-    try {
-      const eventoData: EventoCreate = {
-        actividadId: formData?.actividadId || "",
-        anfitrionId: userId || "", // Asigna un valor predeterminado si es undefined
-        descripcion: formData?.descripcion || "",
-        fecha: formData?.fecha || "", // Puedes usar un valor predeterminado apropiado
-        hora: formData?.hora || "",
-        ubicacion: formData?.ubicacion || { lat: 0, lon: 0 }, // Proporciona un valor predeterminado adecuado para Ubicacion
-        capacidadMaxima: formData?.capacidadMaxima || 0, // O cualquier valor predeterminado adecuado
-      };
-      console.log(eventoData);
-
-      await eventService.create(eventoData);
-      toast({
-        title: "Evento creado correctamente",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-      onClose();
-      toggleSomethingChange();
-    } catch (error) {
-      toast({
-        title: "Algo inesperado ocurrió",
-        description: "Ocurrió un error al intentar crear el evento",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
+  const [activities, setActivities] = useState<Actividad[]>();
+  const methods = useForm<EventoCreate>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    reset,
+  } = useForm<EventoCreate>({
+    defaultValues: {
+      actividadId: "",
+      anfitrionId: userId || "",
+      descripcion: "",
+      fecha: "", // Puedes usar un valor predeterminado apropiado
+      hora: "",
+      ubicacion: "", // Proporciona un valor predeterminado adecuado para Ubicacion
+      capacidadMaxima: 0, // O cualquier valor predeterminado adecuado
+    },
+  });
 
   useEffect(() => {
     const fetchActivities = async () => {
@@ -90,89 +66,109 @@ export const CreateEventPopup = ({
     fetchActivities();
   }, []);
 
+  const onSubmit = async (data: EventoCreate) => {
+    try {
+      data.fecha = formatDate(data.fecha);
+      data.hora = formatTime(data.fecha);
+      await eventService.create(data);
+      onClose();
+      toggleSomethingChange();
+      reset();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleClose = () => {
+    onClose();
+    reset();
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent maxW="900px">
-        <ModalHeader>Crear evento</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody pb={6}>
-          <Flex
-            flexDirection={{ base: "column", md: "row" }}
-            justify={"center"}
-            align={{ base: "center", md: "stretch" }}
-            gap={5}
-          >
-            <VStack maxW={"sm"} gap={8}>
-              <FormControl>
-                <FormLabel>Tipo de actividad</FormLabel>
-                <Select
-                  placeholder="Elegí la actividad"
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      actividadId: e.target.value,
-                    })
-                  }
-                >
-                  {activities?.map((a: Actividad) => (
-                    <option key={a.id} value={a.id}>
-                      {a.nombre}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Cantidad de participantes </FormLabel>
-                <Incrementer
-                  onValueChange={(value: any) =>
-                    setFormData({ ...formData, capacidadMaxima: value })
-                  }
+      <FormProvider {...methods}>
+        <ModalContent as="form" maxW="900px" onSubmit={handleSubmit(onSubmit)}>
+          <ModalHeader>Crear evento</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <Flex
+              flexDirection={{ base: "column", md: "row" }}
+              justify={"center"}
+              align={{ base: "center", md: "stretch" }}
+              gap={5}
+            >
+              <VStack maxW={"sm"} gap={8}>
+                <FormControl isInvalid={!!errors.actividadId}>
+                  <FormLabel>Tipo de actividad</FormLabel>
+                  <Select
+                    id={"actividadId"}
+                    {...register("actividadId", {
+                      required: "Debes brindar un tipo de actividad",
+                    })}
+                  >
+                    {activities?.map((a: Actividad) => (
+                      <option key={a.id} value={a.id}>
+                        {a.nombre}
+                      </option>
+                    ))}
+                  </Select>
+                  <FormErrorMessage>
+                    {errors.actividadId?.message}
+                  </FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.capacidadMaxima}>
+                  <FormLabel>Cantidad de participantes </FormLabel>
+                  <Incrementer
+                    onValueChange={(value: any) =>
+                      setValue("capacidadMaxima", value)
+                    }
+                  />
+                  <FormErrorMessage>
+                    {errors.capacidadMaxima?.message}
+                  </FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.fecha}>
+                  <FormLabel>Fecha y hora</FormLabel>
+                  <Input
+                    id={"fecha"}
+                    type="datetime-local"
+                    {...register("fecha", {
+                      required: "Debes brindar una fecha",
+                    })}
+                  ></Input>
+                  <FormErrorMessage>{errors.fecha?.message}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.descripcion}>
+                  <FormLabel>Descripción</FormLabel>
+                  <Textarea
+                    id={"descripcion"}
+                    maxLength={200}
+                    placeholder="Describe el evento"
+                    {...register("descripcion", {
+                      required: "Descripcion es obligatorio",
+                    })}
+                  />
+                  <FormErrorMessage>
+                    {errors.descripcion?.message}
+                  </FormErrorMessage>
+                </FormControl>
+              </VStack>
+              <VStack>
+                <MapComponent
+                  onValuechange={(value: any) => setValue("ubicacion", value)}
+                  id={"ubicacion"}
                 />
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Fecha y hora</FormLabel>
-                <Input
-                  type="datetime-local"
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      fecha: formatDate(e.target.value),
-                      hora: formatTime(e.target.value),
-                    })
-                  }
-                ></Input>
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>Descripción</FormLabel>
-                <Textarea
-                  maxLength={200}
-                  placeholder="Describe el evento"
-                  onChange={(e) =>
-                    setFormData({ ...formData, descripcion: e.target.value })
-                  }
-                />
-              </FormControl>
-            </VStack>
-
-            <MapComponent
-              onValuechange={(value: any) =>
-                setFormData({ ...formData, ubicacion: value })
-              }
-            />
-          </Flex>
-        </ModalBody>
-
-        <ModalFooter justifyContent={{ base: "center", md: "flex-end" }}>
-          <Button bg="brand.300" color={"white"} mr={3} onClick={handleCreate}>
-            Crear
-          </Button>
-          <Button onClick={onClose}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
+              </VStack>
+            </Flex>
+          </ModalBody>
+          <ModalFooter justifyContent={{ base: "center", md: "flex-end" }}>
+            <Button type="submit" bg="brand.300" color={"white"} mr={3}>
+              Crear
+            </Button>
+            <Button onClick={handleClose}>Cancelar</Button>
+          </ModalFooter>
+        </ModalContent>
+      </FormProvider>
     </Modal>
   );
 };

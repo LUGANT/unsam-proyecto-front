@@ -43,6 +43,8 @@ export function LoginForm() {
           usuario: usuario.toLowerCase(),
           contrasenia,
         });
+        console.log(rta);
+
         auth.login(rta.id);
         auth.changeUsername(rta.username);
         navigate("/");

@@ -1,12 +1,23 @@
-import { Box, Button, Input, useToast, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Input,
+  useToast,
+  VStack,
+} from "@chakra-ui/react";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { useEffect, useRef, useState } from "react";
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
-
-import { AspectRatio, FormControl, FormLabel, HStack } from "@chakra-ui/react";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import "leaflet/dist/leaflet.css";
+import { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { MapRender } from "../../components/map-render";
+import { EventoCreate } from "../../types/Event";
+
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
@@ -17,25 +28,30 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 const MAPBOX_TOKEN =
   "pk.eyJ1IjoiZ29uemFsaXNraSIsImEiOiJjbDVzazZmcXgyaW13M2NsdnJjMTlzMXkzIn0.Pmdn5rD4_xoogyyZwGxAbg";
+
 const MapComponent = ({
   onValuechange,
+  id,
 }: {
   onValuechange: (a: any) => void;
+  id?: string;
 }) => {
   const toast = useToast();
   const [position, setPosition] = useState<[number, number]>([
     -34.6037389, -58.3841507,
   ]); // Coordenadas iniciales
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [searchResult, setSearchResult] = useState<{
-    lat: number;
-    lon: number;
-  } | null>(null);
-  const mapRef = useRef<L.Map | null>(null);
+  // const [searchTerm, setSearchTerm] = useState<string>("");
+  const {
+    register,
+    setError,
+    clearErrors,
+    trigger,
+    getValues,
+    formState: { errors, isValidating },
+  } = useFormContext<EventoCreate>();
 
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSearch = async () => {
+    const searchTerm = getValues("ubicacion");
     try {
       const res = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
@@ -48,24 +64,33 @@ const MapComponent = ({
         const { center, place_name, context } = data.features[0];
         const [lon, lat] = center;
         setPosition([lat, lon]);
-        setSearchResult({ lat, lon });
         const neighborhoodOrPlace =
           context.find((p: any) => p.id.includes("neighborhood")) ||
           context.find((p: any) => p.id.includes("place"));
+        if (!neighborhoodOrPlace) {
+          setError("ubicacion", {
+            type: "manual",
+            message:
+              "Búsqueda poco precisa: Por favor indica un lugar más específico, añadiendo una calle, lugar y/o barrio",
+          });
+          onValuechange({});
+        } else {
+          clearErrors("ubicacion");
+          const obj = {
+            nombreCompletoLugar: place_name,
+            barrio: neighborhoodOrPlace.text,
+            lat,
+            lon,
+          };
+          console.log(obj);
 
-        const obj = {
-          nombreCompletoLugar: place_name,
-          barrio: neighborhoodOrPlace
-            ? neighborhoodOrPlace.text
-            : "No especificado",
-          lat,
-          lon,
-        };
-        console.log(obj);
-
-        onValuechange(obj);
-        console.log("on value change");
+          onValuechange(obj);
+        }
       } else {
+        setError("ubicacion", {
+          type: "manual",
+          message: "No has ingresado una búsqueda válida",
+        });
         toast({
           title: "Sin resultados",
           description: "No se encontraron resultados",
@@ -76,50 +101,55 @@ const MapComponent = ({
       }
     } catch (error) {
       console.error("Error fetching search results:", error);
+      setError("ubicacion", {
+        type: "manual",
+        message: "Error en la búsqueda",
+      });
     }
   };
 
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setView(position, 13, { animate: true });
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
     }
-  }, [position]);
+  };
+  useEffect(() => {
+    onValuechange("");
+    console.log(isValidating && !getValues("ubicacion"));
 
+    // Verificar si se ha intentado enviar el formulario y el campo de ubicación está vacío
+    if (isValidating && !getValues("ubicacion")) {
+      // Forzar la validación del campo de ubicación
+      trigger("ubicacion");
+    }
+  }, [isValidating]);
   return (
-    <VStack maxW={"sm"} gap={8}>
-      +
-      <Box as="form" onSubmit={handleSearch} w={"full"}>
+    <VStack maxW={"min-content"} gap={8}>
+      <Box w={"full"}>
         <FormLabel>Ubicación</FormLabel>
-        <HStack>
-          <FormControl>
+        <FormControl isInvalid={!!errors.ubicacion}>
+          <HStack>
             <Input
+              id={id}
               type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Buscar lugar"
+              placeholder="Ej: Calle 0000, Barrio"
+              {...register("ubicacion", {
+                required: "Ubicación es obligatoria",
+              })}
+              onKeyDown={handleKeyPress}
+              onBlur={() => trigger("ubicacion")}
             />
-          </FormControl>
-          <Button bg="brand.300" color={"white"} type="submit">
-            Buscar
-          </Button>
-        </HStack>
+            <Button bg="brand.300" color={"white"} onClick={handleSearch}>
+              Buscar
+            </Button>
+          </HStack>
+          <FormErrorMessage maxW={"full"}>
+            {errors.ubicacion?.message}
+          </FormErrorMessage>
+        </FormControl>
       </Box>
-      <AspectRatio w="xs" h={"xs"} ratio={4 / 3}>
-        <Box width="100%" height="400px">
-          <MapContainer
-            center={position}
-            zoom={13}
-            style={{ height: "100%", width: "100%" }}
-            ref={mapRef}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            <Marker position={position}></Marker>
-          </MapContainer>
-        </Box>
-      </AspectRatio>
+      <MapRender position={position} />
     </VStack>
   );
 };
