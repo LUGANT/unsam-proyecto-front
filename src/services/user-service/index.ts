@@ -62,7 +62,7 @@ class UserService extends ApiService {
     return rta;
   }
   async updatePassword(usuarioId:string,currentPassword:string,newPassword:string){
-    const rta = await axios.patch(URL_BACK + `usuario/cambiarPassword`,{
+    const rta = await this.api.patch(URL_BACK + `usuario/cambiarPassword`,{
       usuarioId,
       contrasenaActual: currentPassword,
       nuevaContrasena: newPassword
