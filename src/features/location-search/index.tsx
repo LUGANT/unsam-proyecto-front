@@ -13,7 +13,7 @@ import L from "leaflet";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { MapRender } from "../../components/map-render";
 import { EventoCreate } from "../../types/Event";
@@ -40,18 +40,17 @@ const MapComponent = ({
   const [position, setPosition] = useState<[number, number]>([
     -34.6037389, -58.3841507,
   ]); // Coordenadas iniciales
-  // const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const {
     register,
     setError,
-    clearErrors,
     trigger,
-    getValues,
-    formState: { errors, isValidating },
+    formState: { errors },
   } = useFormContext<EventoCreate>();
 
   const handleSearch = async () => {
-    const searchTerm = getValues("ubicacion");
+    console.log(searchTerm);
+
     try {
       const res = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
@@ -59,7 +58,6 @@ const MapComponent = ({
         )}.json?access_token=${MAPBOX_TOKEN}&country=AR`
       );
       const data = await res.json();
-      console.log(data);
       if (data.features.length > 0) {
         const { center, place_name, context } = data.features[0];
         const [lon, lat] = center;
@@ -73,9 +71,7 @@ const MapComponent = ({
             message:
               "Búsqueda poco precisa: Por favor indica un lugar más específico, añadiendo una calle, lugar y/o barrio",
           });
-          onValuechange({});
         } else {
-          clearErrors("ubicacion");
           const obj = {
             nombreCompletoLugar: place_name,
             barrio: neighborhoodOrPlace.text,
@@ -114,16 +110,6 @@ const MapComponent = ({
       handleSearch();
     }
   };
-  useEffect(() => {
-    onValuechange("");
-    console.log(isValidating && !getValues("ubicacion"));
-
-    // Verificar si se ha intentado enviar el formulario y el campo de ubicación está vacío
-    if (isValidating && !getValues("ubicacion")) {
-      // Forzar la validación del campo de ubicación
-      trigger("ubicacion");
-    }
-  }, [isValidating]);
   return (
     <VStack maxW={"min-content"} gap={8}>
       <Box w={"full"}>
@@ -136,9 +122,10 @@ const MapComponent = ({
               placeholder="Ej: Calle 0000, Barrio"
               {...register("ubicacion", {
                 required: "Ubicación es obligatoria",
+                onBlur: () => trigger("ubicacion"),
               })}
+              onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyPress}
-              onBlur={() => trigger("ubicacion")}
             />
             <Button bg="brand.300" color={"white"} onClick={handleSearch}>
               Buscar

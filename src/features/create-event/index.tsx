@@ -16,6 +16,7 @@ import {
   Select,
   Textarea,
   useNumberInput,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -39,25 +40,48 @@ export const CreateEventPopup = ({
   const { userId } = useAuth();
   const { toggleSomethingChange } = useEventContext();
   const [activities, setActivities] = useState<Actividad[]>();
-  const methods = useForm<EventoCreate>();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    reset,
-  } = useForm<EventoCreate>({
+  const methods = useForm<EventoCreate>({
     defaultValues: {
       actividadId: "",
       anfitrionId: userId || "",
       descripcion: "",
-      fecha: "", // Puedes usar un valor predeterminado apropiado
+      fecha: "",
       hora: "",
-      ubicacion: "", // Proporciona un valor predeterminado adecuado para Ubicacion
-      capacidadMaxima: 0, // O cualquier valor predeterminado adecuado
+      ubicacion: "",
+      capacidadMaxima: 0,
     },
   });
+  const toast = useToast();
+  const onSubmit = async (data: EventoCreate) => {
+    if (typeof data.ubicacion == "string") {
+      methods.setError("ubicacion", {
+        type: "manual",
+        message: "Búsqueda inválida",
+      });
+      return;
+    }
 
+    try {
+      data.fecha = formatDate(data.fecha);
+      data.hora = formatTime(data.fecha);
+      await eventService.create(data);
+      onClose();
+      toggleSomethingChange();
+      methods.reset();
+    } catch (error) {
+      toast({
+        title: "Algo inesperado ocurrió",
+        description: "No pudimos crear el evento debido a un fallo",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
+  const handleClose = () => {
+    onClose();
+    methods.reset();
+  };
   useEffect(() => {
     const fetchActivities = async () => {
       const res = await activityService.all();
@@ -66,28 +90,15 @@ export const CreateEventPopup = ({
     fetchActivities();
   }, []);
 
-  const onSubmit = async (data: EventoCreate) => {
-    try {
-      data.fecha = formatDate(data.fecha);
-      data.hora = formatTime(data.fecha);
-      await eventService.create(data);
-      onClose();
-      toggleSomethingChange();
-      reset();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const handleClose = () => {
-    onClose();
-    reset();
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <FormProvider {...methods}>
-        <ModalContent as="form" maxW="900px" onSubmit={handleSubmit(onSubmit)}>
+        <ModalContent
+          as="form"
+          maxW="900px"
+          onSubmit={methods.handleSubmit(onSubmit)}
+        >
           <ModalHeader>Crear evento</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -98,11 +109,11 @@ export const CreateEventPopup = ({
               gap={5}
             >
               <VStack maxW={"sm"} gap={8}>
-                <FormControl isInvalid={!!errors.actividadId}>
+                <FormControl isInvalid={!!methods.formState.errors.actividadId}>
                   <FormLabel>Tipo de actividad</FormLabel>
                   <Select
                     id={"actividadId"}
-                    {...register("actividadId", {
+                    {...methods.register("actividadId", {
                       required: "Debes brindar un tipo de actividad",
                     })}
                   >
@@ -113,56 +124,68 @@ export const CreateEventPopup = ({
                     ))}
                   </Select>
                   <FormErrorMessage>
-                    {errors.actividadId?.message}
+                    {methods.formState.errors.actividadId?.message}
                   </FormErrorMessage>
                 </FormControl>
-                <FormControl isInvalid={!!errors.capacidadMaxima}>
+                <FormControl
+                  isInvalid={!!methods.formState.errors.capacidadMaxima}
+                >
                   <FormLabel>Cantidad de participantes </FormLabel>
                   <Incrementer
                     onValueChange={(value: any) =>
-                      setValue("capacidadMaxima", value)
+                      methods.setValue("capacidadMaxima", value)
                     }
                   />
                   <FormErrorMessage>
-                    {errors.capacidadMaxima?.message}
+                    {methods.formState.errors.capacidadMaxima?.message}
                   </FormErrorMessage>
                 </FormControl>
-                <FormControl isInvalid={!!errors.fecha}>
+                <FormControl isInvalid={!!methods.formState.errors.fecha}>
                   <FormLabel>Fecha y hora</FormLabel>
                   <Input
                     id={"fecha"}
                     type="datetime-local"
-                    {...register("fecha", {
+                    {...methods.register("fecha", {
                       required: "Debes brindar una fecha",
                     })}
                   ></Input>
-                  <FormErrorMessage>{errors.fecha?.message}</FormErrorMessage>
+                  <FormErrorMessage>
+                    {methods.formState.errors.fecha?.message}
+                  </FormErrorMessage>
                 </FormControl>
-                <FormControl isInvalid={!!errors.descripcion}>
+                <FormControl isInvalid={!!methods.formState.errors.descripcion}>
                   <FormLabel>Descripción</FormLabel>
                   <Textarea
                     id={"descripcion"}
                     maxLength={200}
                     placeholder="Describe el evento"
-                    {...register("descripcion", {
+                    {...methods.register("descripcion", {
                       required: "Descripcion es obligatorio",
                     })}
                   />
                   <FormErrorMessage>
-                    {errors.descripcion?.message}
+                    {methods.formState.errors.descripcion?.message}
                   </FormErrorMessage>
                 </FormControl>
               </VStack>
               <VStack>
                 <MapComponent
-                  onValuechange={(value: any) => setValue("ubicacion", value)}
+                  onValuechange={(value: any) =>
+                    methods.setValue("ubicacion", value)
+                  }
                   id={"ubicacion"}
                 />
               </VStack>
             </Flex>
           </ModalBody>
           <ModalFooter justifyContent={{ base: "center", md: "flex-end" }}>
-            <Button type="submit" bg="brand.300" color={"white"} mr={3}>
+            <Button
+              type="submit"
+              bg="brand.300"
+              color={"white"}
+              mr={3}
+              // onClick={dirtyUbicacionCheck}
+            >
               Crear
             </Button>
             <Button onClick={handleClose}>Cancelar</Button>
