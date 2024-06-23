@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextField } from "../../ui/text-field";
+import { TextField, TextFieldSecret } from "../../ui/text-field";
 import { Box, Button, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { userService } from "../../services/user-service";
@@ -46,7 +46,7 @@ export function LoginForm() {
         const user = await userService.getUser()
         auth.login(user.id);
         auth.changeUsername(user.username);
-        navigate("/home");
+        navigate("/");
       } catch (e) {
         setTimeout(() => {
           setIsLoading(false);
@@ -76,10 +76,9 @@ export function LoginForm() {
         onChange={handlerUsuario}
         handleKeyDown={handleKeyPress}
       />
-      <TextField
+      <TextFieldSecret
         isRequired={true}
         size="md"
-        inputType="password"
         label="CONTRASEÑA"
         isError={validarCampo(contrasenia)}
         touched={touchedContrasenia}

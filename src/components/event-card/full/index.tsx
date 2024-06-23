@@ -20,8 +20,7 @@ import { Evento } from "../../../types/Event";
 export const EventCard = ({ evento }: { evento: Evento }) => {
   const toast = useToast();
   const { userId } = useAuth();
-  const { id, anfitrion, actividad, fecha, ubicacion, capacidadMaxima } =
-    evento;
+  const { id, anfitrion, actividad, fecha, ubicacion } = evento;
   const handleRequest = () => {
     try {
       userService.sendRequest(id, userId!);
@@ -47,6 +46,7 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
       <Box
         maxW={"445px"}
         w={"full"}
+        h={"md"}
         // eslint-disable-next-line react-hooks/rules-of-hooks
         bg={useColorModeValue("white", "gray.900")}
         boxShadow={"2xl"}
@@ -81,7 +81,12 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
             fontSize={"2xl"}
             fontFamily={"body"}
           >
-            <ChakraLink as={ReactRouterLink} to={`/evento/${id}`}>
+            <ChakraLink
+              as={ReactRouterLink}
+              to={`/evento/${id}`}
+              noOfLines={2}
+              maxW={"300px"}
+            >
               Partido de {actividad.nombre} en {ubicacion.barrio}
             </ChakraLink>
           </Heading>
@@ -93,7 +98,9 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
           />
           <Stack direction={"column"} spacing={0} fontSize={"sm"}>
             <Text fontWeight={600}>{anfitrion.nombre}</Text>
-            <Text color={"gray.500"}>{fecha.toString()} · 18:00hs</Text>
+            <Text color={"gray.500"}>
+              {formatDate(fecha.toString())} · 18:00hs
+            </Text>
           </Stack>
           <Spacer />
           <Button onClick={handleRequest}>Unirse</Button>
@@ -102,3 +109,17 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
     </Center>
   );
 };
+
+function formatDate(dateString: string): string {
+  // Validar el formato de la cadena de entrada
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(dateString)) {
+    throw new Error("Formato de fecha inválido. Debe ser yyyy-MM-dd.");
+  }
+
+  // Dividir la cadena en partes
+  const [year, month, day] = dateString.split("-");
+
+  // Retornar la cadena formateada
+  return `${day}-${month}-${year}`;
+}

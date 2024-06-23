@@ -6,8 +6,10 @@ import {
   Heading,
   IconButton,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { userService } from "../../services/user-service";
+import { Solicitud } from "../../types/Event";
 
 export function RequestItem({
   id,
@@ -18,10 +20,20 @@ export function RequestItem({
   request: Solicitud;
   onAction: () => void;
 }) {
+  const toast = useToast();
   const { usuario } = request;
   const handleAccept = async () => {
-    await userService.answerRequest(id, true);
-    onAction();
+    try {
+      await userService.answerRequest(id, true);
+      onAction();
+    } catch (e: any) {
+      toast({
+        description: e.response.data.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
   const handleReject = async () => {
     await userService.answerRequest(id, false);

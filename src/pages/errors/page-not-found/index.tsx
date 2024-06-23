@@ -10,12 +10,7 @@ export const PageNotFound = () => {
     >
       <VStack>
         <Heading color={"black"}>Pagina no encontrada</Heading>
-        <Link
-          href="/home"
-          color={"brand.300"}
-          fontSize={"xl"}
-          fontWeight={"bold"}
-        >
+        <Link href="/" color={"brand.300"} fontSize={"xl"} fontWeight={"bold"}>
           Volver al inicio
         </Link>
       </VStack>

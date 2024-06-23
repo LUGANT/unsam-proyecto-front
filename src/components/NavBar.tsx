@@ -49,8 +49,15 @@ const NavLink = (props: Props) => {
         bg: useColorModeValue("gray.200", "gray.700"),
       }}
       href={route}
+      textAlign={"center"}
     >
-      <ChakraLink as={ReactRouterLink} to={route}>
+      <ChakraLink
+        as={ReactRouterLink}
+        to={route}
+        _hover={{
+          textDecoration: "none",
+        }}
+      >
         {children}
       </ChakraLink>
     </Box>
@@ -91,7 +98,7 @@ export const NavBar = () => {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={{ base: 1, md: 8 }} alignItems={"center"}>
-            <ChakraLink as={ReactRouterLink} to={"/home"}>
+            <ChakraLink as={ReactRouterLink} to={"/"}>
               <BrandIcon boxSize={10} color="#341c54" />
             </ChakraLink>
             <HStack
@@ -111,25 +118,36 @@ export const NavBar = () => {
             <Text display={{ base: "none", md: "inline" }}>
               {capitalLetter(username)}
             </Text>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={"full"}
-                variant={"link"}
-                cursor={"pointer"}
-                minW={0}
-              >
-                {islogged ? <Avatar size={"sm"} bg={"brand.300"} /> : <></>}
-              </MenuButton>
-              <MenuList>
-                <MenuItem as={ReactRouterLink} to={`/profile/` + username}>
-                  Ver perfil
-                </MenuItem>
-                <MenuItem>Cambiar contraseña</MenuItem>
-                <MenuDivider />
-                <MenuItem onClick={handlerLogOut}>Cerrar sesión</MenuItem>
-              </MenuList>
-            </Menu>
+            {islogged ? (
+              <Menu>
+                <MenuButton
+                  as={Button}
+                  rounded={"full"}
+                  variant={"link"}
+                  cursor={"pointer"}
+                  minW={0}
+                >
+                  <Avatar size={"sm"} bg={"brand.300"} />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem as={ReactRouterLink} to={`/profile/` + username}>
+                    Ver perfil
+                  </MenuItem>
+                  <MenuItem
+                    as={ReactRouterLink}
+                    to={"/profile/change-password"}
+                  >
+                    Cambiar contraseña
+                  </MenuItem>
+                  <MenuDivider />
+                  <MenuItem onClick={handlerLogOut}>Cerrar sesión</MenuItem>
+                </MenuList>
+              </Menu>
+            ) : (
+              <NavLink route="/auth/login" key="iniciar_sesion">
+                Iniciar Sesion
+              </NavLink>
+            )}
           </Flex>
         </Flex>
 
@@ -154,7 +172,11 @@ const SearchInput = () => {
 
   const handlerSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    navigate("/buscar-eventos/" + search);
+    if (search != "") {
+      navigate("/buscar-eventos/" + search);
+    } else {
+      navigate("/");
+    }
   };
 
   return (
