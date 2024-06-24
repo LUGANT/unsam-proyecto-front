@@ -39,14 +39,13 @@ export function LoginForm() {
     if (!validarCampo(usuario) && !validarCampo(contrasenia)) {
       setIsLoading(true);
       try {
-        const rta = await userService.loggin({
+        await userService.loggin({
           usuario: usuario.toLowerCase(),
           contrasenia,
         });
-        console.log(rta);
-
-        auth.login(rta.id);
-        auth.changeUsername(rta.username);
+        const user = await userService.getUser()
+        auth.login(user.id);
+        auth.changeUsername(user.username);
         navigate("/");
       } catch (e) {
         setTimeout(() => {

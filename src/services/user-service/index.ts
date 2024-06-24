@@ -1,4 +1,3 @@
-import axios from "axios";
 import { AxiosResponse } from "axios";
 import { URL_BACK } from "../configuration";
 import ApiService from "..";
@@ -8,15 +7,16 @@ import { Solicitud } from "../../types/Event";
 class UserService extends ApiService {
   
   async loggin(data: logginType): Promise<any> {
-    const rta = await axios.post(URL_BACK + 'usuario/login', {
+    const rta = await this.api.post(URL_BACK + 'usuario/login', {
       'username': data.usuario,
       'password': data.contrasenia
     })
+    localStorage.setItem("token", rta.data.token)
     return rta.data;
   }
 
   async singUp(data: signupType): Promise<any> {
-    const rta = await axios.post(URL_BACK + 'usuario/signup', {
+    const rta = await this.api.post(URL_BACK + 'usuario/signup', {
       'nombre': data.nombre,
       'apellido': data.apellido,
       'email': data.email,
@@ -25,6 +25,12 @@ class UserService extends ApiService {
     })
     return rta.data;
   }
+
+  async getUser(): Promise<any> {
+    const rta = await this.api.get(URL_BACK + 'usuario/user')
+    return rta.data;
+  }
+  
   
   async sendRequest(idEvento: string, solicitanteId: string) {
     return this.handleRequest<Solicitud[]>(async () => {
@@ -47,16 +53,16 @@ class UserService extends ApiService {
   }
 
   async getUserData(userId:string | null){
-    const rta = await axios.get(URL_BACK + `usuario/${userId}/perfil`)
+    const rta = await this.api.get(URL_BACK + `usuario/${userId}/perfil`)
     return rta.data;
   }
 
   async updateUsername(userId:string | null,newUsername:string){
-    const rta = await axios.patch(URL_BACK + `usuario/${userId}/updateUsername?nuevoUsername=${newUsername}`)
+    const rta = await this.api.patch(URL_BACK + `usuario/${userId}/updateUsername?nuevoUsername=${newUsername}`)
     return rta;
   }
   async updatePassword(usuarioId:string,currentPassword:string,newPassword:string){
-    const rta = await axios.patch(URL_BACK + `usuario/cambiarPassword`,{
+    const rta = await this.api.patch(URL_BACK + `usuario/cambiarPassword`,{
       usuarioId,
       contrasenaActual: currentPassword,
       nuevaContrasena: newPassword

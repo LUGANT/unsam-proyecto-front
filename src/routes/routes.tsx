@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AboutPage } from "../pages/about";
 import { ChangePasswordPage } from "../pages/change-password";
 import { NotFound } from "../pages/errors/not-found";
@@ -9,15 +9,18 @@ import { AuthLayout } from "../pages/layouts/auth-layout";
 import { MainLayout } from "../pages/layouts/main-layout";
 import { LoginPage } from "../pages/login";
 import { MisEventos } from "../pages/mis-eventos";
+import { useAuth } from "../providers/auth/AuthContext";
 import Profile from "../pages/profile/Profile";
 import { SearchPage } from "../pages/search";
 import { SignUpPage } from "../pages/signup";
 
 export function PrincipalRoutes() {
+  const { isLoggedIn } = useAuth();
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth" element={<AuthLayout />}>
+        <Route path="/auth" element={ isLoggedIn ? <Navigate to='/'/> : <AuthLayout />}>
           <Route path="/auth/login" element={<LoginPage />} />
           <Route path="/auth/signup" element={<SignUpPage />} />
         </Route>
