@@ -3,7 +3,7 @@ import { FullEventDetail } from "../../features/event-detail";
 
 export const EventoDetail = () => {
   return (
-    <Box w={"full"} m={0} h={"full"}>
+    <Box w={"full"} m={{ base: "0 auto", md: 0 }} h={"full"}>
       <Box w={"full"} h={"full"}>
         <Image
           h={"200px"}

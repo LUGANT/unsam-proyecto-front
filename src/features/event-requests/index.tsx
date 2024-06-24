@@ -6,6 +6,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { RequestItem } from "../../components/request-item";
@@ -44,14 +45,18 @@ export const RequestsForAnEvent = ({
         <ModalCloseButton />
         <ModalBody>
           <Flex height="100%" direction={"column"} gap={10}>
-            {requests?.map((r) => (
-              <RequestItem
-                key={r.id}
-                id={r.id}
-                request={r}
-                onAction={onClose}
-              />
-            ))}
+            {requests?.length ? (
+              requests?.map((r) => (
+                <RequestItem
+                  key={r.id}
+                  id={r.id}
+                  request={r}
+                  onAction={onClose}
+                />
+              ))
+            ) : (
+              <Text textAlign={"center"}>No hay solicitudes</Text>
+            )}
           </Flex>
         </ModalBody>
       </ModalContent>
