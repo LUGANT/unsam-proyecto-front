@@ -33,7 +33,7 @@ interface Props {
 const Links = [
   { name: "Acerca", route: "/about" },
   { name: "Mis eventos", route: "/mis-eventos" },
-  { name: "Equipos", route: "/equipos" },
+  // { name: "Equipos", route: "/equipos" },
 ];
 
 const NavLink = (props: Props) => {
