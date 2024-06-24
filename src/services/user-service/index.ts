@@ -52,9 +52,11 @@ class UserService extends ApiService {
     });
   }
 
-  async getUserData(userId:string | null){
-    const rta = await this.api.get(URL_BACK + `usuario/${userId}/perfil`)
-    return rta.data;
+  async getUserData(userId: string | null) {
+    return this.handleRequest<Usuario>(async () => {
+      const rta: AxiosResponse<Usuario> = await this.api.get(URL_BACK + `usuario/${userId}/perfil`)
+      return rta.data;
+    })
   }
 
   async updateUsername(userId:string | null,newUsername:string){
