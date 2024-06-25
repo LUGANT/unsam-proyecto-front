@@ -9,9 +9,11 @@ class EventService extends ApiService {
       return response.data;
     });
   }
-  async getEventForAnUserLogged(userId:string):Promise<Evento[]>{
+  async getEventForAnUserLogged(userId: string): Promise<Evento[]> {
     return this.handleRequest<Evento[]>(async () => {
-      const response: AxiosResponse<Evento[]> = await this.api.get(`/home/${userId}`);
+      const response: AxiosResponse<Evento[]> = await this.api.get(
+        `/home/${userId}`
+      );
       return response.data;
     });
   }
@@ -72,7 +74,15 @@ class EventService extends ApiService {
   async getEventsAssisted(userId: string): Promise<Evento[]> {
     return this.handleRequest<Evento[]>(async () => {
       const response: AxiosResponse<Evento[]> = await this.api.get(
-        `/${userId}/eventosCreados`
+        `/${userId}/eventosAsistidos`
+      );
+      return response.data;
+    });
+  }
+  async getEventsToAssist(userId: string): Promise<Evento[]> {
+    return this.handleRequest<Evento[]>(async () => {
+      const response: AxiosResponse<Evento[]> = await this.api.get(
+        `/${userId}/eventosPorAsistir`
       );
       return response.data;
     });
