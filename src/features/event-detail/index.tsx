@@ -19,6 +19,7 @@ import { FaCrown } from "react-icons/fa";
 import { Evento, Participante } from "../../types/Event";
 import { MapRender } from "../../components/map-render";
 import { useAuth } from "../../providers/auth/AuthContext";
+import { userService } from "../../services/user-service";
 
 export const FullEventDetail = () => {
   const [evento, setEvento] = useState<Evento>();
@@ -28,13 +29,24 @@ export const FullEventDetail = () => {
   const { userId } = useAuth();
 
   const handleJoin = () => {
-    toast({
-      title: "Solicitud enviada.",
-      description: "Debes esperar a que el anfitrión te acepte.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
+    try {
+      userService.sendRequest(idEvento, userId!);
+      toast({
+        title: "Solicitud enviada.",
+        description: "Debes esperar a que el anfitrión te acepte.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (e) {
+      toast({
+        title: "Algo inesperado ocurrió",
+        description: "No pudimos enviar tu solicitud debido a un fallo",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   function avaiableSlot() {
@@ -117,7 +129,7 @@ export const FullEventDetail = () => {
       <Flex
         flexDir={{ base: "column", md: "row" }}
         justifyContent={{ base: "center", md: "space-between" }}
-        margin={{ base: "0 30px", md: "0" }}
+        margin={{ base: "0 auto", md: "0" }}
         gap={10}
       >
         <VStack alignItems={"flex-start"} gap={14}>
