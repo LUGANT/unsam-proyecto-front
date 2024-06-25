@@ -20,7 +20,7 @@ import { Evento } from "../../../types/Event";
 export const EventCard = ({ evento }: { evento: Evento }) => {
   const toast = useToast();
   const { userId } = useAuth();
-  const { id, anfitrion, actividad, fecha, ubicacion } = evento;
+  const { id, anfitrion, actividad, fecha, ubicacion, hora } = evento;
   const handleRequest = () => {
     try {
       userService.sendRequest(id, userId!);
@@ -99,11 +99,16 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
           <Stack direction={"column"} spacing={0} fontSize={"sm"}>
             <Text fontWeight={600}>{anfitrion.nombre}</Text>
             <Text color={"gray.500"}>
-              {formatDate(fecha.toString())} · 18:00hs
+              {formatDate(fecha.toString())} · {formatHour(hora)}
             </Text>
           </Stack>
           <Spacer />
-          <Button onClick={handleRequest}>Unirse</Button>
+          <Button 
+            onClick={handleRequest}
+            isDisabled={!evento.habilitado}
+          >
+            {!evento.habilitado ? `Pendiente` : `Unirse`}
+          </Button>
         </Stack>
       </Box>
     </Center>
@@ -122,4 +127,11 @@ function formatDate(dateString: string): string {
 
   // Retornar la cadena formateada
   return `${day}-${month}-${year}`;
+}
+
+function formatHour(hour: Date): string {
+  const hourString = hour.toString()
+  const regex = /^(\d{2}:\d{2}):\d{2}$/;
+  const match = hourString.match(regex);
+  return match[1]
 }

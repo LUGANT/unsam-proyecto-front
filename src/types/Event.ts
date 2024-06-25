@@ -5,11 +5,13 @@ export type Evento = {
   anfitrion: Usuario;
   actividad: Actividad;
   fecha: Date;
+  hora: Date;
   ubicacion: Ubicacion;
   capacidadMaxima: number;
   descripcion?: string;
   participantes?: Participante[];
   solicitudes?: number;
+  habilitado?: boolean;
 };
 export type EventoCreate = {
   anfitrionId: string;
