@@ -31,11 +31,14 @@ function Profile() {
   const auth = useAuth();
   const [name, setname] = useState("");
   const [lastName, setLastName] = useState("");
+  const [opinions, setOpinions] = useState<Opinion[]>([])
 
   const getUserData = async () => {
-    const user = await userService.getUserData(auth.userId);
-    setname(user.usuarioDTO.nombre);
-    setLastName(user.usuarioDTO.apellido);
+    const profile = await userService.getUserData(auth.userId);
+    console.log(profile)
+    setname(profile.usuario.nombre);
+    setLastName(profile.usuario.apellido);
+    setOpinions(profile.opiniones)
   };
 
   useEffect(() => {
@@ -77,9 +80,7 @@ function Profile() {
           Ultimas reseñas
         </Text>
         <VStack spacing={"50px"}>
-          <ReviewMiniCard />
-          <ReviewMiniCard />
-          <ReviewMiniCard />
+          {opinions.map((opinion)=><ReviewMiniCard opinion={opinion}/>)}
         </VStack>
       </Flex>
       <EditProfile isOpen={isOpen} onClose={onClose} usuario={auth.username} />
@@ -89,7 +90,7 @@ function Profile() {
 
 export default Profile;
 
-const ReviewMiniCard = () => {
+const ReviewMiniCard = ({opinion}:{opinion:Opinion}) => {
   return (
     <Flex w={"20rem"}>
       <Image
@@ -101,21 +102,19 @@ const ReviewMiniCard = () => {
       <Flex w={"100%"} gap={"10px"} px={"10px"} flexDirection={"column"}>
         <Flex justifyContent={"space-between"} w={"100%"} textAlign={"center"}>
           <Box>
-            <Text fontSize={"sm"}>PepeJ</Text>
-            <Text fontSize={"xs"}>futbol</Text>
+            <Text fontSize={"sm"}>{opinion.opinante.username}</Text>
+            {/* <Text fontSize={"xs"}>futbol?</Text> */}
           </Box>
           <Box>
             <HStack gap={"5px"}>
-              <StarIcon boxSize={5} color={"brand.300"} />
-              <StarIcon boxSize={5} color={"brand.300"} />
-              <StarIcon boxSize={5} color={"brand.300"} />
-              <StarIcon boxSize={5} color={"brand.300"} />
-              <StarIcon boxSize={5} color={"brand.300"} />
+              {
+              Array.from({length:opinion.puntaje}).map(()=><StarIcon boxSize={5} color={"brand.300"} />)
+              }
             </HStack>
-            <Text>24 de mar 2024</Text>
+            <Text>{opinion.fecha.toString()}</Text>
           </Box>
         </Flex>
-        <Text>Un capo!</Text>
+        <Text>{opinion.comentario}</Text>
       </Flex>
     </Flex>
   );
