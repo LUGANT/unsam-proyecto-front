@@ -12,6 +12,7 @@ import { RequestsForAnEvent } from "../../features/event-requests";
 import { EventByUserId } from "../../features/user-events/eventByUserId";
 import { CreateEventPopup } from "../../features/create-event";
 import { EventsAssisted } from "../../features/user-events/eventsAssisted";
+import { EventsToAssist } from "../../features/user-events/eventsToAssist";
 
 export const MisEventos = () => {
   const [eventRequestSelected, setEventRequestSelected] = useState<string>("");
@@ -26,7 +27,8 @@ export const MisEventos = () => {
       <Tabs variant={"soft-rounded"} colorScheme="brand" isFitted>
         <TabList>
           <Tab>Mis eventos</Tab>
-          <Tab>Mis Participaciones</Tab>
+          <Tab>Proximos eventos</Tab>
+          <Tab>Eventos finalizados</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -41,6 +43,9 @@ export const MisEventos = () => {
               isOpen={openRequest}
               onClose={toggleOpenRequest}
             />
+          </TabPanel>
+          <TabPanel>
+            <EventsToAssist />
           </TabPanel>
           <TabPanel>
             <EventsAssisted />

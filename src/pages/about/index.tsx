@@ -1,4 +1,4 @@
-import { Box, Container, Image } from "@chakra-ui/react";
+import { Box, Container, HStack, Image } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { textType } from "../../types/Text";
 import { technologies } from "./technologies";
@@ -10,24 +10,31 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { team } from "./members";
+import { BrandIcon } from "../../ui/icons/BrandIcon";
 
 export function AboutPage() {
   return (
-    <Container maxW={"full"} height={"86vh"} overflow={"auto"} px={20}>
-      <Box display={"flex"} flexDirection={"column"} gap={5}>
-        <Box display={"flex"} flexDir={"column"}>
-          <Title text="Yo me sumo" />
+    <Container
+      maxW={"full"}
+      height={"86vh"}
+      overflow={"auto"}
+      px={{ base: 0, md: 50, xl: 80 }}
+    >
+      <Box display={"flex"} flexDirection={"column"} gap={8}>
+        <Box display={"flex"} flexDir={"column"} pt={8} gap={5}>
+          <HStack justifyContent={"center"} gap={10}>
+            <Title text="Yo me sumo" />
+            <BrandIcon boxSize={24} />
+          </HStack>
           <ItalicDescription text="`¿Te falta uno? ¡Yo me sumo!`" />
         </Box>
-        <div>
+        <Box display={"flex"} flexDir={"column"} gap={5}>
           <Subtitle text="Objetivo" />
           <NormalText text="Nuestra aplicación busca resolver una problemática proporcionando una plataforma donde los usuarios puedan crear perfiles, especificar sus intereses deportivos y de ocio, y buscar compañeros de juego o eventos locales basados en sus preferencias. Al hacerlo, la aplicación facilita la conexión entre personas con intereses similares, promoviendo la participación en actividades deportivas y recreativas y fomentando un estilo de vida activo y socialmente conectado." />
-        </div>
-        <div>
-          <Subtitle text="Nuestro equipo" />
-          <Team />
-        </div>
-        <Box display={"flex"} flexDir={"column"} gap={5}>
+        </Box>
+        <Subtitle text="Nuestro equipo" />
+        <Team />
+        <Box display={"flex"} flexDir={"column"} gap={5} mb={10}>
           <Subtitle text="Tecnologias" />
           <Technologies />
         </Box>
@@ -217,23 +224,23 @@ function Description({ children }: any) {
 /* Texts*/
 function Title({ text }: textType) {
   return (
-    <Text color="rgb(52, 28, 84)" align="center" fontSize="5xl" as="b">
+    <Heading color="brand.300" textAlign="center" fontSize="5xl">
       {text}
-    </Text>
+    </Heading>
   );
 }
 function ItalicDescription({ text }: textType) {
   return (
-    <Text fontSize="lg" as="i" align="center">
+    <Text fontSize="lg" fontStyle={"italic"} align="center">
       {text}
     </Text>
   );
 }
 function Subtitle({ text }: textType) {
   return (
-    <Text color="rgb(52, 28, 84)" fontSize="3xl" as="u">
+    <Heading color="brand.400" fontSize="3xl" fontWeight={"semibold"}>
       {text}
-    </Text>
+    </Heading>
   );
 }
 function NormalText({ text }: textType) {

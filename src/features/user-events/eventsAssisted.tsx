@@ -1,17 +1,30 @@
 import {
+  Avatar,
   Box,
+  Button,
+  Card,
   Center,
+  Flex,
   Heading,
   HStack,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   Text,
   useColorModeValue,
+  useDisclosure,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { FaUsers } from "react-icons/fa";
 import { useAuth } from "../../providers/auth/AuthContext";
 import eventService from "../../services/event-service";
-import { Evento } from "../../types/Event";
+import { Evento, Participante, Solicitud } from "../../types/Event";
 import { RoundedActivityIcon } from "../../ui/icons/ActivityIcon";
 
 export function EventsAssisted() {
@@ -30,7 +43,7 @@ export function EventsAssisted() {
   return (
     <>
       <VStack>
-        <Heading pt={2}>Mis partipaciones</Heading>
+        <Heading pt={2}>Eventos finalizados</Heading>
       </VStack>
       <Stack
         as={Box}
@@ -55,7 +68,8 @@ export function EventsAssisted() {
   );
 }
 const SimpleEvent = ({ evento }: { evento: Evento }) => {
-  const { id, anfitrion, actividad, ubicacion } = evento;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { id, anfitrion, actividad, ubicacion, participantes } = evento;
   return (
     <Center py={6}>
       <Box
@@ -92,9 +106,114 @@ const SimpleEvent = ({ evento }: { evento: Evento }) => {
             <Text color={"gray.500"} textAlign={"left"}>
               {evento.descripcion}
             </Text>
+            <Button
+              onClick={onOpen}
+              rightIcon={<FaUsers />}
+              variant={"outline"}
+              color="brand.300"
+              _hover={{ bgColor: "brand.300", color: "white" }}
+            >
+              Ver participantes
+            </Button>
+            <ParticipantsPopup
+              participantes={evento.participantes!}
+              onOpen={onOpen}
+              isOpen={isOpen}
+              onClose={onClose}
+            />
           </Stack>
         </HStack>
       </Box>
     </Center>
   );
 };
+export const ParticipantsPopup = ({
+  participantes,
+  onOpen,
+  isOpen,
+  onClose,
+}: {
+  participantes: Participante[];
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}) => {
+  const [requests, setRequests] = useState<Solicitud[]>();
+  // const fetchRequests = async () => {
+  //   const res = await eventService.getRequests(id);
+  //   setRequests(res);
+  // };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent
+        minHeight={"80%"}
+        maxHeight={"90%"}
+        overflowY={"auto"}
+        gap="10px"
+      >
+        <ModalHeader>Participantes</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Flex height="100%" direction={"column"} gap={10}>
+            {participantes?.length ? (
+              participantes?.map((r) => (
+                <Participant
+                  key={r.id}
+                  id={r.id}
+                  participante={r}
+                  onAction={onClose}
+                />
+              ))
+            ) : (
+              <Text textAlign={"center"}>No hay participantes</Text>
+            )}
+          </Flex>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+function Participant({
+  id,
+  participante,
+  onAction,
+}: {
+  id: string;
+  participante: Participante;
+  onAction: () => void;
+}) {
+  const handleRate = async () => {
+    console.log("abrir popup");
+  };
+
+  return (
+    <Card padding={2}>
+      <Flex justifyContent="space-between" alignItems={"center"} gap={2}>
+        <Flex alignItems={"center"} gap={2}>
+          <Avatar size={"md"} bg={"brand.300"} />
+          <Flex direction={"column"}>
+            <Heading as="h5" textAlign={"left"} size="md">
+              {/* {participante.nombre +
+                " " +
+                participante.apellido +
+                `(${participante.username})`} */}
+              {participante.username}
+            </Heading>
+            {/* <Text color="gray.500">{participante.puntajeUsuario} estrellas</Text> */}
+          </Flex>
+        </Flex>
+        <Button
+          onClick={handleRate}
+          variant={"outline"}
+          color="brand.300"
+          _hover={{ bgColor: "brand.300", color: "white" }}
+        >
+          Calificar
+        </Button>
+      </Flex>
+    </Card>
+  );
+}
