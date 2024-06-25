@@ -16,11 +16,19 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { useAuth } from "../../../providers/auth/AuthContext";
 import { userService } from "../../../services/user-service";
 import { Evento } from "../../../types/Event";
+import { ActivitiesPhotos, ActivityPhotoDefault } from "./Activities";
+import { useEffect, useState } from "react";
 
 export const EventCard = ({ evento }: { evento: Evento }) => {
   const toast = useToast();
   const { userId } = useAuth();
   const { id, anfitrion, actividad, fecha, ubicacion, hora } = evento;
+  const [enabled, setEnabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    setEnabled(evento.habilitado!!);
+  }, []);
+
   const handleRequest = () => {
     try {
       userService.sendRequest(id, userId!);
@@ -31,6 +39,7 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
         duration: 5000,
         isClosable: true,
       });
+      setEnabled(!enabled);
     } catch (e) {
       toast({
         title: "Algo inesperado ocurrió",
@@ -56,13 +65,11 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
       >
         <Box bg={"gray.100"} mt={-6} mx={-6} mb={6} pos={"relative"}>
           <Image
-            src={
-              "https://media.istockphoto.com/id/884279742/es/foto/actividades-recreativas.jpg?s=612x612&w=0&k=20&c=pbh6YIRBl6zB__ZR5_NISgyyWTpxbyYzn1F5aZnGONM="
-            }
+            src={ActivitiesPhotos[actividad.nombre] || ActivityPhotoDefault}
             w={"full"}
             height={"210px"}
             objectFit={"cover"}
-            alt="Example"
+            alt={actividad.nombre}
           />
         </Box>
         <Stack>
@@ -103,11 +110,8 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
             </Text>
           </Stack>
           <Spacer />
-          <Button 
-            onClick={handleRequest}
-            isDisabled={!evento.habilitado}
-          >
-            {!evento.habilitado ? `Pendiente` : `Unirse`}
+          <Button onClick={handleRequest} isDisabled={!enabled}>
+            {!enabled ? `Pendiente` : `Unirse`}
           </Button>
         </Stack>
       </Box>
@@ -130,8 +134,8 @@ function formatDate(dateString: string): string {
 }
 
 function formatHour(hour: Date): string {
-  const hourString = hour.toString()
+  const hourString = hour.toString();
   const regex = /^(\d{2}:\d{2}):\d{2}$/;
   const match = hourString.match(regex);
-  return match[1]
+  return match[1];
 }
