@@ -49,6 +49,10 @@ export const FullEventDetail = () => {
     }
   };
 
+  const disableEnviarSolicitud = () => {
+    return evento?.anfitrion.id == userId
+  }
+
   function avaiableSlot() {
     return !(evento?.participantes?.length === evento?.capacidadMaxima);
   }
@@ -122,6 +126,7 @@ export const FullEventDetail = () => {
           color={"white"}
           bgColor="brand.300"
           colorScheme="brand"
+          hidden={disableEnviarSolicitud()}
         >
           Yo me sumo
         </Button>
