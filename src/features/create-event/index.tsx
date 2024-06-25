@@ -6,6 +6,12 @@ import {
   FormLabel,
   HStack,
   Input,
+  InputGroup,
+  InputRightElement,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,22 +19,22 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   Textarea,
   useNumberInput,
   useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import MapComponent from "../../features/location-search";
 import { useAuth } from "../../providers/auth/AuthContext";
 import { useEventContext } from "../../providers/events/EventContext";
-import activityService from "../../services/activity-service";
 import eventService from "../../services/event-service";
-import { Actividad } from "../../types/Activity";
 import { EventoCreate } from "../../types/Event";
 import { formatDate, formatTime } from "../../util/date";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import activityService from "../../services/activity-service";
+import { Actividad } from "../../types/Activity";
 
 export const CreateEventPopup = ({
   isOpen,
@@ -39,7 +45,7 @@ export const CreateEventPopup = ({
 }) => {
   const { userId } = useAuth();
   const { toggleSomethingChange } = useEventContext();
-  const [activities, setActivities] = useState<Actividad[]>();
+
   const methods = useForm<EventoCreate>({
     defaultValues: {
       actividadId: "",
@@ -51,7 +57,15 @@ export const CreateEventPopup = ({
       capacidadMaxima: 0,
     },
   });
+
+  const {
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = methods;
+
   const toast = useToast();
+
   const onSubmit = async (data: EventoCreate) => {
     if (typeof data.ubicacion == "string") {
       methods.setError("ubicacion", {
@@ -78,27 +92,17 @@ export const CreateEventPopup = ({
       });
     }
   };
+
   const handleClose = () => {
     onClose();
     methods.reset();
   };
-  useEffect(() => {
-    const fetchActivities = async () => {
-      const res = await activityService.all();
-      setActivities(res);
-    };
-    fetchActivities();
-  }, []);
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={handleClose}>
       <ModalOverlay />
       <FormProvider {...methods}>
-        <ModalContent
-          as="form"
-          maxW="900px"
-          onSubmit={methods.handleSubmit(onSubmit)}
-        >
+        <ModalContent as="form" maxW="900px" onSubmit={handleSubmit(onSubmit)}>
           <ModalHeader>Crear evento</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
@@ -109,38 +113,19 @@ export const CreateEventPopup = ({
               gap={5}
             >
               <VStack maxW={"sm"} gap={8}>
-                <FormControl isInvalid={!!methods.formState.errors.actividadId}>
-                  <FormLabel>Tipo de actividad</FormLabel>
-                  <Select
-                    id={"actividadId"}
-                    {...methods.register("actividadId", {
-                      required: "Debes brindar un tipo de actividad",
-                    })}
-                  >
-                    {activities?.map((a: Actividad) => (
-                      <option key={a.id} value={a.id}>
-                        {a.nombre}
-                      </option>
-                    ))}
-                  </Select>
-                  <FormErrorMessage>
-                    {methods.formState.errors.actividadId?.message}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl
-                  isInvalid={!!methods.formState.errors.capacidadMaxima}
-                >
+                <ActivitySelect name="actividadId" label="Tipo de actividad" />
+                <FormControl isInvalid={!!errors.capacidadMaxima}>
                   <FormLabel>Cantidad de participantes </FormLabel>
                   <Incrementer
                     onValueChange={(value: any) =>
-                      methods.setValue("capacidadMaxima", value)
+                      setValue("capacidadMaxima", value)
                     }
                   />
                   <FormErrorMessage>
-                    {methods.formState.errors.capacidadMaxima?.message}
+                    {errors.capacidadMaxima?.message}
                   </FormErrorMessage>
                 </FormControl>
-                <FormControl isInvalid={!!methods.formState.errors.fecha}>
+                <FormControl isInvalid={!!errors.fecha}>
                   <FormLabel>Fecha y hora</FormLabel>
                   <Input
                     id={"fecha"}
@@ -149,11 +134,9 @@ export const CreateEventPopup = ({
                       required: "Debes brindar una fecha",
                     })}
                   ></Input>
-                  <FormErrorMessage>
-                    {methods.formState.errors.fecha?.message}
-                  </FormErrorMessage>
+                  <FormErrorMessage>{errors.fecha?.message}</FormErrorMessage>
                 </FormControl>
-                <FormControl isInvalid={!!methods.formState.errors.descripcion}>
+                <FormControl isInvalid={!!errors.descripcion}>
                   <FormLabel>Descripción</FormLabel>
                   <Textarea
                     id={"descripcion"}
@@ -164,28 +147,20 @@ export const CreateEventPopup = ({
                     })}
                   />
                   <FormErrorMessage>
-                    {methods.formState.errors.descripcion?.message}
+                    {errors.descripcion?.message}
                   </FormErrorMessage>
                 </FormControl>
               </VStack>
               <VStack>
                 <MapComponent
-                  onValuechange={(value: any) =>
-                    methods.setValue("ubicacion", value)
-                  }
+                  onValuechange={(value: any) => setValue("ubicacion", value)}
                   id={"ubicacion"}
                 />
               </VStack>
             </Flex>
           </ModalBody>
           <ModalFooter justifyContent={{ base: "center", md: "flex-end" }}>
-            <Button
-              type="submit"
-              bg="brand.300"
-              color={"white"}
-              mr={3}
-              // onClick={dirtyUbicacionCheck}
-            >
+            <Button type="submit" bg="brand.300" color={"white"} mr={3}>
               Crear
             </Button>
             <Button onClick={handleClose}>Cancelar</Button>
@@ -222,3 +197,80 @@ function Incrementer({ onValueChange }: { onValueChange: any }) {
     </HStack>
   );
 }
+interface ActivitySelectProps {
+  name: keyof EventoCreate;
+  label: string;
+}
+
+const ActivitySelect = ({ name, label }: ActivitySelectProps) => {
+  const {
+    register,
+    setValue,
+    formState: { errors },
+  } = useFormContext<EventoCreate>();
+  const [activities, setActivities] = useState<Actividad[]>([]);
+  const [filteredActivities, setFilteredActivities] = useState<Actividad[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedActivity, setSelectedActivity] = useState<string>("");
+
+  useEffect(() => {
+    const fetchActivities = async () => {
+      const res = await activityService.all();
+      setActivities(res);
+      setFilteredActivities(res);
+    };
+    fetchActivities();
+  }, []);
+
+  useEffect(() => {
+    if (activities) {
+      setFilteredActivities(
+        activities.filter((activity) =>
+          activity.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
+  }, [searchTerm, activities]);
+
+  return (
+    <FormControl isInvalid={!!errors[name]}>
+      <FormLabel>{label}</FormLabel>
+      <Menu>
+        <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+          {selectedActivity || "Selecciona una actividad"}
+        </MenuButton>
+        <MenuList maxH="300px" overflowY="auto" overflowX={"clip"}>
+          <InputGroup mx={2} mb={2}>
+            <Input
+              placeholder="Buscar actividad"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <InputRightElement>
+              <ChevronDownIcon />
+            </InputRightElement>
+          </InputGroup>
+          {filteredActivities.map((a) => (
+            <MenuItem
+              key={a.id}
+              onClick={() => {
+                setValue(name, a.id, { shouldValidate: true });
+                setSelectedActivity(a.nombre);
+                setSearchTerm("");
+              }}
+            >
+              {a.nombre}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Menu>
+      <Input
+        type="hidden"
+        {...register(name, {
+          required: "Debes brindar un tipo de actividad",
+        })}
+      />
+      <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>
+    </FormControl>
+  );
+};

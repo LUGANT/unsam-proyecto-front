@@ -124,6 +124,7 @@ const MapComponent = ({
                 required: "Ubicación es obligatoria",
                 onBlur: () => trigger("ubicacion"),
               })}
+              value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyPress}
             />

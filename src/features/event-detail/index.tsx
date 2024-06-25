@@ -129,7 +129,7 @@ export const FullEventDetail = () => {
       <Flex
         flexDir={{ base: "column", md: "row" }}
         justifyContent={{ base: "center", md: "space-between" }}
-        margin={{ base: "0 30px", md: "0" }}
+        margin={{ base: "0 auto", md: "0" }}
         gap={10}
       >
         <VStack alignItems={"flex-start"} gap={14}>

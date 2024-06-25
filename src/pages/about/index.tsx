@@ -13,7 +13,7 @@ import { team } from "./members";
 
 export function AboutPage() {
   return (
-    <Container maxW={"full"} height={"86vh"} overflow={"auto"}>
+    <Container maxW={"full"} height={"86vh"} overflow={"auto"} px={20}>
       <Box display={"flex"} flexDirection={"column"} gap={5}>
         <Box display={"flex"} flexDir={"column"}>
           <Title text="Yo me sumo" />
