@@ -53,7 +53,7 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
   return (
     <Center py={6}>
       <Box
-        maxW={"445px"}
+        maxW={"400px"}
         w={"full"}
         h={"md"}
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -88,12 +88,7 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
             fontSize={"2xl"}
             fontFamily={"body"}
           >
-            <ChakraLink
-              as={ReactRouterLink}
-              to={`/evento/${id}`}
-              noOfLines={2}
-              maxW={"300px"}
-            >
+            <ChakraLink as={ReactRouterLink} to={`/evento/${id}`} noOfLines={2}>
               Partido de {actividad.nombre} en {ubicacion.barrio}
             </ChakraLink>
           </Heading>

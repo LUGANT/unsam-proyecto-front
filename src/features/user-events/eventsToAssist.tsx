@@ -57,7 +57,7 @@ export function EventsToAssist() {
   );
 }
 const SimpleEvent = ({ evento }: { evento: Evento }) => {
-  const { id, anfitrion, actividad, ubicacion } = evento;
+  const { id, anfitrion, actividad, ubicacion, fecha, hora } = evento;
   return (
     <Center py={6}>
       <Box
@@ -73,15 +73,19 @@ const SimpleEvent = ({ evento }: { evento: Evento }) => {
         <HStack alignItems={"flex-start"} gap={6}>
           <RoundedActivityIcon act={"futbol"} />
           <Stack alignItems={"flex-start"}>
-            <Text
-              color={"green.500"}
-              textTransform={"uppercase"}
-              fontWeight={800}
-              fontSize={"sm"}
-              letterSpacing={1.1}
-            >
-              Partido
-            </Text>
+            <HStack justifyContent={"space-between"} width={"full"}>
+              <Text
+                color={"green.500"}
+                textTransform={"uppercase"}
+                fontWeight={800}
+                fontSize={"sm"}
+                letterSpacing={1.1}
+              >
+                Partido
+              </Text>
+              <Text>{fecha.toString()}</Text>
+              <Text>{hora?.toString()}</Text>
+            </HStack>
             <Heading
               // eslint-disable-next-line react-hooks/rules-of-hooks
               color={useColorModeValue("gray.700", "white")}
