@@ -74,10 +74,11 @@ export const CreateEventPopup = ({
       });
       return;
     }
+    console.log(data);
 
     try {
-      data.fecha = formatDate(data.fecha);
       data.hora = formatTime(data.fecha);
+      data.fecha = formatDate(data.fecha);
       await eventService.create(data);
       onClose();
       toggleSomethingChange();
