@@ -56,6 +56,8 @@ export const SimpleEventCard = ({
         rounded={"md"}
         p={6}
         overflow={"hidden"}
+        transition="transform 0.2s"
+        _hover={{ transform: "scale(1.05)" }}
       >
         <HStack alignItems={"flex-start"} gap={6}>
           <RoundedActivityIcon act={"futbol"} />
@@ -67,7 +69,7 @@ export const SimpleEventCard = ({
               fontSize={"sm"}
               letterSpacing={1.1}
             >
-              Partido
+              {evento.actividad.tipo}
             </Text>
             <Heading
               // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -81,8 +83,11 @@ export const SimpleEventCard = ({
                 to={`/evento/${id}`}
                 noOfLines={2}
                 maxW={"300px"}
+                _hover={{ textDecoration: "none" }}
               >
-                Partido de {actividad.nombre} en {ubicacion.barrio}
+                <Text transition="color 0.5s" _hover={{ color: "brand.300" }}>
+                  Partido de {actividad.nombre} en {ubicacion.barrio}
+                </Text>
               </ChakraLink>
             </Heading>
             <Text color={"gray.500"} textAlign={"left"}>

@@ -81,6 +81,8 @@ const SimpleEvent = ({ evento }: { evento: Evento }) => {
         rounded={"md"}
         p={6}
         overflow={"hidden"}
+        transition="transform 0.2s"
+        _hover={{ transform: "scale(1.05)" }}
       >
         <HStack alignItems={"flex-start"} gap={6}>
           <RoundedActivityIcon act={"futbol"} />

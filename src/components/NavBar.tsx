@@ -67,7 +67,6 @@ const NavLink = (props: Props) => {
 export const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [islogged, setIsLogged] = useState<boolean | null>(null);
-  const navigate = useNavigate();
   const { isLoggedIn, logout, username } = useAuth();
 
   useEffect(() => {
@@ -76,7 +75,6 @@ export const NavBar = () => {
 
   const handlerLogOut = () => {
     logout();
-    navigate("/auth/login");
   };
 
   return (

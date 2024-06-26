@@ -69,6 +69,8 @@ const SimpleEvent = ({ evento }: { evento: Evento }) => {
         rounded={"md"}
         p={6}
         overflow={"hidden"}
+        transition="transform 0.2s"
+        _hover={{ transform: "scale(1.05)" }}
       >
         <HStack alignItems={"flex-start"} gap={6}>
           <RoundedActivityIcon act={"futbol"} />
@@ -98,8 +100,11 @@ const SimpleEvent = ({ evento }: { evento: Evento }) => {
                 to={`/evento/${id}`}
                 noOfLines={2}
                 maxW={"300px"}
+                _hover={{textDecoration:"none"}}
               >
-                Partido de {actividad.nombre} en {ubicacion.barrio}
+                <Text transition="color 0.5s" _hover={{color:"brand.300"}}>
+                  Partido de {actividad.nombre} en {ubicacion.barrio}
+                </Text>
               </ChakraLink>
             </Heading>
             <Text color={"gray.500"} textAlign={"left"}>
