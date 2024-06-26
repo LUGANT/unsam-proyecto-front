@@ -43,7 +43,7 @@ export function LoginForm() {
           usuario: usuario.toLowerCase(),
           contrasenia,
         });
-        const user = await userService.getUser()
+        const user = await userService.getUser();
         auth.login(user.id);
         auth.changeUsername(user.username);
         navigate("/");

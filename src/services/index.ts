@@ -29,9 +29,9 @@ class ApiService {
       return response;
     } catch (error: any) {
       console.error("Error en la solicitud:", error);
-      if (error.response && error.response.status == 403) {
-        window.location.href = "/auth/login";
-      }
+      // if (error.response && error.response.status == 403) {
+      //   window.location.href = "/auth/login";
+      // }
       throw error;
     }
   }

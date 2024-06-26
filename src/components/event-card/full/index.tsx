@@ -12,7 +12,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { Link as ReactRouterLink } from "react-router-dom";
+import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../providers/auth/AuthContext";
 import { userService } from "../../../services/user-service";
 import { Evento } from "../../../types/Event";
@@ -20,8 +20,9 @@ import { ActivitiesPhotos, ActivityPhotoDefault } from "./Activities";
 import { useEffect, useState } from "react";
 
 export const EventCard = ({ evento }: { evento: Evento }) => {
+  const navigate = useNavigate();
   const toast = useToast();
-  const { userId } = useAuth();
+  const { userId, isLoggedIn } = useAuth();
   const { id, anfitrion, actividad, fecha, ubicacion, hora } = evento;
   const [enabled, setEnabled] = useState<boolean>(false);
 
@@ -105,9 +106,22 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
             </Text>
           </Stack>
           <Spacer />
-          <Button onClick={handleRequest} isDisabled={!enabled}>
-            {!enabled ? `Pendiente` : `Unirse`}
-          </Button>
+          {!isLoggedIn ? (
+            <Button
+              onClick={() => navigate("/auth/login")}
+              noOfLines={2} // Define el número máximo de líneas
+              overflow="hidden" // Oculta el texto que excede el contenedor
+              textOverflow="ellipsis" // Muestra puntos suspensivos cuando el texto se corta
+              whiteSpace="balance" // Evita que el texto se desborde al siguiente renglón
+              maxWidth={32}
+            >
+              Ingresar para unirse
+            </Button>
+          ) : (
+            <Button onClick={handleRequest} isDisabled={!enabled}>
+              {!enabled ? `Pendiente` : `Unirse`}
+            </Button>
+          )}
         </Stack>
       </Box>
     </Center>

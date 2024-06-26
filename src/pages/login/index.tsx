@@ -1,6 +1,16 @@
-import { Box, Heading, VStack, Text, Link } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  VStack,
+  Text,
+  Icon,
+  Link as ChakraLink,
+  HStack,
+} from "@chakra-ui/react";
 import { LoginForm } from "../../components/login-form";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { BrandIcon } from "../../ui/icons/BrandIcon";
+import { FaArrowRight } from "react-icons/fa6";
 
 export const LoginPage = () => {
   return (
@@ -21,9 +31,22 @@ export const LoginPage = () => {
         <Text fontSize="lg">Conectá, coordiná y divertite acompañado!</Text>
       </VStack>
       <LoginForm />
-      <Link href="/auth/signup" color={"blue"}>
-        ¿No tenés cuenta? Registrate ahora!
-      </Link>
+      <ChakraLink as={ReactRouterLink} to={`/auth/signup`} noOfLines={2}>
+        <Text color={"blue"}>¿No tenés cuenta? Registrate ahora!</Text>
+      </ChakraLink>
+      <ChakraLink as={ReactRouterLink} to={`/`} noOfLines={2} maxW={"300px"}>
+        <HStack alignItems={"center"}>
+          <Heading
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            fontSize={"xl"}
+            textAlign={"left"}
+            fontFamily={"body"}
+          >
+            Continuar sin cuenta
+          </Heading>
+          <Icon as={FaArrowRight}></Icon>
+        </HStack>
+      </ChakraLink>
     </Box>
   );
 };
