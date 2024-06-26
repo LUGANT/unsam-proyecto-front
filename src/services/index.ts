@@ -21,19 +21,16 @@ class ApiService {
       }
       return config;
     });
-
-
   }
 
   async handleRequest<T>(request: () => Promise<T>): Promise<T> {
     try {
       const response = await request();
-      return response
-    } catch (error) {
+      return response;
+    } catch (error: any) {
       console.error("Error en la solicitud:", error);
       if (error.response && error.response.status == 403) {
-        window.location.href = '/auth/login';
-
+        window.location.href = "/auth/login";
       }
       throw error;
     }
