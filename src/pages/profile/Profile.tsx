@@ -20,12 +20,14 @@ import {
   Text,
   VStack,
   Input,
+  useToast,
   Avatar,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { userService } from "../../services/user-service";
 import { useAuth } from "../../providers/auth/AuthContext";
 import Toast from "../../components/Toast";
+import { useNavigate } from "react-router-dom";
 import { StarRating } from "../../components/star-rating";
 
 function Profile() {
@@ -39,7 +41,6 @@ function Profile() {
   const getUserData = async () => {
     const profile = await userService.getUserData(auth.userId);
     console.log(profile);
-    setProfile(profile);
     setname(profile.usuario.nombre);
     setLastName(profile.usuario.apellido);
     setOpinions(profile.opiniones);
@@ -104,7 +105,9 @@ const ReviewMiniCard = ({ opinion }: { opinion: Opinion }) => {
           </Box>
           <Box>
             <HStack gap={"5px"}>
-              <StarRating rating={opinion.puntaje} />
+              {Array.from({ length: opinion.puntaje }).map(() => (
+                <StarIcon boxSize={5} color={"brand.300"} />
+              ))}
             </HStack>
             <Text>{opinion.fecha.toString()}</Text>
           </Box>
@@ -126,7 +129,8 @@ const EditProfile = ({
 }) => {
   const [nuevoUsername, setNuevoUsername] = useState(usuario);
   const auth = useAuth();
-
+  const toast = useToast();
+  const navigate = useNavigate();
   const handlerChange = (event: ChangeEvent<HTMLInputElement>) => {
     setNuevoUsername(event.target.value);
   };
@@ -136,6 +140,17 @@ const EditProfile = ({
     try {
       await userService.updateUsername(auth.userId, nuevoUsername);
       auth.changeUsername(nuevoUsername);
+      toast({
+        title: "El nombre del usuario fue cambiado con éxito",
+        description: "Necesita iniciar sesión nuevamente para efectuar cambios",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        auth.logout();
+        navigate("/auth/login");
+      }, 5000);
     } catch (e) {
       Toast({
         title: "Error 500",
