@@ -3,4 +3,5 @@ type Usuario = {
   nombre: string;
   apellido: string;
   username: string;
+  puntuacion: number;
 };

@@ -1,6 +1,11 @@
 import { AxiosResponse } from "axios";
 import ApiService from "..";
-import { Evento, EventoCreate, Solicitud } from "../../types/Event";
+import {
+  Evento,
+  EventoCreate,
+  Participante,
+  Solicitud,
+} from "../../types/Event";
 
 class EventService extends ApiService {
   async all(): Promise<Evento[]> {
@@ -83,6 +88,17 @@ class EventService extends ApiService {
     return this.handleRequest<Evento[]>(async () => {
       const response: AxiosResponse<Evento[]> = await this.api.get(
         `/${userId}/eventosPorAsistir`
+      );
+      return response.data;
+    });
+  }
+  async getEventParticipant(
+    eventId: string,
+    userId: string
+  ): Promise<Participante[]> {
+    return this.handleRequest<Participante[]>(async () => {
+      const response: AxiosResponse<Participante[]> = await this.api.get(
+        `/${eventId}/opinar/${userId}`
       );
       return response.data;
     });

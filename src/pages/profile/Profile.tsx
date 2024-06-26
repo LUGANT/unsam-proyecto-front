@@ -20,25 +20,29 @@ import {
   Text,
   VStack,
   Input,
+  Avatar,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { userService } from "../../services/user-service";
 import { useAuth } from "../../providers/auth/AuthContext";
 import Toast from "../../components/Toast";
+import { StarRating } from "../../components/star-rating";
 
 function Profile() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const auth = useAuth();
+  const [profile, setProfile] = useState<Profile>();
   const [name, setname] = useState("");
   const [lastName, setLastName] = useState("");
-  const [opinions, setOpinions] = useState<Opinion[]>([])
+  const [opinions, setOpinions] = useState<Opinion[]>([]);
 
   const getUserData = async () => {
     const profile = await userService.getUserData(auth.userId);
-    console.log(profile)
+    console.log(profile);
+    setProfile(profile);
     setname(profile.usuario.nombre);
     setLastName(profile.usuario.apellido);
-    setOpinions(profile.opiniones)
+    setOpinions(profile.opiniones);
   };
 
   useEffect(() => {
@@ -54,20 +58,16 @@ function Profile() {
         justifyContent={"center"}
         gap={"20px"}
       >
-        <Image
-          src="https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png"
-          boxSize={"200px"}
-          objectFit={"cover"}
-          borderRadius={"full"}
-        />
-        <Box>
+        <Avatar size={"2xl"} bg={"brand.300"} />
+        <VStack alignItems={"flex-start"}>
           <Text fontSize={"3xl"} fontWeight={"semibold"}>
             {auth.username}
           </Text>
           <Text fontSize={"xl"}>
-            {name} {lastName}
+            {profile?.usuario.nombre} {profile?.usuario.apellido}
           </Text>
-        </Box>
+          <StarRating rating={profile?.usuario.puntuacion || 0} outline />
+        </VStack>
         <Icon
           as={RiPencilFill}
           boxSize={"35px"}
@@ -80,7 +80,9 @@ function Profile() {
           Ultimas reseñas
         </Text>
         <VStack spacing={"50px"}>
-          {opinions.map((opinion)=><ReviewMiniCard opinion={opinion}/>)}
+          {opinions.map((opinion) => (
+            <ReviewMiniCard opinion={opinion} />
+          ))}
         </VStack>
       </Flex>
       <EditProfile isOpen={isOpen} onClose={onClose} usuario={auth.username} />
@@ -90,15 +92,10 @@ function Profile() {
 
 export default Profile;
 
-const ReviewMiniCard = ({opinion}:{opinion:Opinion}) => {
+const ReviewMiniCard = ({ opinion }: { opinion: Opinion }) => {
   return (
     <Flex w={"20rem"}>
-      <Image
-        src="https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png"
-        boxSize={"50px"}
-        objectFit={"cover"}
-        borderRadius={"full"}
-      />
+      <Avatar size={"md"} bg={"brand.300"} />
       <Flex w={"100%"} gap={"10px"} px={"10px"} flexDirection={"column"}>
         <Flex justifyContent={"space-between"} w={"100%"} textAlign={"center"}>
           <Box>
@@ -107,9 +104,7 @@ const ReviewMiniCard = ({opinion}:{opinion:Opinion}) => {
           </Box>
           <Box>
             <HStack gap={"5px"}>
-              {
-              Array.from({length:opinion.puntaje}).map(()=><StarIcon boxSize={5} color={"brand.300"} />)
-              }
+              <StarRating rating={opinion.puntaje} />
             </HStack>
             <Text>{opinion.fecha.toString()}</Text>
           </Box>
@@ -120,7 +115,15 @@ const ReviewMiniCard = ({opinion}:{opinion:Opinion}) => {
   );
 };
 
-const EditProfile = ({ isOpen, onClose, usuario }) => {
+const EditProfile = ({
+  isOpen,
+  onClose,
+  usuario,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  usuario: string;
+}) => {
   const [nuevoUsername, setNuevoUsername] = useState(usuario);
   const auth = useAuth();
 
@@ -167,12 +170,7 @@ const EditProfile = ({ isOpen, onClose, usuario }) => {
             alignItems={"center"}
             w={"full"}
           >
-            <Image
-              boxSize={"200px"}
-              objectFit={"cover"}
-              borderRadius={"full"}
-              src="https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Image.png"
-            ></Image>
+            <Avatar size={"2xl"} bg={"brand.300"} />
             <FormControl
               flex={"1"}
               display={"flex"}

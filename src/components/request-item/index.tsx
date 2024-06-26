@@ -4,12 +4,14 @@ import {
   Card,
   Flex,
   Heading,
+  HStack,
   IconButton,
   Text,
   useToast,
 } from "@chakra-ui/react";
 import { userService } from "../../services/user-service";
 import { Solicitud } from "../../types/Event";
+import { StarRating } from "../star-rating";
 
 export function RequestItem({
   id,
@@ -51,7 +53,10 @@ export function RequestItem({
                 usuario.apellido +
                 `(${usuario.username})`}
             </Heading>
-            <Text color="gray.500">{request.puntajeUsuario} estrellas</Text>
+            <HStack>
+              <Text color="gray.500">{request.puntajeUsuario}</Text>
+              <StarRating rating={request.puntajeUsuario} />
+            </HStack>
           </Flex>
         </Flex>
         <Flex gap={5}>

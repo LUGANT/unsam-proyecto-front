@@ -17,14 +17,14 @@ import {
   Text,
   useColorModeValue,
   useDisclosure,
-  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa";
+import UserReview from "../../components/UserReview";
 import { useAuth } from "../../providers/auth/AuthContext";
 import eventService from "../../services/event-service";
-import { Evento, Participante, Solicitud } from "../../types/Event";
+import { Evento, Participante } from "../../types/Event";
 import { RoundedActivityIcon } from "../../ui/icons/ActivityIcon";
 
 export function EventsAssisted() {
@@ -69,7 +69,7 @@ export function EventsAssisted() {
 }
 const SimpleEvent = ({ evento }: { evento: Evento }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { id, anfitrion, actividad, ubicacion, participantes } = evento;
+  const { id, anfitrion, actividad, ubicacion, participantes, fecha } = evento;
   return (
     <Center py={6}>
       <Box
@@ -85,15 +85,18 @@ const SimpleEvent = ({ evento }: { evento: Evento }) => {
         <HStack alignItems={"flex-start"} gap={6}>
           <RoundedActivityIcon act={"futbol"} />
           <Stack alignItems={"flex-start"}>
-            <Text
-              color={"green.500"}
-              textTransform={"uppercase"}
-              fontWeight={800}
-              fontSize={"sm"}
-              letterSpacing={1.1}
-            >
-              Partido
-            </Text>
+            <HStack justifyContent={"space-between"} width={"full"}>
+              <Text
+                color={"green.500"}
+                textTransform={"uppercase"}
+                fontWeight={800}
+                fontSize={"sm"}
+                letterSpacing={1.1}
+              >
+                Partido
+              </Text>
+              <Text>{fecha.toString()}</Text>
+            </HStack>
             <Heading
               // eslint-disable-next-line react-hooks/rules-of-hooks
               color={useColorModeValue("gray.700", "white")}
@@ -116,7 +119,7 @@ const SimpleEvent = ({ evento }: { evento: Evento }) => {
               Ver participantes
             </Button>
             <ParticipantsPopup
-              participantes={evento.participantes!}
+              id={evento.id}
               onOpen={onOpen}
               isOpen={isOpen}
               onClose={onClose}
@@ -128,65 +131,87 @@ const SimpleEvent = ({ evento }: { evento: Evento }) => {
   );
 };
 export const ParticipantsPopup = ({
-  participantes,
+  id,
   onOpen,
   isOpen,
   onClose,
 }: {
-  participantes: Participante[];
+  id: string;
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
 }) => {
-  const [requests, setRequests] = useState<Solicitud[]>();
-  // const fetchRequests = async () => {
-  //   const res = await eventService.getRequests(id);
-  //   setRequests(res);
-  // };
+  const [participantes, setParticipantes] = useState<Participante[]>();
+  const [selectedParticipant, setSelectedParticipant] =
+    useState<Participante | null>(null);
+  const { userId } = useAuth();
+  const {
+    isOpen: isRatingOpen,
+    onOpen: onRatingOpen,
+    onClose: onRatingClose,
+  } = useDisclosure();
+  const fetchParticipants = async () => {
+    const res = await eventService.getEventParticipant(id, userId!!);
+    setParticipantes(res);
+  };
+  const handleRateClick = (participant: Participante) => {
+    setSelectedParticipant(participant);
+    onRatingOpen();
+  };
 
+  useEffect(() => {
+    fetchParticipants();
+  }, []);
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
-      <ModalContent
-        minHeight={"80%"}
-        maxHeight={"90%"}
-        overflowY={"auto"}
-        gap="10px"
-      >
-        <ModalHeader>Participantes</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody>
-          <Flex height="100%" direction={"column"} gap={10}>
-            {participantes?.length ? (
-              participantes?.map((r) => (
-                <Participant
-                  key={r.id}
-                  id={r.id}
-                  participante={r}
-                  onAction={onClose}
-                />
-              ))
-            ) : (
-              <Text textAlign={"center"}>No hay participantes</Text>
-            )}
-          </Flex>
-        </ModalBody>
-      </ModalContent>
-    </Modal>
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent
+          minHeight={"80%"}
+          maxHeight={"90%"}
+          overflowY={"auto"}
+          gap="10px"
+        >
+          <ModalHeader>Participantes</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Flex height="100%" direction={"column"} gap={3}>
+              {participantes?.length ? (
+                participantes?.map((r) => (
+                  <Participant
+                    key={r.id}
+                    participante={r}
+                    onRateClick={handleRateClick}
+                  />
+                ))
+              ) : (
+                <Text textAlign={"center"}>No hay participantes</Text>
+              )}
+            </Flex>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+      {selectedParticipant && (
+        <UserReview
+          userId={userId!!}
+          isOpen={isRatingOpen}
+          onClose={onRatingClose}
+          participant={selectedParticipant}
+        />
+      )}
+    </>
   );
 };
 
 function Participant({
-  id,
   participante,
-  onAction,
+  onRateClick,
 }: {
-  id: string;
   participante: Participante;
-  onAction: () => void;
+  onRateClick: (p: Participante) => void;
 }) {
-  const handleRate = async () => {
-    console.log("abrir popup");
+  const handleRate = () => {
+    onRateClick(participante);
   };
 
   return (
@@ -202,7 +227,6 @@ function Participant({
                 `(${participante.username})`} */}
               {participante.username}
             </Heading>
-            {/* <Text color="gray.500">{participante.puntajeUsuario} estrellas</Text> */}
           </Flex>
         </Flex>
         <Button
