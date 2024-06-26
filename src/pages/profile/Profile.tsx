@@ -20,25 +20,27 @@ import {
   Text,
   VStack,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { userService } from "../../services/user-service";
 import { useAuth } from "../../providers/auth/AuthContext";
 import Toast from "../../components/Toast";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const auth = useAuth();
   const [name, setname] = useState("");
   const [lastName, setLastName] = useState("");
-  const [opinions, setOpinions] = useState<Opinion[]>([])
+  const [opinions, setOpinions] = useState<Opinion[]>([]);
 
   const getUserData = async () => {
     const profile = await userService.getUserData(auth.userId);
-    console.log(profile)
+    console.log(profile);
     setname(profile.usuario.nombre);
     setLastName(profile.usuario.apellido);
-    setOpinions(profile.opiniones)
+    setOpinions(profile.opiniones);
   };
 
   useEffect(() => {
@@ -80,7 +82,9 @@ function Profile() {
           Ultimas reseñas
         </Text>
         <VStack spacing={"50px"}>
-          {opinions.map((opinion)=><ReviewMiniCard opinion={opinion}/>)}
+          {opinions.map((opinion) => (
+            <ReviewMiniCard opinion={opinion} />
+          ))}
         </VStack>
       </Flex>
       <EditProfile isOpen={isOpen} onClose={onClose} usuario={auth.username} />
@@ -90,7 +94,7 @@ function Profile() {
 
 export default Profile;
 
-const ReviewMiniCard = ({opinion}:{opinion:Opinion}) => {
+const ReviewMiniCard = ({ opinion }: { opinion: Opinion }) => {
   return (
     <Flex w={"20rem"}>
       <Image
@@ -107,9 +111,9 @@ const ReviewMiniCard = ({opinion}:{opinion:Opinion}) => {
           </Box>
           <Box>
             <HStack gap={"5px"}>
-              {
-              Array.from({length:opinion.puntaje}).map(()=><StarIcon boxSize={5} color={"brand.300"} />)
-              }
+              {Array.from({ length: opinion.puntaje }).map(() => (
+                <StarIcon boxSize={5} color={"brand.300"} />
+              ))}
             </HStack>
             <Text>{opinion.fecha.toString()}</Text>
           </Box>
@@ -123,7 +127,8 @@ const ReviewMiniCard = ({opinion}:{opinion:Opinion}) => {
 const EditProfile = ({ isOpen, onClose, usuario }) => {
   const [nuevoUsername, setNuevoUsername] = useState(usuario);
   const auth = useAuth();
-
+  const toast = useToast();
+  const navigate = useNavigate();
   const handlerChange = (event: ChangeEvent<HTMLInputElement>) => {
     setNuevoUsername(event.target.value);
   };
@@ -133,6 +138,17 @@ const EditProfile = ({ isOpen, onClose, usuario }) => {
     try {
       await userService.updateUsername(auth.userId, nuevoUsername);
       auth.changeUsername(nuevoUsername);
+      toast({
+        title: "El nombre del usuario fue cambiado con éxito",
+        description: "Necesita iniciar sesión nuevamente para efectuar cambios",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        auth.logout();
+        navigate("/auth/login");
+      }, 5000);
     } catch (e) {
       Toast({
         title: "Error 500",
