@@ -16,3 +16,15 @@ export function formatTime(inputDateTime: string): string {
 
   return `${hours}:${minutes}`;
 }
+export function castDate(inputDate: Date): string {
+  // Verifica si inputDate es realmente un objeto Date
+  const newDate = new Date(inputDate);
+  const options: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  };
+
+  const dateStr = newDate.toLocaleDateString("es-ES", options);
+  return dateStr.replace(/\//g, "-"); // Reemplaza las barras por guiones según el formato deseado
+}

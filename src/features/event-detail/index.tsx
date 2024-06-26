@@ -20,6 +20,7 @@ import { Evento, Participante } from "../../types/Event";
 import { MapRender } from "../../components/map-render";
 import { useAuth } from "../../providers/auth/AuthContext";
 import { userService } from "../../services/user-service";
+import { castDate } from "../../util/date";
 
 export const FullEventDetail = () => {
   const [evento, setEvento] = useState<Evento>();
@@ -30,7 +31,7 @@ export const FullEventDetail = () => {
 
   const handleJoin = () => {
     try {
-      userService.sendRequest(idEvento, userId!);
+      userService.sendRequest(idEvento!, userId!);
       toast({
         title: "Solicitud enviada.",
         description: "Debes esperar a que el anfitrión te acepte.",
@@ -50,8 +51,8 @@ export const FullEventDetail = () => {
   };
 
   const disableEnviarSolicitud = () => {
-    return evento?.anfitrion.id == userId
-  }
+    return evento?.anfitrion.id == userId;
+  };
 
   function avaiableSlot() {
     return !(evento?.participantes?.length === evento?.capacidadMaxima);
@@ -145,6 +146,13 @@ export const FullEventDetail = () => {
           <VStack alignItems={"flex-start"}>
             <Heading size={"md"}>Tipo de actividad</Heading>
             <Text>{evento.actividad.nombre}</Text>
+          </VStack>
+          <VStack alignItems={"flex-start"}>
+            <Heading size={"md"}>Fecha y hora</Heading>
+            <Text>
+              {castDate(evento.fecha)} -{" "}
+              {evento.hora && evento.hora.toString() + "hs"}
+            </Text>
           </VStack>
           <VStack alignItems={"flex-start"}>
             <Heading size={"md"}>Descripción</Heading>
