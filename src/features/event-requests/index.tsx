@@ -32,6 +32,12 @@ export const RequestsForAnEvent = ({
       fetchRequests();
     }
   }, [id, onClose]);
+
+
+  const handleAction = (requestId: string) => {
+    setRequests(requests?.filter(request => request.id !== requestId));
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -51,7 +57,7 @@ export const RequestsForAnEvent = ({
                   key={r.id}
                   id={r.id}
                   request={r}
-                  onAction={onClose}
+                  onAction={() => handleAction(r.id)}
                 />
               ))
             ) : (
