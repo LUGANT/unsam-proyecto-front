@@ -69,7 +69,7 @@ export const SimpleEventCard = ({
               fontSize={"sm"}
               letterSpacing={1.1}
             >
-              Partido
+              {evento.actividad.tipo}
             </Text>
             <Heading
               // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -83,9 +83,9 @@ export const SimpleEventCard = ({
                 to={`/evento/${id}`}
                 noOfLines={2}
                 maxW={"300px"}
-                _hover={{textDecoration:"none"}}
+                _hover={{ textDecoration: "none" }}
               >
-                <Text transition="color 0.5s" _hover={{color:"brand.300"}}>
+                <Text transition="color 0.5s" _hover={{ color: "brand.300" }}>
                   Partido de {actividad.nombre} en {ubicacion.barrio}
                 </Text>
               </ChakraLink>
