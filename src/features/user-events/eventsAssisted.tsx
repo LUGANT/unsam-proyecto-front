@@ -26,6 +26,7 @@ import { useAuth } from "../../providers/auth/AuthContext";
 import eventService from "../../services/event-service";
 import { Evento, Participante } from "../../types/Event";
 import { RoundedActivityIcon } from "../../ui/icons/ActivityIcon";
+import { useNavigate } from "react-router-dom";
 
 export function EventsAssisted() {
   const { userId } = useAuth();
@@ -35,7 +36,6 @@ export function EventsAssisted() {
     const getEvents = async () => {
       const res = await eventService.getEventsAssisted(userId!!);
       console.log(res);
-
       setEvents(res);
     };
     getEvents();
@@ -154,6 +154,7 @@ export const ParticipantsPopup = ({
   } = useDisclosure();
   const fetchParticipants = async () => {
     const res = await eventService.getEventParticipant(id, userId!!);
+    console.log("participantes", res);
     setParticipantes(res);
   };
   const handleRateClick = (participant: Participante) => {
@@ -212,6 +213,9 @@ function Participant({
   participante: Participante;
   onRateClick: (p: Participante) => void;
 }) {
+  const [existeOpinion, setExisteOpinion] = useState<boolean>(
+    participante.existeOpinion
+  );
   const handleRate = () => {
     onRateClick(participante);
   };
@@ -236,6 +240,7 @@ function Participant({
           variant={"outline"}
           color="brand.300"
           _hover={{ bgColor: "brand.300", color: "white" }}
+          isDisabled={existeOpinion}
         >
           Calificar
         </Button>
