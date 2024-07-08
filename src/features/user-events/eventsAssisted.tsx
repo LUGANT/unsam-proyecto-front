@@ -35,7 +35,6 @@ export function EventsAssisted() {
   useEffect(() => {
     const getEvents = async () => {
       const res = await eventService.getEventsAssisted(userId!!);
-      console.log(res);
       setEvents(res);
     };
     getEvents();
@@ -154,7 +153,6 @@ export const ParticipantsPopup = ({
   } = useDisclosure();
   const fetchParticipants = async () => {
     const res = await eventService.getEventParticipant(id, userId!!);
-    console.log("participantes", res);
     setParticipantes(res);
   };
   const handleRateClick = (participant: Participante) => {

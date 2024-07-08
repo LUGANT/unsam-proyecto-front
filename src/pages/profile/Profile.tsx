@@ -48,7 +48,6 @@ function Profile() {
     const profile = await userService.getUserData(auth.userId);
     setProfile(profile);
     setOpinions(profile.opiniones);
-    console.log("opinions", opinions);
   };
 
   useEffect(() => {
@@ -181,7 +180,6 @@ const EditProfile = ({
   };
 
   const handlerSubmit = async () => {
-    console.log(nuevoUsername);
     setLoading(true);
     try {
       await userService.updateUsername(auth.userId, nuevoUsername);

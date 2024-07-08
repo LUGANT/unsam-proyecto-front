@@ -24,8 +24,6 @@ class EventService extends ApiService {
   }
 
   async getRequests(eventId: string): Promise<Solicitud[]> {
-    console.log(eventId);
-
     return this.handleRequest<Solicitud[]>(async () => {
       const response: AxiosResponse<Solicitud[]> = await this.api.get(
         `/${eventId}/solicitudes`
