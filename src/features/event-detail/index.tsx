@@ -128,6 +128,7 @@ export const FullEventDetail = () => {
           bgColor="brand.300"
           colorScheme="brand"
           hidden={disableEnviarSolicitud()}
+          disabled={evento.habilitado}
         >
           Yo me sumo
         </Button>

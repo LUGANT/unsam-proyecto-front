@@ -29,6 +29,7 @@ import eventService from "../../../services/event-service";
 import { Evento } from "../../../types/Event";
 import { RoundedActivityIcon } from "../../../ui/icons/ActivityIcon";
 import { useEventContext } from "../../../providers/events/EventContext";
+import { castDate } from "../../../util/date";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const SimpleEventCard = ({
@@ -62,15 +63,19 @@ export const SimpleEventCard = ({
         <HStack alignItems={"flex-start"} gap={6}>
           <RoundedActivityIcon act={"futbol"} />
           <Stack alignItems={"flex-start"}>
-            <Text
-              color={"green.500"}
-              textTransform={"uppercase"}
-              fontWeight={800}
-              fontSize={"sm"}
-              letterSpacing={1.1}
-            >
-              Partido
-            </Text>
+            <HStack justifyContent={"space-between"} width={"full"}>
+              <Text
+                color={"green.500"}
+                textTransform={"uppercase"}
+                fontWeight={800}
+                fontSize={"sm"}
+                letterSpacing={1.1}
+              >
+                Partido
+              </Text>
+              <Text>{castDate(evento.fecha)}</Text>
+              <Text>{evento.hora?.toString()} hs</Text>
+            </HStack>
             <Heading
               // eslint-disable-next-line react-hooks/rules-of-hooks
               color={useColorModeValue("gray.700", "white")}
@@ -83,9 +88,9 @@ export const SimpleEventCard = ({
                 to={`/evento/${id}`}
                 noOfLines={2}
                 maxW={"300px"}
-                _hover={{textDecoration:"none"}}
+                _hover={{ textDecoration: "none" }}
               >
-                <Text transition="color 0.5s" _hover={{color:"brand.300"}}>
+                <Text transition="color 0.5s" _hover={{ color: "brand.300" }}>
                   Partido de {actividad.nombre} en {ubicacion.barrio}
                 </Text>
               </ChakraLink>
