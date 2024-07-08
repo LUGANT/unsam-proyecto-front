@@ -1,4 +1,4 @@
-import { StarIcon } from "@chakra-ui/icons";
+import { WarningTwoIcon } from "@chakra-ui/icons";
 import { RiPencilFill } from "react-icons/ri";
 import {
   Modal,
@@ -16,7 +16,6 @@ import {
   Flex,
   HStack,
   Icon,
-  Image,
   Text,
   VStack,
   Input,
@@ -28,6 +27,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  IconButton,
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { userService } from "../../services/user-service";
@@ -35,6 +35,8 @@ import { useAuth } from "../../providers/auth/AuthContext";
 import Toast from "../../components/Toast";
 import { useNavigate } from "react-router-dom";
 import { StarRating } from "../../components/star-rating";
+import { castDate } from "../../util/date";
+import { capitalLetter } from "../../util/capitalLetter";
 
 function Profile() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -44,9 +46,9 @@ function Profile() {
 
   const getUserData = async () => {
     const profile = await userService.getUserData(auth.userId);
-    console.log(profile);
     setProfile(profile);
     setOpinions(profile.opiniones);
+    console.log("opinions", opinions);
   };
 
   useEffect(() => {
@@ -85,7 +87,7 @@ function Profile() {
         </Text>
         <VStack spacing={"50px"}>
           {opinions.map((opinion) => (
-            <ReviewMiniCard opinion={opinion} />
+            <ReviewMiniCard key={opinion.id} opinion={opinion} />
           ))}
         </VStack>
       </Flex>
@@ -97,21 +99,56 @@ function Profile() {
 export default Profile;
 
 const ReviewMiniCard = ({ opinion }: { opinion: Opinion }) => {
+  const toast = useToast();
+  const [reportExist, setReportExist] = useState<boolean>(
+    opinion.existeReporte
+  );
+  const handlerReport = async () => {
+    try {
+      await userService.reportOpinion(opinion.id, opinion.opinado.id);
+      toast({
+        title: "Reporte enviado con éxito.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+      setReportExist(!reportExist);
+    } catch (e) {
+      toast({
+        title: "Ocurrió un error.",
+        description: "No se puede reportar el comentario más de una vez.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+  };
   return (
     <Flex w={"20rem"}>
       <Avatar size={"md"} bg={"brand.300"} />
       <Flex w={"100%"} gap={"10px"} px={"10px"} flexDirection={"column"}>
         <Flex justifyContent={"space-between"} w={"100%"} textAlign={"center"}>
           <Box>
-            <Text fontSize={"sm"}>{opinion.opinante.username}</Text>
+            <Text fontSize={"sm"}>
+              {capitalLetter(opinion.opinante.username)}
+            </Text>
             {/* <Text fontSize={"xs"}>futbol?</Text> */}
           </Box>
-          <Box>
-            <HStack gap={"5px"}>
-              <StarRating rating={opinion.puntaje} />
-            </HStack>
-            <Text>{opinion.fecha.toString()}</Text>
-          </Box>
+          <Flex gap={"10px"} px={"10px"} justifyContent={"space-between"}>
+            <Box>
+              <HStack gap={"5px"}>
+                <StarRating rating={opinion.puntaje} />
+              </HStack>
+              <Text>{castDate(opinion.fecha)}</Text>
+            </Box>
+            <IconButton
+              aria-label="warning"
+              icon={<WarningTwoIcon />}
+              size="sm"
+              onClick={handlerReport}
+              isDisabled={reportExist}
+            />
+          </Flex>
         </Flex>
         <Text>{opinion.comentario}</Text>
       </Flex>

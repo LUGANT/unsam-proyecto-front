@@ -63,12 +63,18 @@ class UserService extends ApiService {
     const rta = await this.api.patch(URL_BACK + `usuario/${userId}/updateUsername?nuevoUsername=${newUsername}`)
     return rta;
   }
+
   async updatePassword(usuarioId:string,currentPassword:string,newPassword:string){
     const rta = await this.api.patch(URL_BACK + `usuario/cambiarPassword`,{
       usuarioId,
       contrasenaActual: currentPassword,
       nuevaContrasena: newPassword
     })
+    return rta;
+  }
+
+  async reportOpinion(comentarioId:number,reportadorId:string){
+    const rta = await this.api.post(URL_BACK + `valoracion/reportar/${comentarioId}/${reportadorId}`)
     return rta;
   }
 }

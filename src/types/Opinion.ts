@@ -5,6 +5,7 @@ type Opinion = {
   comentario: string;
   puntaje: number;
   fecha: Date;
+  existeReporte:boolean;
 };
 interface RatingData {
   puntaje: number;
