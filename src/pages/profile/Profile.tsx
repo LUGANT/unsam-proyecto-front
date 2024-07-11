@@ -1,40 +1,19 @@
-import { StarIcon } from "@chakra-ui/icons";
-import { RiPencilFill } from "react-icons/ri";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  useDisclosure,
-  FormControl,
-  FormLabel,
+  Avatar,
   Box,
   Flex,
   HStack,
   Icon,
-  Image,
   Text,
+  useDisclosure,
   VStack,
-  Input,
-  useToast,
-  Avatar,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
 } from "@chakra-ui/react";
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import { userService } from "../../services/user-service";
-import { useAuth } from "../../providers/auth/AuthContext";
-import Toast from "../../components/Toast";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { RiPencilFill } from "react-icons/ri";
 import { StarRating } from "../../components/star-rating";
+import { useAuth } from "../../providers/auth/AuthContext";
+import { userService } from "../../services/user-service";
+import { EditProfile } from "../../features/edit-profile";
 
 function Profile() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -89,7 +68,11 @@ function Profile() {
           ))}
         </VStack>
       </Flex>
-      <EditProfile isOpen={isOpen} onClose={onClose} usuario={auth.username} />
+      <EditProfile
+        isOpen={isOpen}
+        onClose={onClose}
+        usuario={{ username: auth.username, imgUrl: auth.imgUrl }}
+      />
     </Flex>
   );
 }
@@ -116,149 +99,5 @@ const ReviewMiniCard = ({ opinion }: { opinion: Opinion }) => {
         <Text>{opinion.comentario}</Text>
       </Flex>
     </Flex>
-  );
-};
-
-const EditProfile = ({
-  isOpen,
-  onClose,
-  usuario,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  usuario: string;
-}) => {
-  const {
-    isOpen: actionAlertIsOpen,
-    onOpen: actionAlertOnOpen,
-    onClose: actionAlertOnClose,
-  } = useDisclosure();
-  const [nuevoUsername, setNuevoUsername] = useState(usuario);
-  const cancelRef = useRef<HTMLButtonElement | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const auth = useAuth();
-  const toast = useToast();
-  const navigate = useNavigate();
-  const handlerChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setNuevoUsername(event.target.value);
-  };
-
-  const handlerSubmit = async () => {
-    console.log(nuevoUsername);
-    setLoading(true);
-    try {
-      await userService.updateUsername(auth.userId, nuevoUsername);
-      auth.changeUsername(nuevoUsername);
-      toast({
-        title: "El nombre del usuario fue cambiado con éxito",
-        description: "Necesita iniciar sesión nuevamente para efectuar cambios",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-      });
-      auth.logout();
-    } catch (e) {
-      Toast({
-        title: "Error 500",
-        message:
-          "No se pudo actualiza el nombre del usuario, intentelo mas tarde",
-        status: "error",
-      });
-    } finally {
-      setLoading(false);
-      onClose();
-    }
-  };
-
-  return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose} size={"sm"}>
-        <ModalOverlay />
-        <ModalContent
-          height={"auto"}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          m={"auto"}
-        >
-          <ModalHeader fontSize={"2xl"} textAlign={"center"} w={"full"}>
-            Editar mis datos
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody display={"flex"} flexDirection={"column"} w={"full"}>
-            <Flex
-              direction="column"
-              gap={"1rem"}
-              flex={"1"}
-              alignItems={"center"}
-              w={"full"}
-            >
-              <Avatar size={"2xl"} bg={"brand.300"} />
-              <FormControl
-                flex={"1"}
-                display={"flex"}
-                flexDirection={"column"}
-                mt={"20px"}
-              >
-                <FormLabel fontSize={"xs"} opacity={".5"}>
-                  Usuario
-                </FormLabel>
-                <Input onChange={handlerChange} defaultValue={usuario}></Input>
-              </FormControl>
-            </Flex>
-          </ModalBody>
-
-          <ModalFooter alignSelf={"flex-end"}>
-            <Button variant="ghost" color="brand.300" mr={3} onClick={onClose}>
-              CANCELAR
-            </Button>
-            <Button
-              _hover={{ bg: "purple.400" }}
-              bg="brand.300"
-              color="white"
-              onClick={actionAlertOnOpen}
-            >
-              GUARDAR
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-      <AlertDialog
-        isOpen={actionAlertIsOpen}
-        leastDestructiveRef={cancelRef}
-        onClose={actionAlertOnClose}
-      >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Cambiar username
-            </AlertDialogHeader>
-
-            <AlertDialogBody>
-              ¿Estás seguro de que quieres cambiarte el username? Tendrás que
-              iniciar sesión con los nuevos cambios.
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button
-                ref={cancelRef}
-                onClick={actionAlertOnClose}
-                disabled={loading}
-              >
-                Cancelar
-              </Button>
-              <Button
-                colorScheme="brand"
-                onClick={handlerSubmit}
-                ml={3}
-                isLoading={loading}
-              >
-                Aceptar
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
-    </>
   );
 };

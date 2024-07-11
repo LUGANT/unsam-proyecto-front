@@ -5,3 +5,7 @@ type Usuario = {
   username: string;
   puntuacion: number;
 };
+type UserData = {
+  username?: string;
+  imgUrl?: string;
+};

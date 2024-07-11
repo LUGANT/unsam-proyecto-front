@@ -59,9 +59,10 @@ class UserService extends ApiService {
     });
   }
 
-  async updateUsername(userId: string | null, newUsername: string) {
+  async updateUser(userId: string | null, userData: UserData) {
     const rta = await this.api.patch(
-      URL_BACK + `usuario/${userId}/updateUsername?nuevoUsername=${newUsername}`
+      URL_BACK + `usuario/${userId}/updateUser`,
+      userData
     );
     return rta;
   }
