@@ -45,7 +45,7 @@ export function RequestItem({
     <Card padding={2}>
       <Flex justifyContent="space-between" alignItems={"center"} gap={2}>
         <Flex alignItems={"center"} gap={2}>
-          <Avatar size={"md"} bg={"brand.300"} />
+          <Avatar src={request.usuario.imgUrl} size={"md"} bg={"brand.300"} />
           <Flex direction={"column"}>
             <Heading as="h5" textAlign={"left"} size="md">
               {usuario.nombre +

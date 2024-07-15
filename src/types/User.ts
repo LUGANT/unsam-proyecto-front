@@ -4,6 +4,7 @@ type Usuario = {
   apellido: string;
   username: string;
   puntuacion: number;
+  imgUrl?: string;
 };
 type UserData = {
   username?: string;

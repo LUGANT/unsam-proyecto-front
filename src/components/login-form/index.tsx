@@ -45,7 +45,7 @@ export function LoginForm() {
         });
         const user = await userService.getUser();
         auth.login(user.id);
-        auth.changeUsername(user.username);
+        auth.updateUser({ username: user.username, imgUrl: user.imgUrl });
         navigate("/");
       } catch (e) {
         setTimeout(() => {

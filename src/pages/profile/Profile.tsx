@@ -41,7 +41,7 @@ function Profile() {
         justifyContent={"center"}
         gap={"20px"}
       >
-        <Avatar size={"2xl"} bg={"brand.300"} />
+        <Avatar src={auth.imgUrl} size={"2xl"} bg={"brand.300"} />
         <VStack alignItems={"flex-start"}>
           <Text fontSize={"3xl"} fontWeight={"semibold"}>
             {auth.username}
@@ -82,7 +82,7 @@ export default Profile;
 const ReviewMiniCard = ({ opinion }: { opinion: Opinion }) => {
   return (
     <Flex w={"20rem"}>
-      <Avatar size={"md"} bg={"brand.300"} />
+      <Avatar src={opinion.opinante.imgUrl} size={"md"} bg={"brand.300"} />
       <Flex w={"100%"} gap={"10px"} px={"10px"} flexDirection={"column"}>
         <Flex justifyContent={"space-between"} w={"100%"} textAlign={"center"}>
           <Box>
