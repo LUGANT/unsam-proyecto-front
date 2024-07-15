@@ -24,8 +24,6 @@ export function EventsToAssist() {
   useEffect(() => {
     const getEvents = async () => {
       const res = await eventService.getEventsToAssist(userId!!);
-      console.log(res);
-
       setEvents(res);
     };
     getEvents();

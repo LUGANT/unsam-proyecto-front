@@ -78,6 +78,12 @@ class UserService extends ApiService {
     });
     return rta;
   }
+
+  async reportOpinion(comentarioId:number,reportadorId:string){
+    const rta = await this.api.post(URL_BACK + `valoracion/reportar/${comentarioId}/${reportadorId}`)
+    return rta;
+  }
+  
   async sendSuggest(usuarioId: string, sugerencia: string) {
     return this.handleRequest(async () => {
       const response: AxiosResponse = await this.api.post(
