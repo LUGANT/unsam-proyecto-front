@@ -12,9 +12,10 @@ interface AuthContextType {
   isLoggedIn: boolean;
   userId: string | null;
   username: string;
+  imgUrl: string;
   login: (userId: string) => void;
   logout: () => void;
-  changeUsername: (newUsername: string) => void;
+  updateUser: ({ username, imgUrl }: UserData) => void;
 }
 
 // Crea el contexto con un valor inicial
@@ -39,11 +40,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [username, setUsername] = useState<string>("");
+  const [imgUrl, setImgUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem("userId");
     const storedUsername = localStorage.getItem("username");
+    const storedImgUrl = localStorage.getItem("imgUrl");
     const storedIsLoggedIn = localStorage.getItem("token") != null;
 
     if (storedUserId && storedUsername) {
@@ -51,6 +54,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUsername(storedUsername);
       setIsLoggedIn(storedIsLoggedIn);
     }
+    setImgUrl(storedImgUrl!);
     setLoading(false);
   }, []);
 
@@ -65,15 +69,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoggedIn(false);
     setUserId(null);
     setUsername("");
+    setImgUrl("");
     localStorage.removeItem("token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("imgUrl");
     localStorage.removeItem("username");
     navigate("/auth/login");
   };
 
-  const changeUsername = (newUsername: string) => {
-    setUsername(newUsername);
-    localStorage.setItem("username", newUsername);
+  const updateUser = ({ username, imgUrl }: UserData) => {
+    if (username) {
+      setUsername(username);
+      localStorage.setItem("username", username);
+    }
+    if (imgUrl) {
+      setImgUrl(imgUrl);
+      localStorage.setItem("imgUrl", imgUrl);
+    }
   };
 
   if (loading) {
@@ -82,7 +94,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, userId, username, login, logout, changeUsername }}
+      value={{
+        isLoggedIn,
+        userId,
+        username,
+        imgUrl,
+        login,
+        logout,
+        updateUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

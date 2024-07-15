@@ -67,7 +67,7 @@ const NavLink = (props: Props) => {
 export const NavBar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [islogged, setIsLogged] = useState<boolean | null>(null);
-  const { isLoggedIn, logout, username } = useAuth();
+  const { isLoggedIn, logout, username, imgUrl } = useAuth();
 
   useEffect(() => {
     setIsLogged(isLoggedIn);
@@ -125,7 +125,7 @@ export const NavBar = () => {
                   cursor={"pointer"}
                   minW={0}
                 >
-                  <Avatar size={"sm"} bg={"brand.300"} />
+                  <Avatar src={imgUrl} size={"sm"} bg={"brand.300"} />
                 </MenuButton>
                 <MenuList>
                   <MenuItem as={ReactRouterLink} to={`/profile/` + username}>

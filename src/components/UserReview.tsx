@@ -112,7 +112,7 @@ function UserReview({
             alignItems={"center"}
             w={"full"}
           >
-            <Avatar size={"xl"} bg={"brand.300"} />
+            <Avatar src={participant.imgUrl} size={"xl"} bg={"brand.300"} />
             <Text>{`${participant.username}`}</Text>
             <VStack gap={"10px"}>
               <FormControl isInvalid={!!errors.puntaje}>

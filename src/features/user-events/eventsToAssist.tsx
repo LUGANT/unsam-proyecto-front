@@ -15,6 +15,7 @@ import { useAuth } from "../../providers/auth/AuthContext";
 import eventService from "../../services/event-service";
 import { Evento } from "../../types/Event";
 import { RoundedActivityIcon } from "../../ui/icons/ActivityIcon";
+import { castDate } from "../../util/date";
 
 export function EventsToAssist() {
   const { userId } = useAuth();
@@ -83,8 +84,8 @@ const SimpleEvent = ({ evento }: { evento: Evento }) => {
               >
                 Partido
               </Text>
-              <Text>{fecha.toString()}</Text>
-              <Text>{hora?.toString()}</Text>
+              <Text>{castDate(fecha)}</Text>
+              <Text>{hora?.toString()} hs</Text>
             </HStack>
             <Heading
               // eslint-disable-next-line react-hooks/rules-of-hooks
