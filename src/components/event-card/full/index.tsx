@@ -64,7 +64,7 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
         p={6}
         overflow={"hidden"}
         transition="transform 0.2s"
-        _hover={{ transform: "scale(1.05)"}}
+        _hover={{ transform: "scale(1.05)" }}
       >
         <Box bg={"gray.100"} mt={-6} mx={-6} mb={6} pos={"relative"}>
           <Image
@@ -83,7 +83,7 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
             fontSize={"sm"}
             letterSpacing={1.1}
           >
-            Partido
+            {actividad.tipo}
           </Text>
           <Heading
             // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -91,8 +91,13 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
             fontSize={"2xl"}
             fontFamily={"body"}
           >
-            <ChakraLink as={ReactRouterLink} to={`/evento/${id}`} noOfLines={2} _hover={{textDecoration:"none"}}>
-              <Text transition="color 0.5s" _hover={{color:"brand.300"}}>
+            <ChakraLink
+              as={ReactRouterLink}
+              to={`/evento/${id}`}
+              noOfLines={2}
+              _hover={{ textDecoration: "none" }}
+            >
+              <Text transition="color 0.5s" _hover={{ color: "brand.300" }}>
                 Partido de {actividad.nombre} en {ubicacion.barrio}
               </Text>
             </ChakraLink>
