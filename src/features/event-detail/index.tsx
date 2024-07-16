@@ -9,6 +9,7 @@ import {
   VStack,
   Spinner,
   Icon,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -20,6 +21,7 @@ import { MapRender } from "../../components/map-render";
 import { useAuth } from "../../providers/auth/AuthContext";
 import { userService } from "../../services/user-service";
 import { castDate } from "../../util/date";
+import Chat from "../chat-events";
 
 export const FullEventDetail = () => {
   const [evento, setEvento] = useState<Evento>();
@@ -27,6 +29,8 @@ export const FullEventDetail = () => {
   const { idEvento } = useParams();
   const toast = useToast();
   const { userId } = useAuth();
+  const [userIds, setUserIds] = useState<string[]>([])
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [buttonEnabled, setButtonEnabled] = useState<boolean>(true);
   const handleJoin = () => {
     try {
@@ -50,8 +54,12 @@ export const FullEventDetail = () => {
     }
   };
 
+  const handleChat = () => {
+    onOpen();
+  }
+
   const disableEnviarSolicitud = () => {
-    return evento?.anfitrion.id == userId;
+    return (evento?.anfitrion.id == userId) || (evento?.participantes?.some(p => p.id == userId));
   };
 
   function avaiableSlot() {
@@ -63,6 +71,8 @@ export const FullEventDetail = () => {
       try {
         const res = await eventService.getById(userId!!, idEvento!!);
         setEvento(res);
+        setUserIds(res.participantes?.map(p => p.id) || [])
+        console.log(evento);
         if (res.habilitado != undefined) {
           setButtonEnabled(res.habilitado);
         }
@@ -133,6 +143,15 @@ export const FullEventDetail = () => {
         >
           Yo me sumo
         </Button>
+        <Button
+          onClick={handleChat}
+          color={"white"}
+          bgColor="brand.300"
+          colorScheme="brand"
+          hidden={!disableEnviarSolicitud()}
+        >
+          Chat
+        </Button>
       </Flex>
       <Flex
         flexDir={{ base: "column", md: "row" }}
@@ -186,6 +205,7 @@ export const FullEventDetail = () => {
           <MapRender position={[evento.ubicacion.lat, evento.ubicacion.lon]} />
         </VStack>
       </Flex>
+      <Chat isOpen={isOpen} onClose={onClose} eventoId={idEvento}/>
     </Flex>
   );
 };
