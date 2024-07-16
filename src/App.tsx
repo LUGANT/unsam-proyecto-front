@@ -1,7 +1,7 @@
-import { PrincipalRoutes } from './routes/routes'
+import { PrincipalRoutes } from "./routes/routes";
 
 function App() {
-  return <PrincipalRoutes/>
+  return <PrincipalRoutes />;
 }
 
-export default App
+export default App;

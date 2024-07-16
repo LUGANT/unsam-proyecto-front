@@ -1,6 +1,12 @@
-import { ButtonUi } from "../../ui/button"
-
+import { Container } from "@chakra-ui/react";
+import { SearchEvents } from "../../features/search-events";
 
 export const HomePage = () => {
-  return <ButtonUi>Home</ButtonUi>
-}
+  return (
+    <>
+      <Container maxW={"full"}>
+        <SearchEvents />
+      </Container>
+    </>
+  );
+};
