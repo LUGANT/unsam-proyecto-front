@@ -63,6 +63,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUserId(userId);
     // localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userId", userId);
+    localStorage.setItem("imgUrl", imgUrl);
   };
 
   const logout = () => {

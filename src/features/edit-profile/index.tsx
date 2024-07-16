@@ -56,7 +56,10 @@ export const EditProfile = ({
 
   // Manejador para enviar los cambios al backend
   const handleSubmit = async () => {
-    const updatedFields: Partial<UserData> = {};
+    const updatedFields: UserData = {
+      username: "",
+      imgUrl: "",
+    };
 
     // Verifica qué campos han cambiado y actualiza el objeto a enviar
     if (userData.username !== usuario.username) {
@@ -80,7 +83,6 @@ export const EditProfile = ({
     }
 
     setLoading(true);
-    console.log(updatedFields);
 
     try {
       // Envía solo los datos que han cambiado al backend
@@ -189,11 +191,11 @@ export const EditProfile = ({
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Cambiar username
+              Cambiar datos
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              ¿Estás seguro de que quieres cambiarte el username? Tendrás que
+              ¿Estás seguro de que quieres cambiar tus datos? Tendrás que
               iniciar sesión con los nuevos cambios.
             </AlertDialogBody>
 

@@ -90,7 +90,7 @@ export function SignUpForm() {
           contrasenia,
         });
         auth.login(rta.id);
-        auth.updateUser({ username: rta.username });
+        auth.updateUser({ username: rta.username, imgUrl: "" });
         navigate("/");
       } catch (e) {
         setTimeout(() => {
