@@ -4,7 +4,7 @@ import { io, Socket } from 'socket.io-client'
 import { useAuth } from '../providers/auth/AuthContext';
 import { IoIosSend } from "react-icons/io";
 
-function Chat({ eventoId, userIds }) {
+function Chat({isOpen, onClose, eventoId, userIds }) {
 
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -12,9 +12,7 @@ function Chat({ eventoId, userIds }) {
     const [socket, setSocket] = useState<Socket | null>(null);
 
     //UI
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
-    const eventId = 1
+    // const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
 
@@ -24,7 +22,7 @@ function Chat({ eventoId, userIds }) {
 
         socket.on('connect', () => {
             console.log('Connected to WebSocket server');
-            socket.emit('eventoId', eventId)
+            socket.emit('eventoId', eventoId)
         });
 
         socket.on('disconnect', () => {
@@ -51,8 +49,8 @@ function Chat({ eventoId, userIds }) {
             const newMessage: ChatMessage = {
                 texto: inputRef.current.value,
                 usuarioId: userId,
-                eventoId: eventId,
-                userIds: [1, 2, 4]
+                eventoId: eventoId,
+                userIds: userIds
                 // Otras propiedades
             };
             socket.emit('chat message', newMessage);
@@ -62,9 +60,6 @@ function Chat({ eventoId, userIds }) {
 
     return (
         <div>
-            <Button colorScheme='teal' onClick={onOpen}>
-                Open
-            </Button>
             <Drawer
                 isOpen={isOpen}
                 placement='right'

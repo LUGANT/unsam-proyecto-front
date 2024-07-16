@@ -14,7 +14,6 @@ import { SearchPage } from "../pages/search";
 import { SignUpPage } from "../pages/signup";
 import AuthProvider from "../providers/auth/AuthContext";
 import { ProtectedRoute } from "./protectedRoute";
-import Chat from './../features/Chat';
 
 export function PrincipalRoutes() {
   return (
@@ -26,7 +25,7 @@ export function PrincipalRoutes() {
             <Route path="/auth/signup" element={<SignUpPage />} />
           </Route>
           <Route path="/" element={<MainLayout />}>
-            <Route path="/" element={<Chat />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/mis-eventos" element={<MisEventos />} />
