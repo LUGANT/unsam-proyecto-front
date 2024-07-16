@@ -1,7 +1,10 @@
 type ChatMessage = {
+    id: string,
     texto: string,
-    // horario: Date,
-    usuarioId: string | null,
-    eventoId: number | null,
-    userIds: number[]
+    fecha: string,
+    hora: string,
+    username: string,
+    userProfile: string,
+    usuarioId: number,
+    eventoId: number,
 }

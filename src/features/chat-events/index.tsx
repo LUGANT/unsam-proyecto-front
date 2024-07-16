@@ -1,30 +1,38 @@
-import { Box, Button, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, IconButton, Input, Text, useDisclosure } from '@chakra-ui/react'
-import { FormEvent, useEffect, useRef, useState } from 'react'
-import { io, Socket } from 'socket.io-client'
-import { useAuth } from '../providers/auth/AuthContext';
+import { Box, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, IconButton, Input, Text } from '@chakra-ui/react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { IoIosSend } from "react-icons/io";
+import { io, Socket } from 'socket.io-client';
+import { useAuth } from '../../providers/auth/AuthContext';
+import { messageService } from '../../services/message-service';
+import Message from './Message';
 
-function Chat({isOpen, onClose, eventoId, userIds }) {
+function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => void, eventoId: string | undefined }) {
 
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
-    const { userId } = useAuth();
+    const { userId, username } = useAuth();
     const [socket, setSocket] = useState<Socket | null>(null);
 
-    //UI
-    // const { isOpen, onOpen, onClose } = useDisclosure()
-
     useEffect(() => {
+        
+        
+        // getMessages    
 
         const socket = io('http://localhost:9092');
-        socket.connect();
         setSocket(socket)
+        
+        // Handshake - Begin
+        
+        socket.connect();
 
         socket.on('connect', () => {
+            socket.emit('initial message', eventoId)
+            socket.emit('joinRoom', eventoId)
             console.log('Connected to WebSocket server');
-            socket.emit('eventoId', eventoId)
         });
+        // Handshake - End
 
+        // Listeners
         socket.on('disconnect', () => {
             console.log('Disconnected from WebSocket server');
         });
@@ -37,6 +45,7 @@ function Chat({isOpen, onClose, eventoId, userIds }) {
             console.log('Mensajes anteriores:', messages);
             setMessages(messages);
         });
+        // Listeners
 
         return () => {
             socket.disconnect();
@@ -48,9 +57,12 @@ function Chat({isOpen, onClose, eventoId, userIds }) {
         if (inputRef.current?.value) {
             const newMessage: ChatMessage = {
                 texto: inputRef.current.value,
-                usuarioId: userId,
-                eventoId: eventoId,
-                userIds: userIds
+                username: username,
+                userProfile: "",
+                usuarioId: parseInt(userId!!),
+                eventoId: parseInt(eventoId!!),
+                fecha: "",
+                hora: ""
                 // Otras propiedades
             };
             socket.emit('chat message', newMessage);
@@ -64,7 +76,7 @@ function Chat({isOpen, onClose, eventoId, userIds }) {
                 isOpen={isOpen}
                 placement='right'
                 onClose={onClose}
-
+                size={"sm"}
             >
                 <DrawerOverlay />
                 <DrawerContent>
@@ -73,22 +85,12 @@ function Chat({isOpen, onClose, eventoId, userIds }) {
 
                     <DrawerBody>
                         <Flex flexDirection={"column"}>
-                            {messages.map((msg, index) => (
-                                msg.usuarioId != userId ? (
-                                    <Box marginBlock={"2px"} bg={"#ddd"} padding={'10px'} rounded={"0 10px 10px 10px"} key={index} alignSelf={'flex-start'}>
-                                        <Text >{msg.usuarioId}: {msg.texto}</Text>
-                                    </Box>
-                                ) : (
-                                    <Box marginBlock={"2px"} bg={"#c29aff"} padding={'10px'} rounded={"10px 10px 0 10px"} key={index} alignSelf={'flex-end'}>
-                                        <Text>{msg.texto}</Text>
-                                    </Box> //yo
-                                )
-                            ))}
+                            {messages.map((msg, index) => <Message message={msg} index={index}></Message>)}
                         </Flex>
                     </DrawerBody>
 
                     <DrawerFooter>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} className='max-width'>
                             <Flex gap={'10px'}>
                                 <Input type="text" ref={inputRef} />
                                 <IconButton type='submit' aria-label='Enviar mensaje' color={'white'} bg={'brand.300'} _hover={{background: '#c29aff', color: 'white'}} icon={<IoIosSend size={'25px'}/> } />

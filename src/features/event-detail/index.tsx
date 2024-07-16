@@ -22,7 +22,7 @@ import { MapRender } from "../../components/map-render";
 import { useAuth } from "../../providers/auth/AuthContext";
 import { userService } from "../../services/user-service";
 import { castDate } from "../../util/date";
-import Chat from "../Chat";
+import Chat from "../chat-events";
 
 export const FullEventDetail = () => {
   const [evento, setEvento] = useState<Evento>();
@@ -202,7 +202,7 @@ export const FullEventDetail = () => {
           <MapRender position={[evento.ubicacion.lat, evento.ubicacion.lon]} />
         </VStack>
       </Flex>
-      <Chat isOpen={isOpen} onClose={onClose} eventoId={idEvento} userIds={userIds}/>
+      <Chat isOpen={isOpen} onClose={onClose} eventoId={idEvento}/>
     </Flex>
   );
 };
