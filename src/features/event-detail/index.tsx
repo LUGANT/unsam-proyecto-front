@@ -1,5 +1,4 @@
 import {
-  AspectRatio,
   Avatar,
   Button,
   Flex,
@@ -32,7 +31,7 @@ export const FullEventDetail = () => {
   const { userId } = useAuth();
   const [userIds, setUserIds] = useState<string[]>([])
   const { isOpen, onOpen, onClose } = useDisclosure()
-
+  const [buttonEnabled, setButtonEnabled] = useState<boolean>(true);
   const handleJoin = () => {
     try {
       userService.sendRequest(idEvento!, userId!);
@@ -43,6 +42,7 @@ export const FullEventDetail = () => {
         duration: 5000,
         isClosable: true,
       });
+      setButtonEnabled(!buttonEnabled);
     } catch (e) {
       toast({
         title: "Algo inesperado ocurrió",
@@ -70,10 +70,12 @@ export const FullEventDetail = () => {
     const fetchEvent = async () => {
       try {
         const res = await eventService.getById(userId!!, idEvento!!);
-        console.log(res);
         setEvento(res);
         setUserIds(res.participantes?.map(p => p.id) || [])
         console.log(evento);
+        if (res.habilitado != undefined) {
+          setButtonEnabled(res.habilitado);
+        }
       } catch (error) {
         console.error("Error fetching event:", error);
         toast({
@@ -137,6 +139,7 @@ export const FullEventDetail = () => {
           bgColor="brand.300"
           colorScheme="brand"
           hidden={disableEnviarSolicitud()}
+          isDisabled={!buttonEnabled}
         >
           Yo me sumo
         </Button>

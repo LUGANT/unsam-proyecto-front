@@ -33,6 +33,7 @@ export type Participante = {
   username: string;
   imgUrl?: string;
   opinable: boolean
+  existeOpinion: boolean;
 };
 export type Solicitud = {
   id: string;

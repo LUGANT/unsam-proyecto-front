@@ -24,6 +24,7 @@ import { Controller, useForm } from "react-hook-form";
 import { FaStar } from "react-icons/fa";
 import { Participante } from "../types/Event";
 import reviewService from "../services/review-service";
+import { useNavigate } from "react-router-dom";
 
 function UserReview({
   userId,
@@ -37,6 +38,7 @@ function UserReview({
   participant: Participante;
 }) {
   const toast = useToast();
+  const navigate = useNavigate();
   const {
     handleSubmit,
     control,
@@ -73,6 +75,7 @@ function UserReview({
         duration: 5000,
         isClosable: true,
       });
+      navigate("/");
     } catch (error: any) {
       toast({
         title: "Algo inesperado ocurrió",
@@ -109,7 +112,7 @@ function UserReview({
             alignItems={"center"}
             w={"full"}
           >
-            <Avatar size={"xl"} bg={"brand.300"} />
+            <Avatar src={participant.imgUrl} size={"xl"} bg={"brand.300"} />
             <Text>{`${participant.username}`}</Text>
             <VStack gap={"10px"}>
               <FormControl isInvalid={!!errors.puntaje}>

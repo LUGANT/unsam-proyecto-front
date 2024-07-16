@@ -26,6 +26,7 @@ import { useAuth } from "../../providers/auth/AuthContext";
 import eventService from "../../services/event-service";
 import { Evento, Participante } from "../../types/Event";
 import { RoundedActivityIcon } from "../../ui/icons/ActivityIcon";
+import { useNavigate } from "react-router-dom";
 
 export function EventsAssisted() {
   const { userId } = useAuth();
@@ -34,8 +35,6 @@ export function EventsAssisted() {
   useEffect(() => {
     const getEvents = async () => {
       const res = await eventService.getEventsAssisted(userId!!);
-      console.log(res);
-
       setEvents(res);
     };
     getEvents();
@@ -212,6 +211,9 @@ function Participant({
   participante: Participante;
   onRateClick: (p: Participante) => void;
 }) {
+  const [existeOpinion, setExisteOpinion] = useState<boolean>(
+    participante.existeOpinion
+  );
   const handleRate = () => {
     onRateClick(participante);
   };
@@ -220,7 +222,7 @@ function Participant({
     <Card padding={2}>
       <Flex justifyContent="space-between" alignItems={"center"} gap={2}>
         <Flex alignItems={"center"} gap={2}>
-          <Avatar size={"md"} bg={"brand.300"} />
+          <Avatar src={participante.imgUrl} size={"md"} bg={"brand.300"} />
           <Flex direction={"column"}>
             <Heading as="h5" textAlign={"left"} size="md">
               {/* {participante.nombre +
@@ -236,6 +238,7 @@ function Participant({
           variant={"outline"}
           color="brand.300"
           _hover={{ bgColor: "brand.300", color: "white" }}
+          isDisabled={existeOpinion}
         >
           Calificar
         </Button>

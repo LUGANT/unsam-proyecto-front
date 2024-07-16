@@ -8,6 +8,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { BrandIcon } from "../../ui/icons/BrandIcon";
+import { SuggestActivity } from "../../features/suggest-activity";
 
 export const Footer = () => {
   return (
@@ -38,6 +39,10 @@ export const Footer = () => {
           >
             Yo me sumo
           </Heading>
+        </HStack>
+        <HStack>
+          <Text>No encontrás tu actividad?</Text>
+          <SuggestActivity />
         </HStack>
         <Text>© 2024 Yo me sumo. Todos los derechos reservados</Text>
       </Container>
