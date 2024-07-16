@@ -60,6 +60,8 @@ class UserService extends ApiService {
   }
 
   async updateUser(userId: string | null, userData: UserData) {
+    console.log(userData);
+
     const rta = await this.api.patch(
       URL_BACK + `usuario/${userId}/updateUser`,
       userData

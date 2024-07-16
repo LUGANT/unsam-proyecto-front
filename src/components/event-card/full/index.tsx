@@ -105,9 +105,7 @@ export const EventCard = ({ evento }: { evento: Evento }) => {
           <Text color={"gray.500"}>{evento.descripcion}</Text>
         </Stack>
         <Stack mt={6} direction={"row"} spacing={4} align={"center"}>
-          <Avatar
-            src={"https://avatars0.githubusercontent.com/u/1164541?v=4"}
-          />
+          <Avatar src={evento.anfitrion.imgUrl || ""} bg="brand.300" />
           <Stack direction={"column"} spacing={0} fontSize={"sm"}>
             <Text fontWeight={600}>{anfitrion.nombre}</Text>
             <Text color={"gray.500"}>

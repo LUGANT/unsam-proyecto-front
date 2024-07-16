@@ -7,6 +7,6 @@ type Usuario = {
   imgUrl?: string;
 };
 type UserData = {
-  username?: string;
-  imgUrl?: string;
+  username: string;
+  imgUrl: string;
 };
