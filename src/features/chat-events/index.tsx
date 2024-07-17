@@ -1,5 +1,5 @@
 import { Box, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Flex, IconButton, Input, Text } from '@chakra-ui/react';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { IoIosSend } from "react-icons/io";
 import { io, Socket } from 'socket.io-client';
 import { useAuth } from '../../providers/auth/AuthContext';
@@ -12,9 +12,11 @@ function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => vo
     const inputRef = useRef<HTMLInputElement>(null);
     const { userId, username } = useAuth();
     const [socket, setSocket] = useState<Socket | null>(null);
+    const [lastFecha, setLastFecha] = useState<string | null>(localStorage.getItem('lastSession') || new Date().toISOString());
+
 
     useEffect(() => {
-        
+        const fechaHoraActual = new Date().toISOString();
         
         // getMessages    
 
@@ -35,6 +37,8 @@ function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => vo
         // Listeners
         socket.on('disconnect', () => {
             console.log('Disconnected from WebSocket server');
+            setLastFecha(fechaHoraActual);
+            localStorage.setItem('lastSession', fechaHoraActual)
         });
 
         socket.on("chat message", (message) => {
@@ -46,7 +50,7 @@ function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => vo
             setMessages(messages);
         });
         // Listeners
-
+        
         return () => {
             socket.disconnect();
         }
@@ -61,8 +65,7 @@ function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => vo
                 userProfile: "",
                 usuarioId: parseInt(userId!!),
                 eventoId: parseInt(eventoId!!),
-                fecha: "",
-                hora: ""
+                fechaHora: new Date().toISOString(),
                 // Otras propiedades
             };
             socket.emit('chat message', newMessage);
@@ -85,7 +88,16 @@ function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => vo
 
                     <DrawerBody>
                         <Flex flexDirection={"column"}>
-                            {messages.map((msg, index) => <Message message={msg} index={index}></Message>)}
+                            {/* {messages.map((msg, index) => <Message message={msg} index={index}></Message>)} */}
+                            {messages.filter(m => m.fechaHora < lastFecha).map((msg, index) => <Message message={msg} index={index}></Message>)}
+                            {
+                            messages.filter(m => m.fechaHora > lastFecha).length != 0 
+                            &&
+                            (messages.filter(m => m.fechaHora > lastFecha)).some(m => m.usuarioId != userId)
+                            &&
+                            <h1>Mensajes Nuevos</h1>
+                            }
+                            {messages.filter(m => m.fechaHora > lastFecha).map((msg, index) => <Message message={msg} index={index}></Message>)}
                         </Flex>
                     </DrawerBody>
 

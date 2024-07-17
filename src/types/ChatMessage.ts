@@ -1,8 +1,7 @@
 type ChatMessage = {
     id: string,
     texto: string,
-    fecha: string,
-    hora: string,
+    fechaHora: string,
     username: string,
     userProfile: string,
     usuarioId: number,
