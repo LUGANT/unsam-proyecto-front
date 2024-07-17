@@ -10,7 +10,7 @@ function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => vo
 
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
-    const { userId, username } = useAuth();
+    const { userId, username, imgUrl } = useAuth();
     const [socket, setSocket] = useState<Socket | null>(null);
 
     useEffect(() => {
@@ -38,6 +38,7 @@ function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => vo
         });
 
         socket.on("chat message", (message) => {
+            console.log(message)
             setMessages(prevMessages => [...prevMessages, message]);
         });
 
@@ -58,7 +59,7 @@ function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => vo
             const newMessage: ChatMessage = {
                 texto: inputRef.current.value,
                 username: username,
-                userProfile: "",
+                imgUrl: imgUrl,
                 usuarioId: parseInt(userId!!),
                 eventoId: parseInt(eventoId!!),
                 fecha: "",
@@ -84,8 +85,8 @@ function Chat({isOpen, onClose, eventoId }: { isOpen: boolean, onClose: () => vo
                     <DrawerHeader>Chat</DrawerHeader>
 
                     <DrawerBody>
-                        <Flex flexDirection={"column"}>
-                            {messages.map((msg, index) => <Message message={msg} index={index}></Message>)}
+                        <Flex flexDirection={"column"} gap={"px"}>
+                            {messages.map((msg, index) => <Message message={msg} index={index} previousMessage={messages[index-1]}></Message>)}
                         </Flex>
                     </DrawerBody>
 
