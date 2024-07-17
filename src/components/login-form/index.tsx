@@ -44,6 +44,7 @@ export function LoginForm() {
           contrasenia,
         });
         const user = await userService.getUser();
+        console.log(user)
         auth.login(user.id);
         auth.updateUser({ username: user.username, imgUrl: user.imgUrl });
         navigate("/");
