@@ -8,16 +8,16 @@ import {
 } from "../../types/Event";
 
 class EventService extends ApiService {
-  async all(): Promise<Evento[]> {
+  async all(page:number,size:number): Promise<Evento[]> {
     return this.handleRequest<Evento[]>(async () => {
-      const response: AxiosResponse<Evento[]> = await this.api.get("/all");
+      const response: AxiosResponse<Evento[]> = await this.api.get(`/all?page=${page}&size=${size}`);
       return response.data;
     });
   }
-  async getEventForAnUserLogged(userId: string): Promise<Evento[]> {
+  async getEventForAnUserLogged(userId: string,page?:number,size?:number): Promise<Evento[]> {
     return this.handleRequest<Evento[]>(async () => {
       const response: AxiosResponse<Evento[]> = await this.api.get(
-        `/home/${userId}`
+        `/home/${userId}?page=${page}&size=${size}`
       );
       return response.data;
     });
