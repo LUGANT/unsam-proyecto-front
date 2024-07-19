@@ -2,10 +2,17 @@ import { WarningTwoIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
+  Button,
   Flex,
   HStack,
   Icon,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Text,
   useDisclosure,
   useToast,
@@ -85,6 +92,7 @@ export default Profile;
 
 const ReviewMiniCard = ({ opinion }: { opinion: Opinion }) => {
   const toast = useToast();
+  const [openModal, setOpenModal] = useState<boolean>(false)
   const [reportExist, setReportExist] = useState<boolean>(
     opinion.existeReporte
   );
@@ -108,6 +116,15 @@ const ReviewMiniCard = ({ opinion }: { opinion: Opinion }) => {
       });
     }
   };
+
+  const openModalFunc = () => {
+    setOpenModal(true)
+  }
+
+  const closeModal = () => {
+    setOpenModal(false)
+  }
+
   return (
     <Flex w={"20rem"}>
       <Avatar src={opinion.opinante.imgUrl} size={"md"} bg={"brand.300"} />
@@ -130,13 +147,39 @@ const ReviewMiniCard = ({ opinion }: { opinion: Opinion }) => {
               aria-label="warning"
               icon={<WarningTwoIcon />}
               size="sm"
-              onClick={handlerReport}
+              onClick={openModalFunc}
               isDisabled={reportExist}
             />
           </Flex>
         </Flex>
         <Text>{opinion.comentario}</Text>
       </Flex>
+      <ModalReport isOpen={openModal} onClose={closeModal} onClick={handlerReport}/>
     </Flex>
   );
 };
+
+function ModalReport({isOpen, onClose, onClick}:{isOpen: boolean, onClose: () => void, onClick: () => void}) {
+
+  return (
+  <Modal isOpen={isOpen} onClose={onClose} size={"md"}>
+    <ModalOverlay/>
+    <ModalContent
+        height={"auto"}
+        display={"flex"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        m={"auto"}>
+        {/* <ModalHeader fontSize={"2xl"} textAlign={"center"} w={"full"}>
+          Reportar usuario
+        </ModalHeader> */}
+        <ModalCloseButton />
+        <ModalBody>
+          <Box padding={'1rem'} display={'flex'} flexDirection={'column'} gap={'10px'} justifyContent={'center'} alignItems={'center'}>
+            <Text fontSize={'md'}>¿Está seguro que desea reportar al usuario?</Text>
+            <Button _hover={{bg: 'red.600', color: 'white'}} onClick={onClick}>Reportar</Button>
+          </Box>            
+        </ModalBody>
+    </ModalContent>
+  </Modal>)
+}
