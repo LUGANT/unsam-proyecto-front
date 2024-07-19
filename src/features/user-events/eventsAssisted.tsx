@@ -196,7 +196,10 @@ export const ParticipantsPopup = ({
         <UserReview
           userId={userId!!}
           isOpen={isRatingOpen}
-          onClose={onRatingClose}
+          onClose={() => {
+            onRatingClose();
+            onClose();
+          }}
           participant={selectedParticipant}
         />
       )}

@@ -38,7 +38,6 @@ function UserReview({
   participant: Participante;
 }) {
   const toast = useToast();
-  const navigate = useNavigate();
   const {
     handleSubmit,
     control,
@@ -75,7 +74,10 @@ function UserReview({
         duration: 5000,
         isClosable: true,
       });
-      navigate("/");
+      // navigate("/");
+      setTimeout(() => {
+        location.reload();
+      }, "1000");
     } catch (error: any) {
       toast({
         title: "Algo inesperado ocurrió",
