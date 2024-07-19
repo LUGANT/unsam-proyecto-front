@@ -89,9 +89,9 @@ export function SignUpForm() {
           usuario,
           contrasenia,
         });
-        auth.login(rta.id);
-        auth.updateUser({ username: rta.username, imgUrl: "" });
-        navigate("/");
+        // auth.login(rta.id);
+        // auth.updateUser({ username: rta.username, imgUrl: "" });
+        navigate("/auth/login");
       } catch (e) {
         setTimeout(() => {
           setIsLoading(false);
