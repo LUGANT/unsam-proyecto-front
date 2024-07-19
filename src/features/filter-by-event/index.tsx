@@ -18,7 +18,6 @@ export function FilterByEvent() {
     try {
       const response : any = await eventService.getSearchedEvents(userId!!, search!!);
       setEvents(response.content);
-      console.log("aaaaaaa", response)
     } finally {
       setLoading(false);
     }
