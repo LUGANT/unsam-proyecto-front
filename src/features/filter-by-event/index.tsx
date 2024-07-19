@@ -16,8 +16,9 @@ export function FilterByEvent() {
   const searchedEvents = async () => {
     setLoading(true);
     try {
-      const response = await eventService.getSearchedEvents(userId!!, search!!);
-      setEvents(response);
+      const response : any = await eventService.getSearchedEvents(userId!!, search!!);
+      setEvents(response.content);
+      console.log("aaaaaaa", response)
     } finally {
       setLoading(false);
     }
