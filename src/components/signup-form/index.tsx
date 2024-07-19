@@ -96,7 +96,7 @@ export function SignUpForm() {
         setTimeout(() => {
           setIsLoading(false);
           toast({
-            description: "Hubo con error al registrarse. Inténtelo más tarde.",
+            description: e.response ? e.response.data : "Hubo con error al registrarse. Inténtelo más tarde.",
             status: "error",
             duration: 5000,
             isClosable: true,
